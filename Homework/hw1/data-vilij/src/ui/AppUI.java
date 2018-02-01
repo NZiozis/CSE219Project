@@ -81,11 +81,15 @@ public final class AppUI extends UITemplate {
 
         // This is where the left hand side of the front end is created
         Pane LHS = new VBox();
+
+        Pane centerLabel1 = new StackPane();
         Label dataFileLabel = new Label("Data File");
+        centerLabel1.getChildren().add(dataFileLabel); // This is done to center the text of dataFieldLabel
+
         textArea = new TextArea();
         Button display = new Button("Display");
 
-        LHS.getChildren().addAll(dataFileLabel, textArea,display);
+        LHS.getChildren().addAll(centerLabel1, textArea,display);
 
 
         //This is where the right hand side of the front end is created
@@ -93,7 +97,7 @@ public final class AppUI extends UITemplate {
 
         Pane centerLabel2 = new StackPane();
         Label dataVisualizationLabel = new Label("Data Visualization");
-        centerLabel2.getChildren().add(dataVisualizationLabel); // This is done to center the text of the label
+        centerLabel2.getChildren().add(dataVisualizationLabel); // This is done to center the text of dataVisualizationLabel
 
         NumberAxis xAxis = new NumberAxis(0, 10, 1);
         NumberAxis yAxis = new NumberAxis(0, 10, 1);
@@ -101,10 +105,10 @@ public final class AppUI extends UITemplate {
 
         RHS.getChildren().addAll(centerLabel2, chart);
 
-        //This is the main compilationn of all the nodes back into the root
+        //This is the main compilation of all the nodes back into the root
         mainDataVisualization.getChildren().addAll(LHS, RHS);
         root.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
-        Scene scene = new Scene(root, 1000*1.5, 1000);
+        Scene scene = new Scene(root, 1000*1.5, 700);
 
         primaryStage.setTitle("Data Visualization App");
         primaryStage.setScene(scene);
