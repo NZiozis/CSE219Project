@@ -1,12 +1,19 @@
 package ui;
 
 import actions.AppActions;
+import javafx.scene.Scene;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
+
+import javax.swing.text.LabelView;
 
 /**
  * This is the application's user interface implementation.
@@ -66,6 +73,33 @@ public final class AppUI extends UITemplate {
 
     private void layout() {
         // TODO for homework 1
+        Pane root = new VBox(); // This creates the basic pane that the entire app will be based on
+        Pane mainDataVisualization = new HBox(); // This is the main area that will hold the text area and chart
+
+        // This is where the left hand side of the front end is created
+        Pane LHS = new VBox(); //Update this later with something more representative of the left side
+        Label dataFileLabel = new Label("Data File");
+        textArea = new TextArea();
+        Button display = new Button("Display");
+
+        LHS.getChildren().addAll(dataFileLabel, textArea,display);
+
+        //This is where the right hand side of the front end is created
+
+        /*
+        String test = "test";
+        String two = "two";
+        test.bind(two);
+        scene.widthProperty().bind(scene.heightProperty());
+        */
+
+        mainDataVisualization.getChildren().addAll(LHS);
+        root.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
+        Scene scene = new Scene(root, 1000*1.5, 1000);
+
+        primaryStage.setTitle("Data Visualization App");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private void setWorkspaceActions() {
