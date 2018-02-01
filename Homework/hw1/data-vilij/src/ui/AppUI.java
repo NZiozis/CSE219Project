@@ -1,13 +1,16 @@
 package ui;
 
 import actions.AppActions;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vilij.templates.ApplicationTemplate;
@@ -77,23 +80,29 @@ public final class AppUI extends UITemplate {
         Pane mainDataVisualization = new HBox(); // This is the main area that will hold the text area and chart
 
         // This is where the left hand side of the front end is created
-        Pane LHS = new VBox(); //Update this later with something more representative of the left side
+        Pane LHS = new VBox();
         Label dataFileLabel = new Label("Data File");
         textArea = new TextArea();
         Button display = new Button("Display");
 
         LHS.getChildren().addAll(dataFileLabel, textArea,display);
 
+
         //This is where the right hand side of the front end is created
+        Pane RHS = new VBox();
 
-        /*
-        String test = "test";
-        String two = "two";
-        test.bind(two);
-        scene.widthProperty().bind(scene.heightProperty());
-        */
+        Pane centerLabel2 = new StackPane();
+        Label dataVisualizationLabel = new Label("Data Visualization");
+        centerLabel2.getChildren().add(dataVisualizationLabel); // This is done to center the text of the label
 
-        mainDataVisualization.getChildren().addAll(LHS);
+        NumberAxis xAxis = new NumberAxis(0, 10, 1);
+        NumberAxis yAxis = new NumberAxis(0, 10, 1);
+        chart = new ScatterChart<>(xAxis, yAxis);
+
+        RHS.getChildren().addAll(centerLabel2, chart);
+
+        //This is the main compilationn of all the nodes back into the root
+        mainDataVisualization.getChildren().addAll(LHS, RHS);
         root.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
         Scene scene = new Scene(root, 1000*1.5, 1000);
 
