@@ -27,7 +27,7 @@ public class RandomStudentSelector extends Application {
 
     List<String>              names;
     Map<String, List<String>> csv;
-    Button nextButton;
+    Button nextButton = new Button("Next");
     int currentPosition;
 
     Button prevButton = new Button("Previous");
@@ -38,7 +38,7 @@ public class RandomStudentSelector extends Application {
 
     @Override
     public void start(Stage primaryStage) throws URISyntaxException, IOException {
-        setCSV(Paths.get(Application.class.getResource("/roster.csv").toURI()));
+        setCSV(Paths.get("/home/nikoziozis/CollegeClasses/CSE219/Recitation2/resources/roster.csv"));
         setNames();
 
         List<String> fontFamilies     = javafx.scene.text.Font.getFamilies();
@@ -77,9 +77,15 @@ public class RandomStudentSelector extends Application {
                     }
                     for (int i = 0; i < maxCount; i++) {
                         if (event.getSource() == prevButton) {
+                            currentPosition -= 1;
+                            if (currentPosition < 0)
+                                currentPosition = names.size() - 1;
+                        }
+                        else if (event.getSource() == nextButton) {
                             currentPosition += 1;
-                            if (currentPosition < 0) currentPosition = names.size() - 1;
-                        } else if (event.getSource() == nextButton) currentPosition += 1;
+                            if (currentPosition > names.size() - 1)
+                                currentPosition = 0;
+                        }
                         else currentPosition = getRandomPosition();
 
                         Platform.runLater(() -> {
