@@ -1,7 +1,6 @@
 package ui;
 
 import actions.AppActions;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -16,7 +15,6 @@ import javafx.stage.Stage;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
-import javax.swing.text.LabelView;
 
 /**
  * This is the application's user interface implementation.
@@ -76,7 +74,7 @@ public final class AppUI extends UITemplate {
 
     private void layout() {
         // TODO for homework 1
-        Pane root = new VBox(); // This creates the basic pane that the entire app will be based on
+        workspace = new VBox(); // This is the initialization of the basic pane for the entire front end
         Pane mainDataVisualization = new HBox(); // This is the main area that will hold the text area and chart
 
         // This is where the left hand side of the front end is created
@@ -105,10 +103,10 @@ public final class AppUI extends UITemplate {
 
         RHS.getChildren().addAll(centerLabel2, chart);
 
-        //This is the main compilation of all the nodes back into the root
+        //This is the main compilation of all the nodes back into the root node workspace
         mainDataVisualization.getChildren().addAll(LHS, RHS);
-        root.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
-        Scene scene = new Scene(root, 1000*1.5, 700);
+        workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
+        Scene scene = new Scene(workspace, 1000*1.5, 700);
 
         primaryStage.setTitle("Data Visualization App");
         primaryStage.setScene(scene);
