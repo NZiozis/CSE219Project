@@ -70,11 +70,12 @@ public final class AppUI extends UITemplate {
     @Override
     public void clear() {
         // TODO for homework 1
+        textArea.clear();
     }
 
     private void layout() {
         // TODO for homework 1
-        workspace = new VBox(); // This is the initialization of the basic pane for the entire front end
+        workspace = new VBox(); // This creates the basic pane that the entire app will be based on
         Pane mainDataVisualization = new HBox(); // This is the main area that will hold the text area and chart
 
         // This is where the left hand side of the front end is created
@@ -85,9 +86,9 @@ public final class AppUI extends UITemplate {
         centerLabel1.getChildren().add(dataFileLabel); // This is done to center the text of dataFieldLabel
 
         textArea = new TextArea();
-        Button display = new Button("Display");
+        displayButton = new Button("Display");
 
-        LHS.getChildren().addAll(centerLabel1, textArea,display);
+        LHS.getChildren().addAll(centerLabel1, textArea, displayButton);
 
 
         //This is where the right hand side of the front end is created
@@ -103,9 +104,9 @@ public final class AppUI extends UITemplate {
 
         RHS.getChildren().addAll(centerLabel2, chart);
 
-        //This is the main compilation of all the nodes back into the root node workspace
+        //This is the main compilation of all the nodes back into the workspace
         mainDataVisualization.getChildren().addAll(LHS, RHS);
-        workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original root Pane
+        workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original workspace Pane
         Scene scene = new Scene(workspace, 1000*1.5, 700);
 
         primaryStage.setTitle("Data Visualization App");
