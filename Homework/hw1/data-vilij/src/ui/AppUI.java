@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import vilij.components.ErrorDialog;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
@@ -123,13 +124,8 @@ public final class AppUI extends UITemplate {
                 ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
             }
             catch (Exception e1) {
-                Alert error = new Alert(Alert.AlertType.ERROR);                     // You should incorporate the error dialogs here instead of the generic message
-                error.setTitle("Error Dialog");
-                error.setHeaderText("Look, an Error Dialog");
-                error.setContentText("Ooops, there was an error!");
-
-                error.showAndWait();
-
+                ErrorDialog error = ErrorDialog.getDialog();
+                error.show("Error", "Invalid input data");
             }
         });
     }
