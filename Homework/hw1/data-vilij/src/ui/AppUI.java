@@ -1,9 +1,11 @@
 package ui;
 
 import actions.AppActions;
+import dataprocessors.AppData;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -107,7 +109,7 @@ public final class AppUI extends UITemplate {
         //This is the main compilation of all the nodes back into the workspace
         mainDataVisualization.getChildren().addAll(LHS, RHS);
         workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original workspace Pane
-        Scene scene = new Scene(workspace, 1000*1.5, 700);
+        Scene scene = new Scene(workspace, super.windowWidth, super.windowHeight);
 
         primaryStage.setTitle("Data Visualization App");
         primaryStage.setScene(scene);
@@ -116,5 +118,19 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         // TODO for homework 1
+        displayButton.setOnAction(e -> {
+            try {
+                ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
+            }
+            catch (Exception e1) {
+                Alert error = new Alert(Alert.AlertType.ERROR);                     // You should incorporate the error dialogs here instead of the generic message
+                error.setTitle("Error Dialog");
+                error.setHeaderText("Look, an Error Dialog");
+                error.setContentText("Ooops, there was an error!");
+
+                error.showAndWait();
+
+            }
+        });
     }
 }
