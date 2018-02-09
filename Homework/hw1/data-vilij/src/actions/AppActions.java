@@ -26,6 +26,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
+
     }
 
     @Override
