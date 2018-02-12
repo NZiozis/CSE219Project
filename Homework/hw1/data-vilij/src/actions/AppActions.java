@@ -2,7 +2,6 @@ package actions;
 
 import javafx.application.Platform;
 import vilij.components.ActionComponent;
-import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.IOException;

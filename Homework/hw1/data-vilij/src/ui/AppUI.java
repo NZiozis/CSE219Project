@@ -8,14 +8,18 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
+import vilij.settings.PropertyTypes;
+import settings.AppPropertyTypes;
 
 
 /**
@@ -34,6 +38,7 @@ public final class AppUI extends UITemplate {
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
+    protected String                     scrnshoticonPath;// This is the path for the scrnshoticonButton
 
     public ScatterChart<Number, Number> getChart() { return chart; }
 
@@ -45,12 +50,21 @@ public final class AppUI extends UITemplate {
     @Override
     protected void setResourcePaths(ApplicationTemplate applicationTemplate) {
         super.setResourcePaths(applicationTemplate);
+        PropertyManager manager = applicationTemplate.manager;
+
+        String SEPARATOR = "/";
+        String iconsPath = SEPARATOR + String.join(SEPARATOR,
+                manager.getPropertyValue(PropertyTypes.GUI_RESOURCE_PATH.name()),
+                manager.getPropertyValue(PropertyTypes.ICONS_RESOURCE_PATH.name()));
+        scrnshoticonPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
     }
 
     @Override
     protected void setToolBar(ApplicationTemplate applicationTemplate) {
         // TODO for homework 1
         super.setToolBar(applicationTemplate); // This is temporary until I add the screenshot button
+        scrnshotButton = setToolbarButton(scrnshoticonPath, AppPropertyTypes.SCREENSHOT_TOOLTIP.name(), true);
+        toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton, scrnshotButton);
     }
 
     @Override
@@ -61,7 +75,7 @@ public final class AppUI extends UITemplate {
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
-        // scrnshotButton.setOnAction(e -> ) // complete the screenshot button action connection here.
+        //scrnshotButton.setOnAction(e -> applicationTemplate.getActionComponent().handleScreenshotRequest()); // complete the screenshot button action connection here.
     }
 
     @Override
@@ -115,7 +129,7 @@ public final class AppUI extends UITemplate {
         primaryStage.setTitle("Data Visualization App");
         primaryStage.setScene(scene);
         primaryStage.show();
-    } // this is the completed layout that requires no changes on my end.
+    } // fix the chartTitle. You should not have to create a new label.
 
     private void setWorkspaceActions() {
         // TODO for homework 1
