@@ -30,8 +30,7 @@ public class AppData implements DataComponent {
     public void loadData(String dataString) throws Exception {
         // TODO for homework 1
             processor.processString(dataString);
-            // convert the dataString to a Chart
-            //processor.toChartData();
+            displayData();
     }
 
     @Override

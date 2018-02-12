@@ -2,8 +2,6 @@ package ui;
 
 import actions.AppActions;
 import dataprocessors.AppData;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -90,6 +88,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         textArea.clear();
+        chart.getData().clear();
     }
 
     private void layout() {
@@ -117,8 +116,8 @@ public final class AppUI extends UITemplate {
         Label dataVisualizationLabel = new Label("Data Visualization");
         centerLabel2.getChildren().add(dataVisualizationLabel); // This is done to center the text of dataVisualizationLabel
 
-        NumberAxis xAxis = new NumberAxis(0, 10, 1);
-        NumberAxis yAxis = new NumberAxis(0, 10, 1);
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
         chart = new ScatterChart<>(xAxis, yAxis);
 
         RHS.getChildren().addAll(centerLabel2, chart);
@@ -147,7 +146,6 @@ public final class AppUI extends UITemplate {
                        applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_MSG.name()) +
                                e1.getLocalizedMessage()
                );
-               clear();
             }
         });
 
