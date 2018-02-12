@@ -5,7 +5,6 @@ import dataprocessors.AppData;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -15,7 +14,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vilij.components.Dialog;
-import vilij.components.ErrorDialog;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
