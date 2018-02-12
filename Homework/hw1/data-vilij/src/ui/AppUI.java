@@ -140,9 +140,12 @@ public final class AppUI extends UITemplate {
                 ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
             }
             catch (Exception e1) {
-                Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                error.show("Error", "Invalid Input");
-                clear();
+               applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(
+                       applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_TITLE.name()),
+                       applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_MSG.name()) +
+                               e1.getLocalizedMessage()
+               );
+               clear();
             }
         });
 
