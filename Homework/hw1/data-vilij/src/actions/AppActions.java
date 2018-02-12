@@ -1,6 +1,8 @@
 package actions;
 
+import javafx.application.Platform;
 import vilij.components.ActionComponent;
+import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.IOException;
@@ -42,6 +44,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
+        Platform.exit();
     }
 
     @Override
