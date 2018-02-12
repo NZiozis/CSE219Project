@@ -146,6 +146,7 @@ public final class AppUI extends UITemplate {
                        applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_MSG.name()) +
                                e1.getLocalizedMessage()
                );
+               clear();
             }
         });
 
