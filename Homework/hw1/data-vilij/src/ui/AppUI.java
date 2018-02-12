@@ -2,6 +2,8 @@ package ui;
 
 import actions.AppActions;
 import dataprocessors.AppData;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -149,7 +151,19 @@ public final class AppUI extends UITemplate {
             }
         });
 
-
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!oldValue.equals(newValue)){
+                hasNewText = true;
+            }
+            if (hasNewText) {
+                newButton.setDisable(false);
+                saveButton.setDisable(false);
+            }
+            if (newValue.isEmpty()) {
+                newButton.setDisable(true);
+                saveButton.setDisable(true);
+            }
+        });
     }
 
 }
