@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import vilij.components.Dialog;
 import vilij.components.ErrorDialog;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
@@ -62,6 +63,7 @@ public final class AppUI extends UITemplate {
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
+        // scrnshotButton.setOnAction(e -> ) // complete the screenshot button action connection here.
     }
 
     @Override
@@ -115,18 +117,23 @@ public final class AppUI extends UITemplate {
         primaryStage.setTitle("Data Visualization App");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    } // this is the completed layout that requires no changes on my end.
 
     private void setWorkspaceActions() {
         // TODO for homework 1
+
+        // with the display button, when it is clicked it will try and load the data, if not, it will run the error message
         displayButton.setOnAction(e -> {
             try {
                 ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
             }
             catch (Exception e1) {
-                ErrorDialog error = ErrorDialog.getDialog();
-                error.show("Error", "Invalid input data");
+                Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                error.show("Error", "Invalid Input");
+                clear();
             }
         });
+
+
     }
 }
