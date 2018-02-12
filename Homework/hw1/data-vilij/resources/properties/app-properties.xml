@@ -4,6 +4,12 @@ file is only for the standard high-level controls for an application, so it does
 functionality within the main workspace. -->
 <properties>
     <property_list>
+        <!-- MY ADDITIONS -->
+        <property name="SEPARATOR" value="/"/>
+        <property name="TEXT_AREA_LABEL" value="Data File"/>
+        <property name="DISPLAY_BUTTON_LABEL" value="Display"/>
+        <property name="CHART_LABEL" value="Data Visualization"/>
+
         <!-- RESOURCE FILES AND FOLDERS -->
         <property name="DATA_RESOURCE_PATH" value="data"/>
 

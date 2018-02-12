@@ -9,6 +9,12 @@ package settings;
  */
 public enum AppPropertyTypes {
 
+    /* My additions */
+    SEPARATOR,
+    TEXT_AREA_LABEL,
+    DISPLAY_BUTTON_LABEL,
+    CHART_LABEL,
+
     /* resource files and folders */
     DATA_RESOURCE_PATH,
 

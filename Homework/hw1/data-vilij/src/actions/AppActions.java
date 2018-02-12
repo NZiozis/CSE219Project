@@ -1,7 +1,12 @@
 package actions;
 
 import javafx.application.Platform;
+import settings.AppPropertyTypes;
 import vilij.components.ActionComponent;
+import vilij.components.ConfirmationDialog;
+import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
+import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.IOException;
@@ -27,6 +32,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
+        //promptToSave();
 
     }
 
@@ -69,7 +75,15 @@ public final class AppActions implements ActionComponent {
      */
     private boolean promptToSave() throws IOException {
         // TODO for homework 1
-        // TODO remove the placeholder line below after you have implemented this method
-        return false;
+        ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
+        confirmationDialog.show(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name())
+        );
+        ConfirmationDialog.Option chosen = confirmationDialog.getSelectedOption();
+        if (chosen.equals(ConfirmationDialog.Option.CANCEL))
+            return false;
+        else
+            return true;
     }
 }

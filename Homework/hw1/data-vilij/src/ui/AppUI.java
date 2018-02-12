@@ -52,7 +52,7 @@ public final class AppUI extends UITemplate {
         super.setResourcePaths(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
 
-        String SEPARATOR = "/";
+        String SEPARATOR = manager.getPropertyValue(AppPropertyTypes.SEPARATOR.name());
         String iconsPath = SEPARATOR + String.join(SEPARATOR,
                 manager.getPropertyValue(PropertyTypes.GUI_RESOURCE_PATH.name()),
                 manager.getPropertyValue(PropertyTypes.ICONS_RESOURCE_PATH.name()));
@@ -100,11 +100,11 @@ public final class AppUI extends UITemplate {
         Pane LHS = new VBox();
 
         Pane centerLabel1 = new StackPane();
-        Label dataFileLabel = new Label("Data File");
-        centerLabel1.getChildren().add(dataFileLabel); // This is done to center the text of dataFieldLabel
+        Label textAeaLabel = new Label(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.TEXT_AREA_LABEL.name()));
+        centerLabel1.getChildren().add(textAeaLabel); // This is done to center the text of dataFieldLabel
 
         textArea = new TextArea();
-        displayButton = new Button("Display");
+        displayButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DISPLAY_BUTTON_LABEL.name()));
 
         LHS.getChildren().addAll(centerLabel1, textArea, displayButton);
 
@@ -113,7 +113,7 @@ public final class AppUI extends UITemplate {
         Pane RHS = new VBox();
 
         Pane centerLabel2 = new StackPane();
-        Label dataVisualizationLabel = new Label("Data Visualization");
+        Label dataVisualizationLabel = new Label(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CHART_LABEL.name()));
         centerLabel2.getChildren().add(dataVisualizationLabel); // This is done to center the text of dataVisualizationLabel
 
         NumberAxis xAxis = new NumberAxis();
@@ -127,7 +127,7 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original workspace Pane
         Scene scene = new Scene(workspace, super.windowWidth, super.windowHeight);
 
-        primaryStage.setTitle("Data Visualization App");
+        primaryStage.setTitle(super.applicationTitle);
         primaryStage.setScene(scene);
         primaryStage.show();
     } // fix the chartTitle. You should not have to create a new label.
@@ -150,6 +150,7 @@ public final class AppUI extends UITemplate {
             }
         });
 
+        // this is a listener that works when the textArea gets text input in it
         textArea.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals(newValue)){
                 hasNewText = true;
