@@ -1,14 +1,14 @@
 package actions;
 
 import javafx.application.Platform;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import settings.AppPropertyTypes;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
-import vilij.components.Dialog;
-import vilij.propertymanager.PropertyManager;
-import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -32,8 +32,22 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
-        //promptToSave();
-
+        if (promptToSave()) {
+            // this is what should happen if yes or no are selected
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()));
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter(
+                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
+                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name())
+                    )
+            );
+            File file = fileChooser.showSaveDialog(new Stage());
+            // now that I have this file how do I actually save it
+        }
+        else {
+            //this is what should happen otherwise
+        }
     }
 
     @Override
@@ -73,8 +87,9 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException {
+    private boolean promptToSave() /*throws IOException*/ { // why is there a throws IOException here
         // TODO for homework 1
+
         ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
         confirmationDialog.show(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
@@ -85,5 +100,6 @@ public final class AppActions implements ActionComponent {
             return false;
         else
             return true;
+
     }
 }

@@ -130,7 +130,7 @@ public final class AppUI extends UITemplate {
         primaryStage.setTitle(super.applicationTitle);
         primaryStage.setScene(scene);
         primaryStage.show();
-    } // fix the chartTitle. You should not have to create a new label.
+    }
 
     private void setWorkspaceActions() {
         // TODO for homework 1
