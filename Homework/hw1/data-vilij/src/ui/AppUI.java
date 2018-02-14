@@ -62,7 +62,7 @@ public final class AppUI extends UITemplate {
     @Override
     protected void setToolBar(ApplicationTemplate applicationTemplate) {
         // TODO for homework 1
-        super.setToolBar(applicationTemplate); // This is temporary until I add the screenshot button
+        super.setToolBar(applicationTemplate);
         scrnshotButton = setToolbarButton(scrnshoticonPath, AppPropertyTypes.SCREENSHOT_TOOLTIP.name(), true);
         toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton, scrnshotButton);
     }
@@ -89,6 +89,10 @@ public final class AppUI extends UITemplate {
         // TODO for homework 1
         textArea.clear();
         chart.getData().clear();
+    }
+
+    public String getText(){
+        return textArea.getText();
     }
 
     private void layout() {
@@ -138,13 +142,16 @@ public final class AppUI extends UITemplate {
         // with the display button, when it is clicked it will try and load the data, if not, it will run the error message
         displayButton.setOnAction(e -> {
             try {
+                if (!(chart.getData().isEmpty()))
+                    chart.getData().clear();
+
                 ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
             }
             catch (Exception e1) {
                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(
                        applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_TITLE.name()),
                        applicationTemplate.manager.getPropertyValue(PropertyTypes.LOAD_ERROR_MSG.name()) +
-                               e1.getLocalizedMessage()
+                               applicationTemplate.manager.getPropertyValue(AppPropertyTypes.TEXT_AREA.name())
                );
                clear();
             }

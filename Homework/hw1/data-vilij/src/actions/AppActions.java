@@ -2,13 +2,16 @@ package actions;
 
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import settings.AppPropertyTypes;
+import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
+import vilij.components.Dialog;
+import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -32,22 +35,14 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
-        if (promptToSave()) {
-            // this is what should happen if yes or no are selected
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()));
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter(
-                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
-                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name())
-                    )
-            );
-            File file = fileChooser.showSaveDialog(new Stage());
-            // now that I have this file how do I actually save it
+        try {
+            if (promptToSave())
+                    (applicationTemplate.getUIComponent()).clear();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else {
-            //this is what should happen otherwise
-        }
+
     }
 
     @Override
@@ -87,7 +82,7 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() /*throws IOException*/ { // why is there a throws IOException here
+    private boolean promptToSave() throws IOException { // why is there a throws IOException here
         // TODO for homework 1
 
         ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
@@ -96,10 +91,38 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name())
         );
         ConfirmationDialog.Option chosen = confirmationDialog.getSelectedOption();
-        if (chosen.equals(ConfirmationDialog.Option.CANCEL))
-            return false;
-        else
-            return true;
 
+        if (chosen.equals(ConfirmationDialog.Option.YES)) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()));
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter(
+                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
+                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name())
+                    )
+            );
+
+            try {
+                fileChooser.setInitialDirectory(
+                        new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()))
+                );
+            }
+            catch (Exception e){
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(
+                        applicationTemplate.manager.getPropertyValue(PropertyTypes.SAVE_ERROR_TITLE.name()),
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name())
+                );
+            }
+
+            File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(((AppUI)(applicationTemplate.getUIComponent())).getText());
+            fileWriter.close();
+
+
+            }
+
+        return !(chosen.equals(ConfirmationDialog.Option.CANCEL));
     }
 }
