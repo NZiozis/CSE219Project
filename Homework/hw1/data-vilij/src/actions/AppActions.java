@@ -39,8 +39,13 @@ public final class AppActions implements ActionComponent {
             if (promptToSave())
                     (applicationTemplate.getUIComponent()).clear();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (IOException e) {
+            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(
+                    applicationTemplate.manager.getPropertyValue(PropertyTypes.SAVE_ERROR_TITLE.name()),
+                    applicationTemplate.manager.getPropertyValue(PropertyTypes.SAVE_ERROR_MSG.name())
+                    + applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SPECIFIED_FILE.name())
+            );
         }
 
     }
@@ -82,7 +87,7 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException { // why is there a throws IOException here
+    private boolean promptToSave() throws IOException {
         // TODO for homework 1
 
         ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
