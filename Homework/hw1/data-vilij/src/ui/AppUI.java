@@ -134,7 +134,7 @@ public final class AppUI extends UITemplate {
         primaryStage.setTitle(super.applicationTitle);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    } // try using AppPane here
 
     private void setWorkspaceActions() {
         // TODO for homework 1
