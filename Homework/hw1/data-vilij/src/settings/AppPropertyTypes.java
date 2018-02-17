@@ -14,6 +14,7 @@ public enum AppPropertyTypes {
     TEXT_AREA_LABEL,
     DISPLAY_BUTTON_LABEL,
     CHART_LABEL,
+    EXIT_DIALOG,
 
     /* resource files and folders */
     DATA_RESOURCE_PATH,

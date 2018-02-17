@@ -63,7 +63,13 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
-        Platform.exit();
+        ConfirmationDialog exitDialog = ConfirmationDialog.getDialog();
+        exitDialog.show(
+                applicationTemplate.manager.getPropertyValue(PropertyTypes.EXIT_TOOLTIP.name()),
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EXIT_DIALOG.name())
+
+        );
+        if (exitDialog.getSelectedOption().equals(ConfirmationDialog.Option.YES)) Platform.exit();
     }
 
     @Override

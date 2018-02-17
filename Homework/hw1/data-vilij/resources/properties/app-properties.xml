@@ -9,6 +9,7 @@ functionality within the main workspace. -->
         <property name="TEXT_AREA_LABEL" value="Data File"/>
         <property name="DISPLAY_BUTTON_LABEL" value="Display"/>
         <property name="CHART_LABEL" value="Data Visualization"/>
+        <property name="EXIT_DIALOG" value="Are you sure you want to exit?"/>
 
         <!-- RESOURCE FILES AND FOLDERS -->
         <property name="DATA_RESOURCE_PATH" value="data-vilij/resources/data"/>
