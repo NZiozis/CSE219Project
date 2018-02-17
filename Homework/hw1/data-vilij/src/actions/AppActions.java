@@ -93,7 +93,7 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException { //This is like this because we haven't implemented the screenshot save
+    private boolean promptToSave() throws IOException {
         // TODO for homework 1
 
         ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
