@@ -129,7 +129,7 @@ public final class AppActions implements ActionComponent {
                         applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name())
                 );
             }
-            fileChooser.setInitialFileName("Untitled.tsd");
+            fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DEFAULT_FILE_NAME.name()));
             File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
 
             try {

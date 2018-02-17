@@ -15,6 +15,7 @@ public enum AppPropertyTypes {
     DISPLAY_BUTTON_LABEL,
     CHART_LABEL,
     EXIT_DIALOG,
+    DEFAULT_FILE_NAME,
 
     /* resource files and folders */
     DATA_RESOURCE_PATH,
