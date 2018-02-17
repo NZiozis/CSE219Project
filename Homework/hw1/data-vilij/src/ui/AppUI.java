@@ -132,7 +132,7 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().addAll(toolBar, mainDataVisualization); // this adds all the created nodes back into the original workspace Pane
         Scene scene = new Scene(workspace, super.windowWidth, super.windowHeight);
 
-        primaryStage.setTitle(super.applicationTitle);
+        primaryStage.setTitle(super.getTitle());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
