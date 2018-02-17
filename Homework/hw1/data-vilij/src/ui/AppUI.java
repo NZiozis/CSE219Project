@@ -88,6 +88,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         textArea.clear();
+        applicationTemplate.getDataComponent().clear();
         chart.getData().clear();
     }
 
@@ -142,9 +143,10 @@ public final class AppUI extends UITemplate {
         // with the display button, when it is clicked it will try and load the data, if not, it will run the error message
         displayButton.setOnAction(e -> {
             try {
-                if (!(chart.getData().isEmpty()))
+                if (!(chart.getData().isEmpty())) {
+                    applicationTemplate.getDataComponent().clear();
                     chart.getData().clear();
-
+                }
                 ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
             }
             catch (Exception e1) {

@@ -101,7 +101,12 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name())
         );
+
         ConfirmationDialog.Option chosen = confirmationDialog.getSelectedOption();
+
+        if (chosen == null)
+            chosen = ConfirmationDialog.Option.CANCEL;
+
 
         if (chosen.equals(ConfirmationDialog.Option.YES)) {
             FileChooser fileChooser = new FileChooser();
