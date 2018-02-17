@@ -87,7 +87,7 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException {
+    private boolean promptToSave() throws IOException { //This is like this because we haven't implemented the screenshot save
         // TODO for homework 1
 
         ConfirmationDialog confirmationDialog = ConfirmationDialog.getDialog();
@@ -118,15 +118,19 @@ public final class AppActions implements ActionComponent {
                         applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name())
                 );
             }
-
+            fileChooser.setInitialFileName("Untitled.tsd");
             File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
 
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(((AppUI)(applicationTemplate.getUIComponent())).getText());
-            fileWriter.close();
-
-
+            try {
+                FileWriter fileWriter = new FileWriter(file);
+                fileWriter.write(((AppUI) (applicationTemplate.getUIComponent())).getText());
+                fileWriter.close();
             }
+            catch (Exception ignored){
+                //The reason why this is here is so that hitting cancel won't throw an error
+            }
+
+        }
 
         return !(chosen.equals(ConfirmationDialog.Option.CANCEL));
     }
