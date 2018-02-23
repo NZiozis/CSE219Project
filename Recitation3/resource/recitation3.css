@@ -1,0 +1,6 @@
+.text-area:disabled {
+    -fx-background-color: ghostwhite;
+    -fx-text-fill: slategrey;
+    -fx-opacity: 1;
+    -fx-font-family: monospace;
+}
