@@ -21,8 +21,13 @@ public class Main extends Application {
 
         lineChart.setTitle("Stock Monitoring, 2010");
 
+
+        //Beginning of series 1
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         series.setName("My portfolio1");
+
+        if (series.getData() == null)
+            throw new Exception();
 
         series.getData().add(new XYChart.Data<>(1, 23));
         series.getData().add(new XYChart.Data<>(2, 14));
@@ -38,7 +43,7 @@ public class Main extends Application {
         series.getData().add(new XYChart.Data<>(12, 25));
 
 
-
+        // Beginning of series 2
         XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
         series2.setName("Portfolio 2");
         series2.getData().add(new XYChart.Data<>(1, 33));
@@ -54,16 +59,17 @@ public class Main extends Application {
         series2.getData().add(new XYChart.Data<>(11, 37));
         series2.getData().add(new XYChart.Data<>(12, 29));
 
+
+        // Beginning of series 3
         XYChart.Series<Number,Number> series3 = new XYChart.Series<>();
         series3.setName("Portfolio 3");
-        int counter = 0;
-        while (counter < 12){
-            series3.getData().add(new XYChart.Data<>(
-                    counter+1,
-                    ((series.getData().get(counter).getYValue()).intValue() +
-                            (series2.getData().get(counter).getYValue()).intValue())));
 
-            counter++;
+        for (int counter = 0; counter < 12; counter++ ){
+            series3.getData().add(new XYChart.Data<>(
+                    series.getData().get(counter).getXValue(),
+                    ((series.getData().get(counter).getYValue()).intValue() +
+                            (series2.getData().get(counter).getYValue()).intValue())
+            ));
         }
 
 
