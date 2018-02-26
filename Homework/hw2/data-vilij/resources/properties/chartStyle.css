@@ -1,0 +1,45 @@
+.toolbar-button {
+    -fx-pref-width: 36px;
+    -fx-pref-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-background-color: transparent;
+}
+
+.chart {
+    -fx-padding: 10px;
+}
+.chart-content {
+    -fx-padding: 30px;
+}
+
+.chart-plot-background {
+    -fx-border-color: black;
+    -fx-border-style: solid;
+    -fx-border-width: 4px;
+    -fx-background-color: white;
+}
+
+.chart-horizontal-grid-lines{
+    -fx-stroke: transparent;
+}
+
+.chart-vertical-grid-lines{
+    -fx-stroke: transparent;
+}
+
+.axis {
+    -fx-tick-label-fill: #914800;
+    -fx-tick-length: 20;
+    -fx-minor-tick-length: 10;
+}
+
+.axis-tick-mark {
+    -fx-stroke: green;
+    -fx-stroke-width: 3;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: black;
+}
