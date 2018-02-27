@@ -1,16 +1,7 @@
-.toolbar-button {
-    -fx-pref-width: 36px;
-    -fx-pref-height: 36px;
-    -fx-max-width: 36px;
-    -fx-max-height: 36px;
-    -fx-min-width: 36px;
-    -fx-min-height: 36px;
-    -fx-background-color: transparent;
-}
-
 .chart {
     -fx-padding: 10px;
 }
+
 .chart-content {
     -fx-padding: 30px;
 }

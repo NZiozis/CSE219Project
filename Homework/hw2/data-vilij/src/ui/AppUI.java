@@ -3,22 +3,30 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import settings.AppPropertyTypes;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
+
+import java.util.Set;
 
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
@@ -97,8 +105,10 @@ public final class AppUI extends UITemplate {
 
     private void layout() {
         PropertyManager manager = applicationTemplate.manager;
-        NumberAxis      xAxis   = new NumberAxis();
-        NumberAxis      yAxis   = new NumberAxis();
+
+
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
         chart = new LineChart<>(xAxis, yAxis);
         chart.setTitle(manager.getPropertyValue(AppPropertyTypes.CHART_TITLE.name()));
 
@@ -173,6 +183,8 @@ public final class AppUI extends UITemplate {
                     dataComponent.clear();
                     dataComponent.loadData(textArea.getText());
                     dataComponent.displayData();
+                    addTooltips();
+                    createAverageLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -180,4 +192,39 @@ public final class AppUI extends UITemplate {
             }
         });
     }
+
+    private void addTooltips(){
+        for (int i = 0; i < chart.getData().size(); i++) {
+            for (XYChart.Data<Number, Number> data : chart.getData().get(i).getData()) {
+                Node node = data.getNode();
+                node.setCursor(Cursor.HAND);
+                Tooltip t = new Tooltip(data.getExtraValue().toString());
+                t.setAnchorLocation(PopupWindow.AnchorLocation.CONTENT_BOTTOM_RIGHT);
+                Tooltip.install(node, t);
+            }
+        }
+    }
+
+    private void createAverageLine(){
+        double totalY = 0;
+        int maxX = 0;
+        int minX = 0;
+
+        for (int i = 0; i < chart.getData().size(); i++){
+            for (XYChart.Data<Number, Number> data : chart.getData().get(i).getData()) {
+                totalY += data.getYValue().intValue();
+                if (data.getXValue().intValue() > maxX) maxX = data.getXValue().intValue();
+                if (data.getXValue().intValue() < minX) minX = data.getXValue().intValue();
+            }
+        }
+
+        double avgY = totalY / chart.getData().size();
+
+        XYChart.Series<Number,Number> seriesAvg = new XYChart.Series<>();
+        seriesAvg.getData().add(new XYChart.Data<>(minX, avgY));
+        seriesAvg.getData().add(new XYChart.Data<>(maxX, avgY));
+        seriesAvg.setName("Average of Y-Values");
+        chart.getData().add(seriesAvg);
+    }
+
 }

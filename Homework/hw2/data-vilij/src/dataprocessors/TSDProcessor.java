@@ -77,7 +77,7 @@ public final class TSDProcessor {
             series.setName(label);
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+                series.getData().add(new XYChart.Data<>(point.getX(), point.getY(), series.getName()));
             });
             chart.getData().add(series);
         }
