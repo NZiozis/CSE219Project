@@ -185,6 +185,10 @@ public final class AppUI extends UITemplate {
                     dataComponent.displayData();
                     addTooltips();
                     createAverageLine();
+                    for (XYChart.Data<Number,Number> data : chart.getData().get(chart.getData().size()-1).getData()){
+                        StackPane node = (StackPane)data.getNode();
+                        node.setVisible(false);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
