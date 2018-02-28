@@ -10,6 +10,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
@@ -45,7 +46,9 @@ public final class AppUI extends UITemplate {
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
+    private CheckBox                     checkBox;       // when toggled this determines the Read Only mode
     private String                       CSS_RESOURCE_PATH; // this is the css for the application
+
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -127,7 +130,8 @@ public final class AppUI extends UITemplate {
         HBox processButtonsBox = new HBox();
         displayButton = new Button(manager.getPropertyValue(AppPropertyTypes.DISPLAY_BUTTON_TEXT.name()));
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
-        processButtonsBox.getChildren().add(displayButton);
+        checkBox = new CheckBox(manager.getPropertyValue(AppPropertyTypes.CHECKBOX_TEXT.name()));
+        processButtonsBox.getChildren().addAll(displayButton, checkBox);
 
         leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox);
 
@@ -147,6 +151,7 @@ public final class AppUI extends UITemplate {
     private void setWorkspaceActions() {
         setTextAreaActions();
         setDisplayButtonActions();
+        setCheckboxActions();
     }
 
     private void setTextAreaActions() {
@@ -226,6 +231,17 @@ public final class AppUI extends UITemplate {
         seriesAvg.getData().add(new XYChart.Data<>(maxX, avgY));
         seriesAvg.setName("Average of Y-Values");
         chart.getData().add(seriesAvg);
+    }
+
+    private void setCheckboxActions(){
+        checkBox.setOnAction(e -> {
+            if (checkBox.isSelected())
+                textArea.setDisable(true);
+            else
+                textArea.setDisable(false);
+        });
+
+
     }
 
 }
