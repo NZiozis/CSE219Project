@@ -21,6 +21,14 @@
     -fx-stroke: transparent;
 }
 
+.chart-vertical-zero-line{
+    -fx-stroke: transparent;
+}
+
+.chart-horizontal-zero-line{
+    -fx-stroke: transparent;
+}
+
 .axis {
     -fx-tick-label-fill: #914800;
     -fx-tick-length: 20;

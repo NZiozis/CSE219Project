@@ -130,8 +130,10 @@ public final class AppUI extends UITemplate {
         HBox processButtonsBox = new HBox();
         displayButton = new Button(manager.getPropertyValue(AppPropertyTypes.DISPLAY_BUTTON_TEXT.name()));
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
+        StackPane centerCheckbox = new StackPane();
         checkBox = new CheckBox(manager.getPropertyValue(AppPropertyTypes.CHECKBOX_TEXT.name()));
-        processButtonsBox.getChildren().addAll(displayButton, checkBox);
+        centerCheckbox.getChildren().add(checkBox);
+        processButtonsBox.getChildren().addAll(displayButton, centerCheckbox);
 
         leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox);
 
@@ -152,6 +154,7 @@ public final class AppUI extends UITemplate {
         setTextAreaActions();
         setDisplayButtonActions();
         setCheckboxActions();
+        setChartActions();
     }
 
     private void setTextAreaActions() {
@@ -199,6 +202,35 @@ public final class AppUI extends UITemplate {
         });
     }
 
+    private void setCheckboxActions(){
+        checkBox.setOnAction(e -> {
+            if (checkBox.isSelected())
+                textArea.setDisable(true);
+            else
+                textArea.setDisable(false);
+        });
+
+
+    }
+
+
+    // TODO
+    // This is the section I am working on now. The goal is to disable the screenshot button when the chart is empty. Otherwise it should be able to be selected.
+    private void setChartActions(){
+        chart.dataProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()){
+                    scrnshotButton.setDisable(true);
+                }
+                else
+                    scrnshotButton.setDisable(false);
+            } catch (IndexOutOfBoundsException e) {
+                System.err.println(newValue);
+            }
+        });
+
+    }
+
     private void addTooltips(){
         for (int i = 0; i < chart.getData().size(); i++) {
             for (XYChart.Data<Number, Number> data : chart.getData().get(i).getData()) {
@@ -231,17 +263,6 @@ public final class AppUI extends UITemplate {
         seriesAvg.getData().add(new XYChart.Data<>(maxX, avgY));
         seriesAvg.setName("Average of Y-Values");
         chart.getData().add(seriesAvg);
-    }
-
-    private void setCheckboxActions(){
-        checkBox.setOnAction(e -> {
-            if (checkBox.isSelected())
-                textArea.setDisable(true);
-            else
-                textArea.setDisable(false);
-        });
-
-
     }
 
 }
