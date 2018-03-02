@@ -21,9 +21,11 @@ public enum AppPropertyTypes {
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
+    SCREENSHOT_ERROR_MESSAGE,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
+    SCREENSHOT_ERROR_TITLE,
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
