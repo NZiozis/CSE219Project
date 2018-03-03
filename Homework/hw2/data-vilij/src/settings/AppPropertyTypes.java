@@ -33,6 +33,10 @@ public enum AppPropertyTypes {
     /* application-specific parameters */
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
+    DATA_FILE_INITIAL,
+    SCRNSHT_INITIAL,
+    SCRNSHT_FILE_EXT,
+    SCRNSHT_FILE_DESC,
     TEXT_AREA,
     SPECIFIED_FILE,
     LEFT_PANE_TITLE,

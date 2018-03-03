@@ -1,9 +1,15 @@
 package actions;
 
+import com.sun.corba.se.spi.ior.Writeable;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
+import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import settings.AppPropertyTypes;
+import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
 import vilij.components.Dialog;
@@ -12,6 +18,7 @@ import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -81,6 +88,30 @@ public final class AppActions implements ActionComponent {
 
     public void handleScreenshotRequest() throws IOException {
         // TODO: NOT A PART OF HW 1
+        PropertyManager manager = applicationTemplate.manager;
+        LineChart<Number,Number> chart = ((AppUI)applicationTemplate.getUIComponent()).getChart();
+        WritableImage image = chart.snapshot(new SnapshotParameters(), null);
+
+        FileChooser fileChooser = new FileChooser();
+        String      dataDirPath = SEPARATOR + manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name());
+        URL         dataDirURL  = getClass().getResource(dataDirPath);
+
+        if (dataDirURL == null)
+            throw new FileNotFoundException(manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+
+        fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
+        fileChooser.setTitle(manager.getPropertyValue(SAVE_WORK_TITLE.name()));
+        String description = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_DESC.name());
+        String extension   = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name());
+        ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+                String.format("*.%s", extension));
+
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.SCRNSHT_INITIAL.name()));
+        File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+
+        if (selected != null)
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), AppPropertyTypes.SCRNSHT_FILE_EXT.name(), selected);
     }
 
     /**
@@ -121,6 +152,7 @@ public final class AppActions implements ActionComponent {
                                                                 String.format("*.%s", extension));
 
                 fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.DATA_FILE_INITIAL.name()));
                 File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
                 if (selected != null) {
                     dataFilePath = selected.toPath();

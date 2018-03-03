@@ -32,6 +32,10 @@ functionality within the main workspace. -->
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
+        <property name="DATA_FILE_INITIAL" value="Untitled.tsd"/>
+        <property name="SCRNSHT_INITIAL" value="Untitled.png"/>
+        <property name="SCRNSHT_FILE_EXT" value=".png"/>
+        <property name="SCRNSHT_FILE_DESC" value="PNG"/>
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
         <property name="LEFT_PANE_TITLE" value="Data File"/>

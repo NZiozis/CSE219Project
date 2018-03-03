@@ -263,8 +263,8 @@ public final class AppUI extends UITemplate {
         int maxX = 0;
         int minX = 0;
 
-        for (int i = 0; i < chart.getData().size(); i++){
-            for (XYChart.Data<Number, Number> data : chart.getData().get(i).getData()) {
+        for (XYChart.Series<Number,Number> series : chart.getData()){
+            for (XYChart.Data<Number,Number> data: series.getData()){
                 totalY += data.getYValue().intValue();
                 if (data.getXValue().intValue() > maxX) maxX = data.getXValue().intValue();
                 if (data.getXValue().intValue() < minX) minX = data.getXValue().intValue();
