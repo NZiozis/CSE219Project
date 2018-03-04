@@ -1,6 +1,5 @@
 package actions;
 
-import com.sun.corba.se.spi.ior.Writeable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -51,6 +50,8 @@ public final class AppActions implements ActionComponent {
 
     public void setIsUnsavedProperty(boolean property) { isUnsaved.set(property); }
 
+    public SimpleBooleanProperty getIsUnsaved() { return isUnsaved; }
+
     @Override
     public void handleNewRequest() {
         try {
@@ -66,6 +67,12 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
+        try {
+            if (!isUnsaved.get() || promptToSave()) {
+                isUnsaved.set(false);
+            }
+        }
+        catch (IOException e) { errorHandlingHelper(); }
     }
 
     @Override
@@ -87,7 +94,6 @@ public final class AppActions implements ActionComponent {
     }
 
     public void handleScreenshotRequest() throws IOException {
-        // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
         LineChart<Number,Number> chart = ((AppUI)applicationTemplate.getUIComponent()).getChart();
         WritableImage image = chart.snapshot(new SnapshotParameters(), null);

@@ -86,7 +86,11 @@ public final class AppUI extends UITemplate {
     protected void setToolbarHandlers(ApplicationTemplate applicationTemplate) {
         applicationTemplate.setActionComponent(new AppActions(applicationTemplate));
         newButton.setOnAction(e -> applicationTemplate.getActionComponent().handleNewRequest());
-        saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
+        saveButton.setOnAction(e -> {
+                    applicationTemplate.getActionComponent().handleSaveRequest();
+                    saveButton.setDisable(true);
+                }
+        );
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
@@ -118,9 +122,11 @@ public final class AppUI extends UITemplate {
 
     public String getCurrentText() { return textArea.getText(); }
 
+    public void setCurrentText(String text){ textArea.setText(text); }
+
+
     private void layout() {
         PropertyManager manager = applicationTemplate.manager;
-
 
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -224,8 +230,6 @@ public final class AppUI extends UITemplate {
             else
                 textArea.setDisable(false);
         });
-
-
     }
 
     private void addTooltips(){
