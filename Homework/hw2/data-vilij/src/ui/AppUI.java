@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.PopupWindow;
@@ -113,6 +114,7 @@ public final class AppUI extends UITemplate {
     public void initialize() {
         layout();
         setWorkspaceActions();
+        appPane.getStylesheets().add(CSS_RESOURCE_PATH); // This is where I add the css sheet
     }
 
     @Override
@@ -169,7 +171,6 @@ public final class AppUI extends UITemplate {
         HBox.setHgrow(workspace, Priority.ALWAYS);
 
         appPane.getChildren().add(workspace);
-        appPane.getStylesheets().add(CSS_RESOURCE_PATH); // This is where I add the css sheet
         VBox.setVgrow(appPane, Priority.ALWAYS);
     }
 
@@ -211,13 +212,10 @@ public final class AppUI extends UITemplate {
                     dataComponent.loadData(textArea.getText());
                     dataComponent.displayData();
                     addTooltips();
-                    createAverageLine();
-                    for (XYChart.Data<Number,Number> data : chart.getData().get(chart.getData().size()-1).getData()){
+                    for (XYChart.Data<Number,Number> data : chart.getData().get(0).getData()){
                         StackPane node = (StackPane)data.getNode();
                         node.setVisible(false);
                     }
-
-
                     scrnshotButton.setDisable(false);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -237,7 +235,7 @@ public final class AppUI extends UITemplate {
     }
 
     private void addTooltips(){
-        for (int i = 0; i < chart.getData().size(); i++) {
+        for (int i = 1; i < chart.getData().size(); i++) {
             for (XYChart.Data<Number, Number> data : chart.getData().get(i).getData()) {
                 Node node = data.getNode();
                 node.setCursor(Cursor.HAND);
@@ -246,30 +244,6 @@ public final class AppUI extends UITemplate {
                 Tooltip.install(node, t);
             }
         }
-    }
-
-    private void createAverageLine(){
-        double totalY = 0;
-        int numberOfY = 0;
-        int maxX = 0;
-        int minX = 0;
-
-        for (XYChart.Series<Number,Number> series : chart.getData()){
-            for (XYChart.Data<Number,Number> data: series.getData()){
-                totalY += data.getYValue().intValue();
-                numberOfY++;
-                if (data.getXValue().intValue() > maxX) maxX = data.getXValue().intValue();
-                if (data.getXValue().intValue() < minX) minX = data.getXValue().intValue();
-            }
-        }
-
-        double avgY = totalY / numberOfY;
-
-        XYChart.Series<Number,Number> seriesAvg = new XYChart.Series<>();
-        seriesAvg.getData().add(new XYChart.Data<>(minX, avgY));
-        seriesAvg.getData().add(new XYChart.Data<>(maxX, avgY));
-        seriesAvg.setName("Average of Y-Values");
-        chart.getData().add(seriesAvg);
     }
 
 }

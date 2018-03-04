@@ -46,5 +46,5 @@ public enum AppPropertyTypes {
     LEFT_PANE_TITLESIZE,
     CHART_TITLE,
     DISPLAY_BUTTON_TEXT,
-    CHECKBOX_TEXT
+    CHECKBOX_TEXT,
 }

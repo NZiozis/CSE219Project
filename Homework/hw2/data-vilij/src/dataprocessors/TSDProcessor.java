@@ -5,6 +5,8 @@ import javafx.scene.chart.XYChart;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 /**
@@ -72,6 +74,7 @@ public final class TSDProcessor {
      */
     void toChartData(XYChart<Number, Number> chart) {
         Set<String> labels = new HashSet<>(dataLabels.values());
+        ArrayList<XYChart.Series<Number,Number>> arrayList = new ArrayList<>();
         for (String label : labels) {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
@@ -79,8 +82,33 @@ public final class TSDProcessor {
                 Point2D point = dataPoints.get(entry.getKey());
                 series.getData().add(new XYChart.Data<>(point.getX(), point.getY(), entry.getKey().substring(1)));
             });
-            chart.getData().add(series);
+            arrayList.add(series);
         }
+        createAverageLine(arrayList, chart);
+        arrayList.forEach(numberNumberSeries -> chart.getData().add(numberNumberSeries));
+    }
+
+    private void createAverageLine(ArrayList<XYChart.Series<Number,Number>> arrayList, XYChart<Number,Number> chart){
+        AtomicReference<Double> totalY = new AtomicReference<>((double) 0);
+        AtomicInteger numberOfY = new AtomicInteger();
+        AtomicInteger maxX = new AtomicInteger();
+        AtomicInteger minX = new AtomicInteger();
+
+        arrayList.forEach(numberNumberSeries -> {
+            for (XYChart.Data<Number, Number> data : numberNumberSeries.getData()) {
+                totalY.updateAndGet(v -> v + data.getYValue().intValue());
+                numberOfY.getAndIncrement();
+                if (data.getXValue().intValue() > maxX.get()) maxX.set(data.getXValue().intValue());
+                if (data.getXValue().intValue() < minX.get()) minX.set(data.getXValue().intValue());
+            }
+        });
+        double avgY = totalY.get() / numberOfY.get();
+
+        XYChart.Series<Number,Number> seriesAvg = new XYChart.Series<>();
+        seriesAvg.getData().add(new XYChart.Data<>(minX, avgY));
+        seriesAvg.getData().add(new XYChart.Data<>(maxX, avgY));
+        seriesAvg.setName("Average of Y values");
+        chart.getData().add(0, seriesAvg);
     }
 
     void clear() {
