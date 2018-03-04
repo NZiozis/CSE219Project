@@ -78,8 +78,7 @@ public final class AppUI extends UITemplate {
                                               iconsPath,
                                               manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
         scrnshotButton = setToolbarButton(scrnshoticonPath,
-                                          manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
-                                          true);
+                                          manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()), true);
         toolBar.getItems().add(scrnshotButton);
     }
 
@@ -114,6 +113,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         textArea.clear();
         chart.getData().clear();
+        scrnshotButton.setDisable(true);
     }
 
     public String getCurrentText() { return textArea.getText(); }
@@ -169,7 +169,6 @@ public final class AppUI extends UITemplate {
         setTextAreaActions();
         setDisplayButtonActions();
         setCheckboxActions();
-        setChartActions();
     }
 
     private void setTextAreaActions() {
@@ -209,6 +208,7 @@ public final class AppUI extends UITemplate {
                         StackPane node = (StackPane)data.getNode();
                         node.setVisible(false);
                     }
+                    scrnshotButton.setDisable(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -217,7 +217,7 @@ public final class AppUI extends UITemplate {
         });
     }
 
-    private void setCheckboxActions(){
+    private void setCheckboxActions() {
         checkBox.setOnAction(e -> {
             if (checkBox.isSelected())
                 textArea.setDisable(true);
@@ -225,24 +225,6 @@ public final class AppUI extends UITemplate {
                 textArea.setDisable(false);
         });
 
-
-    }
-
-
-    // TODO
-    // This is the section I am working on now. The goal is to disable the screenshot button when the chart is empty. Otherwise it should be able to be selected.
-    private void setChartActions(){
-        chart.dataProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                if (newValue.isEmpty()){
-                    scrnshotButton.setDisable(true);
-                }
-                else
-                    scrnshotButton.setDisable(false);
-            } catch (IndexOutOfBoundsException e) {
-                System.err.println(newValue);
-            }
-        });
 
     }
 
