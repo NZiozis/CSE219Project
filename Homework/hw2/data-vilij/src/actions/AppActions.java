@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
@@ -45,6 +46,9 @@ public final class AppActions implements ActionComponent {
 
     /** The boolean property marking whether or not there are any unsaved changes. */
     SimpleBooleanProperty isUnsaved;
+
+    /** This will contain the contents that are currently being loaded in */
+    ArrayList<String> arrayList = new ArrayList<>();
 
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
@@ -208,9 +212,17 @@ public final class AppActions implements ActionComponent {
             if (selected != null) {
                 Scanner s = new Scanner(new File(selected.toPath().toString())).useDelimiter("\n");
                 while (s.hasNextLine()) {
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextArea().appendText(s.nextLine() + "\n");
+                    arrayList.add(s.nextLine() + "\n");
                 }
-                load();
+                if (indexOfErrorOrDuplicates(arrayList).get_key() != -1){
+                    // load the file into the textArea
+                    dataFilePath = selected.toPath();
+                    load();
+                }
+                else {
+                    // create an error dialog that tells the person the index of the error and the content of that error.
+                }
+
             }
             else return false; // if user presses escape after initially selecting 'yes'
         }
@@ -235,5 +247,31 @@ public final class AppActions implements ActionComponent {
         String          errMsg   = manager.getPropertyValue(PropertyTypes.SAVE_ERROR_MSG.name());
         String          errInput = manager.getPropertyValue(AppPropertyTypes.SPECIFIED_FILE.name());
         dialog.show(errTitle, errMsg + errInput);
+    }
+
+    /** This returns the index of an error if there is. If not, the Tuple.get_key() == -1 */
+    private Tuple<Integer, String> indexOfErrorOrDuplicates(ArrayList<String> arrayList){
+        Tuple<Integer,String> tuple = new Tuple<>(-1, "");
+
+
+
+        return tuple;
+    }
+
+    private class Tuple<T, T1> {
+        T _key;
+        T1 _value;
+
+        public Tuple(T key,T1 value){
+            _key = key;
+            _value = value;
+        }
+
+        public void set_key(T _key) { this._key = _key; }
+        public void set_value(T1 _value) { this._value = _value; }
+
+        public T get_key() { return _key; }
+
+        public T1 get_value() { return _value; }
     }
 }

@@ -216,6 +216,8 @@ public final class AppUI extends UITemplate {
                         StackPane node = (StackPane)data.getNode();
                         node.setVisible(false);
                     }
+
+
                     scrnshotButton.setDisable(false);
                 } catch (Exception e) {
                     e.printStackTrace();

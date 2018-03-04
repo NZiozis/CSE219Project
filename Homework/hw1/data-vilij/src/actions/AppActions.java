@@ -114,7 +114,7 @@ public final class AppActions implements ActionComponent {
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter(
                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
-                            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name())
+                            applicationTemplate.manager.getPropertyValue (AppPropertyTypes.DATA_FILE_EXT.name())
                     )
             );
 
