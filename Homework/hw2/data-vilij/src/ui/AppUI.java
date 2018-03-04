@@ -250,18 +250,20 @@ public final class AppUI extends UITemplate {
 
     private void createAverageLine(){
         double totalY = 0;
+        int numberOfY = 0;
         int maxX = 0;
         int minX = 0;
 
         for (XYChart.Series<Number,Number> series : chart.getData()){
             for (XYChart.Data<Number,Number> data: series.getData()){
                 totalY += data.getYValue().intValue();
+                numberOfY++;
                 if (data.getXValue().intValue() > maxX) maxX = data.getXValue().intValue();
                 if (data.getXValue().intValue() < minX) minX = data.getXValue().intValue();
             }
         }
 
-        double avgY = totalY / chart.getData().size();
+        double avgY = totalY / numberOfY;
 
         XYChart.Series<Number,Number> seriesAvg = new XYChart.Series<>();
         seriesAvg.getData().add(new XYChart.Data<>(minX, avgY));
