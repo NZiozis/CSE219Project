@@ -1,5 +1,7 @@
 package actions;
 
+import com.sun.javafx.iio.ios.IosDescriptor;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -23,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -50,8 +53,6 @@ public final class AppActions implements ActionComponent {
 
     public void setIsUnsavedProperty(boolean property) { isUnsaved.set(property); }
 
-    public SimpleBooleanProperty getIsUnsaved() { return isUnsaved; }
-
     @Override
     public void handleNewRequest() {
         try {
@@ -78,6 +79,11 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleLoadRequest() {
         // TODO: NOT A PART OF HW 1
+        try {
+            if (promptToLoad())
+                isUnsaved.set(false);
+        }
+        catch (IOException e) {errorHandlingHelper();}
     }
 
     @Override
@@ -131,6 +137,7 @@ public final class AppActions implements ActionComponent {
      * </ol>
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
+
      */
     private boolean promptToSave() throws IOException {
         PropertyManager    manager = applicationTemplate.manager;
@@ -171,8 +178,51 @@ public final class AppActions implements ActionComponent {
         return !dialog.getSelectedOption().equals(ConfirmationDialog.Option.CANCEL);
     }
 
+    private boolean promptToLoad() throws IOException {
+        PropertyManager    manager = applicationTemplate.manager;
+        ConfirmationDialog dialog  = ConfirmationDialog.getDialog();
+        dialog.show(manager.getPropertyValue(AppPropertyTypes.LOAD_DATA_TITLE.name()),
+                manager.getPropertyValue(AppPropertyTypes.LOAD_DATA.name()));
+
+        if (dialog.getSelectedOption() == null) return false;
+
+        if (dialog.getSelectedOption().equals(ConfirmationDialog.Option.YES)) {
+
+            FileChooser fileChooser = new FileChooser();
+            String      dataDirPath = SEPARATOR + manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name());
+            URL         dataDirURL  = getClass().getResource(dataDirPath);
+
+            if (dataDirURL == null)
+                throw new FileNotFoundException(manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+
+            fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
+            fileChooser.setTitle(manager.getPropertyValue(AppPropertyTypes.LOAD_DATA_TITLE.name()));
+
+            /*String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
+            String extension   = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name());
+            ExtensionFilter extFilter = new ExtensionFilter(description, extension);
+
+            fileChooser.getExtensionFilters().add(extFilter);*/
+            File selected = fileChooser.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+            if (selected != null) {
+                Scanner s = new Scanner(new File(selected.toPath().toString())).useDelimiter("\n");
+                while (s.hasNextLine()) {
+                    ((AppUI) applicationTemplate.getUIComponent()).getTextArea().appendText(s.nextLine() + "\n");
+                }
+            }
+            else return false; // if user presses escape after initially selecting 'yes'
+        }
+
+        return !dialog.getSelectedOption().equals(ConfirmationDialog.Option.CANCEL);
+    }
+
     private void save() throws IOException {
         applicationTemplate.getDataComponent().saveData(dataFilePath);
+        isUnsaved.set(false);
+    }
+
+    private void load() throws IOException {
+        applicationTemplate.getDataComponent().loadData(dataFilePath);
         isUnsaved.set(false);
     }
 

@@ -56,6 +56,8 @@ public final class AppUI extends UITemplate {
 
     public LineChart<Number, Number> getChart() { return chart; }
 
+    public TextArea getTextArea() { return textArea; }
+
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;

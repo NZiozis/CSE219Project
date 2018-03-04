@@ -26,9 +26,11 @@ public enum AppPropertyTypes {
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
     SCREENSHOT_ERROR_TITLE,
+    LOAD_DATA_TITLE,
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
+    LOAD_DATA,
 
     /* application-specific parameters */
     DATA_FILE_EXT,
