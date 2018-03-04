@@ -162,7 +162,7 @@ public final class AppActions implements ActionComponent {
                 String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
                 String extension   = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name());
                 ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
-                                                                String.format("*.%s", extension));
+                                                                String.format("*%s", extension));
 
                 fileChooser.getExtensionFilters().add(extFilter);
                 fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.DATA_FILE_INITIAL.name()));
@@ -198,17 +198,19 @@ public final class AppActions implements ActionComponent {
             fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
             fileChooser.setTitle(manager.getPropertyValue(AppPropertyTypes.LOAD_DATA_TITLE.name()));
 
-            /*String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
+            String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
             String extension   = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name());
-            ExtensionFilter extFilter = new ExtensionFilter(description, extension);
+            ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+                                                            String.format("*%s", extension));
 
-            fileChooser.getExtensionFilters().add(extFilter);*/
+            fileChooser.getExtensionFilters().add(extFilter);
             File selected = fileChooser.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (selected != null) {
                 Scanner s = new Scanner(new File(selected.toPath().toString())).useDelimiter("\n");
                 while (s.hasNextLine()) {
                     ((AppUI) applicationTemplate.getUIComponent()).getTextArea().appendText(s.nextLine() + "\n");
                 }
+                load();
             }
             else return false; // if user presses escape after initially selecting 'yes'
         }
