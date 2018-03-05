@@ -128,7 +128,6 @@ public final class AppUI extends UITemplate {
 
     public void setCurrentText(String text){ textArea.setText(text); }
 
-
     private void layout() {
         PropertyManager manager = applicationTemplate.manager;
 

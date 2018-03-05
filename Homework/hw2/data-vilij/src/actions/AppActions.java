@@ -170,8 +170,24 @@ public final class AppActions implements ActionComponent {
                 fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.DATA_FILE_INITIAL.name()));
                 File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
                 if (selected != null) {
-                    dataFilePath = selected.toPath();
-                    save();
+                    arrayList = new ArrayList<>();
+                    Scanner s = new Scanner(((AppUI)applicationTemplate.getUIComponent()).getCurrentText()).useDelimiter("\n");
+                    while (s.hasNextLine()) {
+                        arrayList.add(s.nextLine() + "\n");
+                    }
+
+                    AppData.Tuple<Integer,String> errorTuple =
+                            ((AppData)applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayList);
+
+                    if (errorTuple.get_key() == -1){
+                        dataFilePath = selected.toPath();
+                        save();
+                    }
+                    else {
+                        dataFilePath=null;
+                        if (errorTuple.get_isDuplicate()) { duplicateErrorHelper(errorTuple); }
+                        else                              { invalidTextErrorHelper(errorTuple); }
+                    }
                 } else return false; // if user presses escape after initially selecting 'yes'
             } else
                 save();
@@ -208,6 +224,7 @@ public final class AppActions implements ActionComponent {
             fileChooser.getExtensionFilters().add(extFilter);
             File selected = fileChooser.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (selected != null) {
+                arrayList = new ArrayList<>();
                 Scanner s = new Scanner(new File(selected.toPath().toString())).useDelimiter("\n");
                 while (s.hasNextLine()) {
                     arrayList.add(s.nextLine() + "\n");
