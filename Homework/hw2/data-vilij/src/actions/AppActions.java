@@ -19,6 +19,7 @@ import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
 import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -127,8 +128,10 @@ public final class AppActions implements ActionComponent {
         fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.SCRNSHT_INITIAL.name()));
         File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
 
-        if (selected != null)
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), AppPropertyTypes.SCRNSHT_FILE_EXT.name(), selected);
+        if (selected != null){
+            RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
+            ImageIO.write(renderedImage, AppPropertyTypes.SCRNSHT_FILE_EXT.name(), selected);
+        }
     }
 
     /**

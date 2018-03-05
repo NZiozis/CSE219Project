@@ -200,7 +200,6 @@ public final class AppUI extends UITemplate {
                             }
                             for (; counter < oldTextArea.length; counter++){
                                 arrayList.remove(counter);
-
                             }
 
                             ((AppData)applicationTemplate.getDataComponent()).loadInTenLines();
@@ -244,8 +243,6 @@ public final class AppUI extends UITemplate {
                             arrayList.add(text[counter]);
                         }
                     }
-
-
 
                     arrayList.forEach(tempString::append);
                     dataComponent.loadData(tempString.toString());
