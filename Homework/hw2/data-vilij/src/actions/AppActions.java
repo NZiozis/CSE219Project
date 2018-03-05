@@ -1,7 +1,6 @@
 package actions;
 
 import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -222,6 +221,7 @@ public final class AppActions implements ActionComponent {
                     load();
                 }
                 else {
+                    dataFilePath=null;
                     if (errorTuple.get_isDuplicate()) { duplicateErrorHelper(errorTuple); }
                     else                              { invalidTextErrorHelper(errorTuple); }
                 }

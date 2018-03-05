@@ -75,19 +75,21 @@ public class AppData implements DataComponent {
         HashMap<String, Integer> map = new HashMap<>();
         arrayList.forEach(string -> {
             if (map.containsKey(string)) {
-                tuple.set_key((arrayList.indexOf(string)) /3);
+                tuple.set_key((arrayList.indexOf(string)));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(true);
             }
             else { map.put(string, 1); }
         });
 
+        if (tuple.get_key() != -1) return tuple;
+
         arrayList.forEach(string -> {
             try {
                 processor.processString(string);
             }
             catch (Exception e){
-                tuple.set_key(arrayList.indexOf(string) /3);
+                tuple.set_key(arrayList.indexOf(string));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(false);
             }
