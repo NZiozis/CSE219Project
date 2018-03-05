@@ -3,7 +3,6 @@ package dataprocessors;
 import actions.AppActions;
 import settings.AppPropertyTypes;
 import ui.AppUI;
-import vilij.components.ConfirmationDialog;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
 import vilij.components.ErrorDialog;
@@ -37,6 +36,7 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
+        ((AppUI)applicationTemplate.getUIComponent()).getTextArea().clear();
         int counter = loadInTenLines();
         ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
 
@@ -56,6 +56,7 @@ public class AppData implements DataComponent {
         int counter = 0;
         for (String s : arrayList) {
             if (!(s.equals(""))) {
+                if (!s.substring(s.length() - 1).equals("\n"))  s += "\n";
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().appendText(s);
                 counter++;
             }

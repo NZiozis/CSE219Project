@@ -24,7 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -120,7 +121,7 @@ public final class AppActions implements ActionComponent {
         String description = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_DESC.name());
         String extension   = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name());
         ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
-                String.format("*.%s", extension));
+                String.format("*%s", extension));
 
         fileChooser.getExtensionFilters().add(extFilter);
         fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.SCRNSHT_INITIAL.name()));

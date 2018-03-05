@@ -6,8 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.PopupWindow;
@@ -30,6 +29,7 @@ import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
@@ -179,6 +179,7 @@ public final class AppUI extends UITemplate {
 
     private void setTextAreaActions() {
         textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
             try {
                 if (!newValue.equals(oldValue)) {
                     if (!newValue.isEmpty()) {
@@ -187,6 +188,23 @@ public final class AppUI extends UITemplate {
                             hasNewText = true;
                         newButton.setDisable(false);
                         saveButton.setDisable(false);
+
+                        String[] oldTextArea = oldValue.split("\n");
+                        String[] newTextArea = newValue.split("\n");
+                        if (newTextArea.length < oldTextArea.length &&
+                                arrayList.size() > 10){
+                            textArea.clear();
+                            int counter = 0;
+                            for (String s : newTextArea){
+                                arrayList.set(counter++, s);
+                            }
+                            for (; counter < oldTextArea.length; counter++){
+                                arrayList.remove(counter);
+
+                            }
+
+                            ((AppData)applicationTemplate.getDataComponent()).loadInTenLines();
+                        }
                     } else {
                         hasNewText = true;
                         newButton.setDisable(true);
@@ -207,7 +225,29 @@ public final class AppUI extends UITemplate {
                     AppData dataComponent = (AppData) applicationTemplate.getDataComponent();
                     dataComponent.clear();
                     StringBuilder tempString = new StringBuilder();
-                    ((AppActions) applicationTemplate.getActionComponent()).getArrayList().forEach(tempString::append);
+                    ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
+                    String[] text = textArea.getText().split("\n");
+
+                    if (arrayList.isEmpty()) {
+                        for (String s : text){
+                            arrayList.add(s + "\n");
+                        }
+                    }
+
+                    if (text.length > arrayList.size()) {
+                        int counter = 0;
+                        for (int i = 0; i < arrayList.size(); i++) {
+                            arrayList.set(i, text[i]);
+                            counter++;
+                        }
+                        for (; counter < text.length; counter++){
+                            arrayList.add(text[counter]);
+                        }
+                    }
+
+
+
+                    arrayList.forEach(tempString::append);
                     dataComponent.loadData(tempString.toString());
                     dataComponent.displayData();
                     addTooltips();
