@@ -22,11 +22,15 @@ public enum AppPropertyTypes {
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
     SCREENSHOT_ERROR_MESSAGE,
+    DUPLICATE_ERROR_MESSAGE,
+    INVALID_TEXT_ERROR_MESSAGE,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
     SCREENSHOT_ERROR_TITLE,
     LOAD_DATA_TITLE,
+    DUPLICATE_ERROR_TITLE,
+    INVALID_TEXT_ERROR_TITLE,
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
@@ -47,4 +51,5 @@ public enum AppPropertyTypes {
     CHART_TITLE,
     DISPLAY_BUTTON_TEXT,
     CHECKBOX_TEXT,
+    ON_LINE,
 }

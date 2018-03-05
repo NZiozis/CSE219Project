@@ -21,11 +21,15 @@ functionality within the main workspace. -->
         <!-- ERROR MESSAGES -->
         <property name="RESOURCE_SUBDIR_NOT_FOUND" value="Directory not found under resources."/>
         <property name="SCREENSHOT_ERROR_MESSAGE" value="Could not take a screenshot."/>
+        <property name="DUPLICATE_ERROR_MESSAGE" value="There is a duplicate element: " />
+        <property name="INVALID_TEXT_ERROR_MESSAGE" value="There is invalid text: "/>
 
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
         <property name="SCREENSHOT_ERROR_TITLE" value="Screenshot Error"/>
         <property name="LOAD_DATA_TITLE" value="Load Data"/>
+        <property name="DUPLICATE_ERROR_TITLE" value="Duplicate Error"/>
+        <property name="INVALID_TEXT_ERROR_TITLE" value="Invalid Text"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
@@ -46,6 +50,7 @@ functionality within the main workspace. -->
         <property name="CHART_TITLE" value="Data Visualization"/>
         <property name="DISPLAY_BUTTON_TEXT" value="Display Data"/>
         <property name="CHECKBOX_TEXT" value="Read Only"/>
+        <property name="ON_LINE" value=" on line "/>
 
     </property_list>
     <property_options_list/>

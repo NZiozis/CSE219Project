@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -32,7 +34,6 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
-        // TODO: NOT A PART OF HW 1
     }
 
     public void loadData(String dataString) {
@@ -67,4 +68,53 @@ public class AppData implements DataComponent {
     public void displayData() {
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
     }
+
+    /** This returns the index of an error if there is. If not, the Tuple.get_key() == -1 */
+    public Tuple<Integer, String> indexOfErrorOrDuplicates(ArrayList<String> arrayList){
+        Tuple<Integer,String> tuple = new Tuple<>(-1, "");
+        HashMap<String, Integer> map = new HashMap<>();
+        arrayList.forEach(string -> {
+            if (map.containsKey(string)) {
+                tuple.set_key((arrayList.indexOf(string)) /3);
+                tuple.set_value(string);
+                tuple.set_isDuplicate(true);
+            }
+            else { map.put(string, 1); }
+        });
+
+        arrayList.forEach(string -> {
+            try {
+                processor.processString(string);
+            }
+            catch (Exception e){
+                tuple.set_key(arrayList.indexOf(string) /3);
+                tuple.set_value(string);
+                tuple.set_isDuplicate(false);
+            }
+
+        });
+
+        return tuple;
+    }
+
+    public class Tuple<T, T1> {
+        T _key;
+        T1 _value;
+        boolean _isDuplicate;
+
+        public Tuple(T key,T1 value){
+            _key = key;
+            _value = value;
+        }
+
+
+        public void set_isDuplicate(boolean _isDuplicate) { this._isDuplicate = _isDuplicate; }
+        public void set_key(T _key) { this._key = _key; }
+        public void set_value(T1 _value) { this._value = _value; }
+
+        public T get_key() { return _key; }
+        public T1 get_value() { return _value; }
+        public boolean get_isDuplicate() { return _isDuplicate; }
+    }
+
 }

@@ -1,7 +1,7 @@
 package actions;
 
-import com.sun.javafx.iio.ios.IosDescriptor;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import dataprocessors.AppData;
+import dataprocessors.TSDProcessor;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -25,8 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -214,13 +213,17 @@ public final class AppActions implements ActionComponent {
                 while (s.hasNextLine()) {
                     arrayList.add(s.nextLine() + "\n");
                 }
-                if (indexOfErrorOrDuplicates(arrayList).get_key() != -1){
-                    // load the file into the textArea
+
+                AppData.Tuple<Integer,String> errorTuple =
+                        ((AppData)applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayList);
+
+                if (errorTuple.get_key() == -1){
                     dataFilePath = selected.toPath();
                     load();
                 }
                 else {
-                    // create an error dialog that tells the person the index of the error and the content of that error.
+                    if (errorTuple.get_isDuplicate()) { duplicateErrorHelper(errorTuple); }
+                    else                              { invalidTextErrorHelper(errorTuple); }
                 }
 
             }
@@ -249,29 +252,27 @@ public final class AppActions implements ActionComponent {
         dialog.show(errTitle, errMsg + errInput);
     }
 
-    /** This returns the index of an error if there is. If not, the Tuple.get_key() == -1 */
-    private Tuple<Integer, String> indexOfErrorOrDuplicates(ArrayList<String> arrayList){
-        Tuple<Integer,String> tuple = new Tuple<>(-1, "");
-
-
-
-        return tuple;
+    private void invalidTextErrorHelper(AppData.Tuple<Integer,String> tuple){
+        ErrorDialog     dialog         = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+        PropertyManager manager        = applicationTemplate.manager;
+        String          errTitle       = manager.getPropertyValue(AppPropertyTypes.INVALID_TEXT_ERROR_TITLE.name());
+        String          errMsg         = manager.getPropertyValue(AppPropertyTypes.INVALID_TEXT_ERROR_MESSAGE.name());
+        String          invalidElement = tuple.get_value();
+        String          online         = manager.getPropertyValue(AppPropertyTypes.ON_LINE.name());
+        String          invalidIndex   = tuple.get_key().toString();
+        dialog.show(errTitle, errMsg + invalidElement + online + invalidIndex);
     }
 
-    private class Tuple<T, T1> {
-        T _key;
-        T1 _value;
+    private void duplicateErrorHelper(AppData.Tuple<Integer,String> tuple){
+        ErrorDialog     dialog           = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+        PropertyManager manager          = applicationTemplate.manager;
+        String          errTitle         = manager.getPropertyValue(AppPropertyTypes.DUPLICATE_ERROR_TITLE.name());
+        String          errMsg           = manager.getPropertyValue(AppPropertyTypes.DUPLICATE_ERROR_MESSAGE.name());
+        String          duplicateElement = tuple.get_value();
+        String          onLine           = manager.getPropertyValue(AppPropertyTypes.ON_LINE.name());
+        String          duplicateIndex   = tuple.get_key().toString();
 
-        public Tuple(T key,T1 value){
-            _key = key;
-            _value = value;
-        }
-
-        public void set_key(T _key) { this._key = _key; }
-        public void set_value(T1 _value) { this._value = _value; }
-
-        public T get_key() { return _key; }
-
-        public T1 get_value() { return _value; }
+        dialog.show(errTitle, errMsg + duplicateElement + onLine + duplicateIndex);
     }
+
 }
