@@ -31,10 +31,12 @@ public enum AppPropertyTypes {
     LOAD_DATA_TITLE,
     DUPLICATE_ERROR_TITLE,
     INVALID_TEXT_ERROR_TITLE,
+    LOAD_ACTION_RESULT_TITLE,
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
     LOAD_DATA,
+    LOAD_ACTION_RESULT,
 
     /* application-specific parameters */
     DATA_FILE_EXT,
@@ -52,4 +54,5 @@ public enum AppPropertyTypes {
     DISPLAY_BUTTON_TEXT,
     CHECKBOX_TEXT,
     ON_LINE,
+
 }

@@ -126,8 +126,6 @@ public final class AppUI extends UITemplate {
 
     public String getCurrentText() { return textArea.getText(); }
 
-    public void setCurrentText(String text){ textArea.setText(text); }
-
     private void layout() {
         PropertyManager manager = applicationTemplate.manager;
 
@@ -208,7 +206,9 @@ public final class AppUI extends UITemplate {
                     chart.getData().clear();
                     AppData dataComponent = (AppData) applicationTemplate.getDataComponent();
                     dataComponent.clear();
-                    dataComponent.loadData(textArea.getText());
+                    StringBuilder tempString = new StringBuilder();
+                    ((AppActions) applicationTemplate.getActionComponent()).getArrayList().forEach(tempString::append);
+                    dataComponent.loadData(tempString.toString());
                     dataComponent.displayData();
                     addTooltips();
                     for (XYChart.Data<Number,Number> data : chart.getData().get(0).getData()){

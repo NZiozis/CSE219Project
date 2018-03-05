@@ -53,6 +53,10 @@ public final class AppActions implements ActionComponent {
         this.isUnsaved = new SimpleBooleanProperty(false);
     }
 
+    public ArrayList<String> getArrayList() {
+        return arrayList;
+    }
+
     public void setIsUnsavedProperty(boolean property) { isUnsaved.set(property); }
 
     @Override
@@ -69,7 +73,6 @@ public final class AppActions implements ActionComponent {
 
     @Override
     public void handleSaveRequest() {
-        // TODO: NOT A PART OF HW 1
         try {
             if (!isUnsaved.get() || promptToSave()) {
                 isUnsaved.set(false);
@@ -80,7 +83,6 @@ public final class AppActions implements ActionComponent {
 
     @Override
     public void handleLoadRequest() {
-        // TODO: NOT A PART OF HW 1
         try {
             if (promptToLoad())
                 isUnsaved.set(false);

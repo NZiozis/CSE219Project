@@ -1,7 +1,9 @@
 package dataprocessors;
 
+import actions.AppActions;
 import settings.AppPropertyTypes;
 import ui.AppUI;
+import vilij.components.ConfirmationDialog;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
 import vilij.components.ErrorDialog;
@@ -24,6 +26,7 @@ import java.util.HashMap;
  */
 public class AppData implements DataComponent {
 
+
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
 
@@ -34,6 +37,32 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
+        int counter = loadInTenLines();
+        ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
+
+        ErrorDialog dialog                 = (ErrorDialog)applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+        PropertyManager manager            = applicationTemplate.manager;
+        String          loadActionTitle    = manager.getPropertyValue(AppPropertyTypes.LOAD_ACTION_RESULT_TITLE.name());
+        int             arrayListSize      = arrayList.size();
+        String          loadActionResult   = manager.getPropertyValue(AppPropertyTypes.LOAD_ACTION_RESULT.name());
+        loadActionResult = String.format(loadActionResult, arrayListSize, counter);
+
+        dialog.show(loadActionTitle, loadActionResult);
+
+    }
+
+    public int loadInTenLines(){
+        ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
+        int counter = 0;
+        for (String s : arrayList) {
+            if (!(s.equals(""))) {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().appendText(s);
+                counter++;
+            }
+            if (counter == 10)
+                break;
+        }
+        return counter;
     }
 
     public void loadData(String dataString) {
