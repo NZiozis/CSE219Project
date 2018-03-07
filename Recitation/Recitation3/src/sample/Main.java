@@ -12,23 +12,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Main extends Application {
 
-    private static final String CSS_RESOURCE_PATH   = "/recitation3.css";
-    private static final String FILE_INPUT_TOOLTIP  = "Enter absolute path of file to be uploaded.";
+    private static final String CSS_RESOURCE_PATH = "/recitation3.css";
+    private static final String FILE_INPUT_TOOLTIP = "Enter absolute path of file to be uploaded.";
     private static final String FILE_DISPLAY_PROMPT = "File contents will be displayed here.";
 
-    VBox     leftPanel;
-    VBox     rightPanel;
+    VBox leftPanel;
+    VBox rightPanel;
     TextArea fileTextArea;
-    Button   displayAsColumns;
+    Button displayAsColumns;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         setFileTextArea();
         setLeftPanel();
         setRightPanel();
@@ -61,7 +60,7 @@ public class Main extends Application {
         leftPanel.setPadding(new Insets(10));
 
         TextField filePathInputNode = new TextField();
-        Button    openButton        = new Button("Open File");
+        Button openButton = new Button("Open File");
 
         filePathInputNode.setTooltip(new Tooltip(FILE_INPUT_TOOLTIP));
         openButton.setOnAction(event -> {
@@ -86,25 +85,25 @@ public class Main extends Application {
 
         HBox formatButtonsBox = new HBox(10);
 
-        MenuButton arrange   = new MenuButton("Arrange");
-        MenuItem   firstName = new MenuItem("First Name");
-        MenuItem   lastName  = new MenuItem("Last Name");
-        MenuItem   gpa       = new MenuItem("GPA");
+        MenuButton arrange = new MenuButton("Arrange");
+        MenuItem firstName = new MenuItem("First Name");
+        MenuItem lastName = new MenuItem("Last Name");
+        MenuItem gpa = new MenuItem("GPA");
         arrange.getItems().addAll(firstName, lastName, gpa);
         formatButtonsBox.getChildren().addAll(displayAsColumns, arrange);
         arrange.setDisable(true);
         displayAsColumns.setDisable(true);
 
         displayAsColumns.setOnAction(event -> {
-            String   fourwhitespaces = "    ";
-            String   text            = fileTextArea.getText();
-            String[] lines           = text.split("\n");
+            String fourwhitespaces = "    ";
+            String text = fileTextArea.getText();
+            String[] lines = text.split("\n");
             int fstColumnWidth = Arrays.stream(lines)
-                                       .map(line -> line.split(",")[0].trim().length()).reduce(0, Math::max);
+                    .map(line -> line.split(",")[0].trim().length()).reduce(0, Math::max);
             int sndColumnWidth = Arrays.stream(lines)
-                                       .map(line -> line.split(",")[1].trim().length()).reduce(0, Math::max);
+                    .map(line -> line.split(",")[1].trim().length()).reduce(0, Math::max);
             int lstColumnWidth = Arrays.stream(lines)
-                                       .map(line -> line.split(",")[2].trim().length()).reduce(0, Math::max);
+                    .map(line -> line.split(",")[2].trim().length()).reduce(0, Math::max);
 
             StringBuilder textBuilder = new StringBuilder();
             Arrays.stream(lines).forEach(line -> {
@@ -120,10 +119,10 @@ public class Main extends Application {
 
         firstName.setOnAction(event -> {
             //noinspection RepeatedSpace
-            String              fourwhitespaces = "    ";
-            String              text            = fileTextArea.getText();
-            String[]            lines           = text.split("\n");
-            Map<String, String> fstNameMap      = new TreeMap<>();
+            String fourwhitespaces = " {4}";
+            String text = fileTextArea.getText();
+            String[] lines = text.split("\n");
+            Map<String, String> fstNameMap = new TreeMap<>();
             Arrays.stream(lines).skip(1).forEach(line -> {
                 String[] keyvalue = line.split(fourwhitespaces, 2);
                 fstNameMap.put(keyvalue[0], keyvalue[1]);
@@ -131,17 +130,17 @@ public class Main extends Application {
 
             StringBuilder textBuilder = new StringBuilder(lines[0]).append('\n');
             fstNameMap.forEach((key, value) -> textBuilder.append(key)
-                                                          .append(fourwhitespaces)
-                                                          .append(value)
-                                                          .append('\n'));
+                    .append(fourwhitespaces)
+                    .append(value)
+                    .append('\n'));
             fileTextArea.setText(textBuilder.toString());
         });
 
         gpa.setOnAction(event -> {
-            String            fourwhitespaces = "    ";
-            String            text            = fileTextArea.getText();
-            String[]          lines           = text.split("\n");
-            Map<String, String> gpaMap        = new TreeMap<>();
+            String fourwhitespaces = " {4}";
+            String text = fileTextArea.getText();
+            String[] lines = text.split("\n");
+            Map<String, String> gpaMap = new TreeMap<>();
             Arrays.stream(lines).skip(1).forEach(line -> {
                 String[] keyvalue = line.split(fourwhitespaces, 6);
                 String[] restVal = Arrays.copyOfRange(keyvalue, 0, 3);
