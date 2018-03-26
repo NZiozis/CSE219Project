@@ -22,7 +22,7 @@ public class SampleBank {
         printTotalAmount();
     }
 
-    public void transfer(int fromAccount, int toAccount, double balance) {
+    /*public void transfer(int fromAccount, int toAccount, double balance) {
         bankLock.lock();
         try {
             if (accounts.get(fromAccount) < balance) {
@@ -38,6 +38,20 @@ public class SampleBank {
         } finally {
             bankLock.unlock();
         }
+    }*/
+
+    public synchronized void transfer(int fromAccount, int toAccount, double balance) {
+        if (accounts.get(fromAccount) < balance) {
+            return;
+        }
+        accounts.put(fromAccount, accounts.get(fromAccount) - balance);
+        System.out.printf("\t\t(Thread.currentThread()) Transferred %10.2f from Account %d to Account %d%n",
+                balance,
+                fromAccount,
+                toAccount);
+        accounts.put(toAccount, accounts.get(toAccount) + balance);
+        printTotalAmount();
+
     }
 
     public void printTotalAmount() {
