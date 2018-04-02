@@ -36,7 +36,6 @@ public final class AppUI extends UITemplate {
     @SuppressWarnings("FieldCanBeLocal")
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
     private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
-    private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
 
@@ -115,9 +114,7 @@ public final class AppUI extends UITemplate {
         textArea = new TextArea();
 
         HBox processButtonsBox = new HBox();
-        displayButton = new Button(manager.getPropertyValue(AppPropertyTypes.DISPLAY_BUTTON_TEXT.name()));
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
-        processButtonsBox.getChildren().add(displayButton);
 
         leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox);
 
@@ -135,7 +132,6 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         setTextAreaActions();
-        setDisplayButtonActions();
     }
 
     private void setTextAreaActions() {
@@ -156,23 +152,6 @@ public final class AppUI extends UITemplate {
                 }
             } catch (IndexOutOfBoundsException e) {
                 System.err.println(newValue);
-            }
-        });
-    }
-
-    private void setDisplayButtonActions() {
-        displayButton.setOnAction(event -> {
-            if (hasNewText) {
-                try {
-                    chart.getData().clear();
-                    AppData dataComponent = (AppData) applicationTemplate.getDataComponent();
-                    dataComponent.clear();
-                    dataComponent.loadData(textArea.getText());
-                    dataComponent.displayData();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         });
     }
