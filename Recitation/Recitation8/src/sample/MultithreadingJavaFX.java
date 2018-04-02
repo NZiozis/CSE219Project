@@ -13,16 +13,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class MultithreadingJavaFX extends Application {
-    ProgressBar bar;
-    ProgressIndicator indicator;
-    Button button;
-    Label processLabel;
+import java.util.concurrent.locks.ReentrantLock;
 
-    int numTasks = 0;
+public class MultithreadingJavaFX extends Application {
+    private ProgressBar bar;
+    private ProgressIndicator indicator;
+    private Label processLabel;
+
+    private int numTasks = 0;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         VBox box = new VBox();
         HBox toolbar = new HBox();
         bar = new ProgressBar(0);
@@ -30,7 +31,7 @@ public class MultithreadingJavaFX extends Application {
         indicator.setStyle("font-size: 16pt");
         toolbar.getChildren().add(bar);
         toolbar.getChildren().add(indicator);
-        button = new Button("Restart");
+        Button button = new Button("Restart");
         processLabel = new Label();
         processLabel.setFont(new Font("Serif", 16));
         box.getChildren().add(toolbar);
@@ -38,6 +39,7 @@ public class MultithreadingJavaFX extends Application {
         box.getChildren().add(processLabel);
         Scene scene = new Scene(box);
         primaryStage.setScene(scene);
+        ReentrantLock lock = new ReentrantLock();
 
         button.setOnAction(e -> {
             Task task = new Task() {
@@ -46,28 +48,33 @@ public class MultithreadingJavaFX extends Application {
                 double perc;
 
                 @Override
-                protected Void call() throws Exception {
-                    for (int i = 0; i < 200; i++) {
-                        System.out.println(i);
-                        perc = i / max;
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
+                protected Void call() {
+                    lock.lock();
+                    try {
+                        for (int i = 0; i < 200; i++) {
+                            System.out.println(i);
+                            perc = i / max;
+                            Platform.runLater(() -> {
                                 bar.setProgress(perc);
                                 indicator.setProgress(perc);
                                 processLabel.setText("Task number " + task);
-                            }
-                        });
 
-                        // sleep each frame
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException ie) {
-                            ie.printStackTrace();
+                            });
+
+                            // sleep each frame
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException ie) {
+                                ie.printStackTrace();
+                            }
+
                         }
+                        return null;
+                    } finally {
+                        lock.unlock();
                     }
-                    return null;
                 }
+
             };
             Thread thread = new Thread(task);
             thread.start();
