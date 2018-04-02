@@ -1,11 +1,10 @@
 package ui;
 
 import actions.AppActions;
-import dataprocessors.AppData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
@@ -30,20 +29,24 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
  */
 public final class AppUI extends UITemplate {
 
-    /** The application to which this class of actions belongs. */
+    /**
+     * The application to which this class of actions belongs.
+     */
     ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
-    private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
-    private TextArea                     textArea;       // text area for new data input
-    private boolean                      hasNewText;     // whether or not the text area has any new data since last display
-
-    public ScatterChart<Number, Number> getChart() { return chart; }
+    private Button scrnshotButton;                    // toolbar button to take a screenshot of the data
+    private LineChart<Number, Number> chart;          // the chart where data will be displayed
+    private TextArea textArea;                        // text area for new data input
+    private boolean hasNewText;                       // whether or not the text area has any new data since last display
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+    }
+
+    public LineChart<Number, Number> getChart() {
+        return chart;
     }
 
     @Override
@@ -56,14 +59,14 @@ public final class AppUI extends UITemplate {
         super.setToolBar(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
         String iconsPath = SEPARATOR + String.join(SEPARATOR,
-                                                   manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-                                                   manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
+                manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
         String scrnshoticonPath = String.join(SEPARATOR,
-                                              iconsPath,
-                                              manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
+                iconsPath,
+                manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
         scrnshotButton = setToolbarButton(scrnshoticonPath,
-                                          manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
-                                          true);
+                manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
+                true);
         toolBar.getItems().add(scrnshotButton);
     }
 
@@ -81,6 +84,7 @@ public final class AppUI extends UITemplate {
     public void initialize() {
         layout();
         setWorkspaceActions();
+        appPane.getStylesheets().add(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CSS_RESOURCE_PATH.name()));
     }
 
     @Override
@@ -89,13 +93,15 @@ public final class AppUI extends UITemplate {
         chart.getData().clear();
     }
 
-    public String getCurrentText() { return textArea.getText(); }
+    public String getCurrentText() {
+        return textArea.getText();
+    }
 
     private void layout() {
         PropertyManager manager = applicationTemplate.manager;
-        NumberAxis      xAxis   = new NumberAxis();
-        NumberAxis      yAxis   = new NumberAxis();
-        chart = new ScatterChart<>(xAxis, yAxis);
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        chart = new LineChart<>(xAxis, yAxis);
         chart.setTitle(manager.getPropertyValue(AppPropertyTypes.CHART_TITLE.name()));
 
         VBox leftPanel = new VBox(8);
@@ -106,9 +112,9 @@ public final class AppUI extends UITemplate {
         leftPanel.setMaxSize(windowWidth * 0.29, windowHeight * 0.3);
         leftPanel.setMinSize(windowWidth * 0.29, windowHeight * 0.3);
 
-        Text   leftPanelTitle = new Text(manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLE.name()));
-        String fontname       = manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLEFONT.name());
-        Double fontsize       = Double.parseDouble(manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLESIZE.name()));
+        Text leftPanelTitle = new Text(manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLE.name()));
+        String fontname = manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLEFONT.name());
+        Double fontsize = Double.parseDouble(manager.getPropertyValue(AppPropertyTypes.LEFT_PANE_TITLESIZE.name()));
         leftPanelTitle.setFont(Font.font(fontname, fontsize));
 
         textArea = new TextArea();

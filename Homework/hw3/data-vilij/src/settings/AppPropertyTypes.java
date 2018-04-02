@@ -11,6 +11,7 @@ public enum AppPropertyTypes {
 
     /* resource files and folders */
     DATA_RESOURCE_PATH,
+    CSS_RESOURCE_PATH,
 
     /* user interface icon file names */
     SCREENSHOT_ICON,
@@ -36,5 +37,4 @@ public enum AppPropertyTypes {
     LEFT_PANE_TITLEFONT,
     LEFT_PANE_TITLESIZE,
     CHART_TITLE,
-    DISPLAY_BUTTON_TEXT
 }
