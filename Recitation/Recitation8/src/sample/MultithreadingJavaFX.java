@@ -57,7 +57,8 @@ public class MultithreadingJavaFX extends Application {
                             Platform.runLater(() -> {
                                 bar.setProgress(perc);
                                 indicator.setProgress(perc);
-                                processLabel.setText("Task number " + task);
+                                processLabel.setText("Task number " 
+						+ task);
 
                             });
 

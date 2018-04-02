@@ -15,7 +15,8 @@ public class Main extends Application {
         new Thread(() -> {
             for (int i = 0; i < 10000; i++) {
                 final int counter = i;
-                Platform.runLater(() -> bar.setProgress(counter / 1000.0));
+                Platform.runLater(() -> bar.setProgress(counter /
+				       	1000.0));
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
