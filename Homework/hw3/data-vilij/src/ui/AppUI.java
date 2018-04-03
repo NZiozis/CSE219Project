@@ -77,7 +77,6 @@ public final class AppUI extends UITemplate {
         saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
-        printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
     }
 
     @Override
