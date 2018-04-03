@@ -32,7 +32,7 @@ public final class AppUI extends UITemplate {
     /**
      * The application to which this class of actions belongs.
      */
-    ApplicationTemplate applicationTemplate;
+    private ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
     private Button scrnshotButton;                    // toolbar button to take a screenshot of the data
