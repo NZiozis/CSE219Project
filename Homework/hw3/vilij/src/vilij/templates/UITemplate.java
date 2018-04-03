@@ -26,30 +26,28 @@ public class UITemplate implements UIComponent {
 
     public static final String SEPARATOR = "/";
     private static final String UI_NOT_INITIALIZABLE_FOR_TEMPLATES = "The graphical user interface cannot be " +
-                                                                     "initialized at template-level. A child " +
-                                                                     "class must be implemented.";
+            "initialized at template-level. A child " +
+            "class must be implemented.";
 
-    protected Pane    workspace;        // the top-level GUI element in the main workspace
+    protected Pane workspace;        // the top-level GUI element in the main workspace
     protected ToolBar toolBar;          // the top toolbar
-    protected String  newiconPath;      // path to the 'new' icon
-    protected String  printiconPath;    // path to the 'print' icon
-    protected String  saveiconPath;     // path to the 'save' icon
-    protected String  loadiconPath;     // path to the 'load' icon
-    protected String  exiticonPath;     // path to the 'save' icon
-    protected String  logoPath;         // path to the Vilij logo icon
-    protected String  cssPath;          // path to the CSS file used for stylization of the user interface
-    protected Stage   primaryStage;     // the application window
-    protected Scene   primaryScene;     // the scene graph
-    protected Pane    appPane;          // the root node in the scene graph, to organize the containers
-    protected Button  newButton;        // button to create new data
-    protected Button  saveButton;       // button to save progress on application
-    protected Button  loadButton;       // button to load data for the application
-    protected Button  exitButton;       // button to exit application
-    protected Button  printButton;      // button to print a visualization
-    protected String  applicationTitle; // the application title
-    protected Image   logo;             // the Vilij logo
-    protected int     windowWidth;
-    protected int     windowHeight;
+    protected String newiconPath;      // path to the 'new' icon
+    protected String saveiconPath;     // path to the 'save' icon
+    protected String loadiconPath;     // path to the 'load' icon
+    protected String exiticonPath;     // path to the 'save' icon
+    protected String logoPath;         // path to the Vilij logo icon
+    protected String cssPath;          // path to the CSS file used for stylization of the user interface
+    protected Stage primaryStage;     // the application window
+    protected Scene primaryScene;     // the scene graph
+    protected Pane appPane;          // the root node in the scene graph, to organize the containers
+    protected Button newButton;        // button to create new data
+    protected Button saveButton;       // button to save progress on application
+    protected Button loadButton;       // button to load data for the application
+    protected Button exitButton;       // button to exit application
+    protected String applicationTitle; // the application title
+    protected Image logo;             // the Vilij logo
+    protected int windowWidth;
+    protected int windowHeight;
 
     /**
      * Creates the minimal user interface to be used by a Vilij application. It uses the window height and width
@@ -71,15 +69,23 @@ public class UITemplate implements UIComponent {
     }
 
     @Override
-    public Stage getPrimaryWindow() { return primaryStage; }
+    public Stage getPrimaryWindow() {
+        return primaryStage;
+    }
 
     @Override
-    public Scene getPrimaryScene() { return primaryScene; }
+    public Scene getPrimaryScene() {
+        return primaryScene;
+    }
 
     @Override
-    public String getTitle() { return applicationTitle; }
+    public String getTitle() {
+        return applicationTitle;
+    }
 
-    /** Initialization is not provided at the template-level, and must be implemented by a child class. */
+    /**
+     * Initialization is not provided at the template-level, and must be implemented by a child class.
+     */
     @Override
     public void initialize() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(UI_NOT_INITIALIZABLE_FOR_TEMPLATES);
@@ -90,9 +96,8 @@ public class UITemplate implements UIComponent {
         newButton = setToolbarButton(newiconPath, manager.getPropertyValue(NEW_TOOLTIP.name()), true);
         saveButton = setToolbarButton(saveiconPath, manager.getPropertyValue(SAVE_TOOLTIP.name()), true);
         loadButton = setToolbarButton(loadiconPath, manager.getPropertyValue(LOAD_TOOLTIP.name()), false);
-        printButton = setToolbarButton(printiconPath, manager.getPropertyValue(PRINT_TOOLTIP.name()), true);
         exitButton = setToolbarButton(exiticonPath, manager.getPropertyValue(EXIT_TOOLTIP.name()), false);
-        toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton);
+        toolBar = new ToolBar(newButton, saveButton, loadButton, exitButton);
     }
 
     protected Button setToolbarButton(String iconPath, String tooltip, boolean disabled) {
@@ -106,25 +111,26 @@ public class UITemplate implements UIComponent {
     protected void setResourcePaths(ApplicationTemplate applicationTemplate) {
         PropertyManager manager = applicationTemplate.manager;
         String iconsPath = SEPARATOR + String.join(SEPARATOR,
-                                                   manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-                                                   manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
+                manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
 
         newiconPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(NEW_ICON.name()));
         saveiconPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(SAVE_ICON.name()));
         loadiconPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(LOAD_ICON.name()));
         exiticonPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(EXIT_ICON.name()));
-        printiconPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(PRINT_ICON.name()));
         logoPath = String.join(SEPARATOR, iconsPath, manager.getPropertyValue(LOGO.name()));
 
         cssPath = SEPARATOR + String.join(SEPARATOR,
-                                          manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-                                          manager.getPropertyValue(CSS_RESOURCE_PATH.name()),
-                                          manager.getPropertyValue(CSS_RESOURCE_FILENAME.name()));
+                manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                manager.getPropertyValue(CSS_RESOURCE_PATH.name()),
+                manager.getPropertyValue(CSS_RESOURCE_FILENAME.name()));
 
         logo = new Image(getClass().getResourceAsStream(logoPath));
     }
 
-    /** Initialization is not provided at the template-level, and must be implemented by a child class. */
+    /**
+     * Initialization is not provided at the template-level, and must be implemented by a child class.
+     */
     protected void setToolbarHandlers(ApplicationTemplate applicationTemplate) { /* squelch */ }
 
     protected void setWindow(ApplicationTemplate applicationTemplate) {
@@ -134,7 +140,7 @@ public class UITemplate implements UIComponent {
         appPane.getChildren().add(toolBar);
 
         primaryScene = windowWidth < 1 || windowHeight < 1 ? new Scene(appPane)
-                                                           : new Scene(appPane, windowWidth, windowHeight);
+                : new Scene(appPane, windowWidth, windowHeight);
         primaryStage.getIcons().add(logo);
         primaryStage.setScene(primaryScene);
         primaryStage.show();
