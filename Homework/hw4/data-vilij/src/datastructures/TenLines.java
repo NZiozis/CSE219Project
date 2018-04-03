@@ -6,24 +6,6 @@ public class TenLines<T> {
     private ArrayList<T> activeArea = new ArrayList<>();
     private ArrayList<T> passiveArea = new ArrayList<>();
 
-    public static void main(String... args) {
-        ArrayList<Integer> test1 = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            test1.add(i);
-        }
-        ArrayList<Integer> test2 = new ArrayList<>();
-        for (int i = 10; i < 20; i++) {
-            test2.add(i);
-        }
-        ArrayList<Integer> test3 = new ArrayList<>();
-        test3.addAll(test1);
-        test3.addAll(test2);
-
-        System.out.println(test3.toString());
-
-
-    }
-
     public ArrayList<T> get_activeArea() {
         return activeArea;
     }
