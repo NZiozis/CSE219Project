@@ -8,29 +8,29 @@ public class TenLines<T>{
     private ArrayList<T> totalData;
 
 
-    public TenLines (){
+    public TenLines(){
         activeArea = new ArrayList<>();
         passiveArea = new ArrayList<>();
         totalData = new ArrayList<>();
     }
 
-    public TenLines (ArrayList<T> totalData){
+    public TenLines(ArrayList<T> totalData){
         activeArea = new ArrayList<>();
         passiveArea = totalData;
         this.totalData = totalData;
-        update_activeArea();
+        update();
     }
 
 
-    public ArrayList<T> get_activeArea (){
+    public ArrayList<T> get_activeArea(){
         return activeArea;
     }
 
-    public ArrayList<T> get_passiveArea (){
+    public ArrayList<T> get_passiveArea(){
         return passiveArea;
     }
 
-    public ArrayList<T> get_totalData (){
+    public ArrayList<T> get_totalData(){
         return totalData;
     }
 
@@ -39,18 +39,18 @@ public class TenLines<T>{
      * application is working with to the initial case. This should also only really be needed to be called when the
      * default constructor is used as this is already handled in the other version.
      */
-    public void setTotalData (ArrayList<T> totalData){
+    public void setTotalData(ArrayList<T> totalData){
         this.totalData = totalData;
         passiveArea = totalData;
-        update_activeArea();
+        update();
     }
 
-
     /**
-     * This will take elements from the passiveArea until it reaches a size of 10. Make this public if this has
-     * to be maintained for all data in the textArea.
+     * This will take elements from the passiveArea and add it to the activeArea until the activeArea reaches a size of
+     * 10. Make this public if this has to be maintained for all data in the textArea and not just for the data loaded
+     * in from files.
      */
-    private void update_activeArea (){
+    private void update(){
         int index = 0;
         while (activeArea.size() < 10 || passiveArea.size() == 0){
             activeArea.add(passiveArea.remove(index));

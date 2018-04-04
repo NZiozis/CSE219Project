@@ -27,7 +27,7 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
  *
  * @author Ritwik Banerjee
  */
-public final class AppUI extends UITemplate {
+public final class AppUI extends UITemplate{
 
     /**
      * The application to which this class of actions belongs.
@@ -35,43 +35,44 @@ public final class AppUI extends UITemplate {
     private ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private Button scrnshotButton;                    // toolbar button to take a screenshot of the data
-    private LineChart<Number, Number> chart;          // the chart where data will be displayed
-    private TextArea textArea;                        // text area for new data input
-    private boolean hasNewText;                       // whether or not the text area has any new data since last display
+    private Button                   scrnshotButton;
+    // toolbar button to take a screenshot of the data
+    private LineChart<Number,Number> chart;          // the chart where data will be displayed
+    private TextArea                 textArea;                        // text area for new data input
+    private boolean                  hasNewText;
+    // whether or not the text area has any new data since last display
 
-    public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
+    public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
     }
 
-    public LineChart<Number, Number> getChart() {
+    public LineChart<Number,Number> getChart(){
         return chart;
     }
 
     @Override
-    protected void setResourcePaths(ApplicationTemplate applicationTemplate) {
+    protected void setResourcePaths(ApplicationTemplate applicationTemplate){
         super.setResourcePaths(applicationTemplate);
     }
 
     @Override
-    protected void setToolBar(ApplicationTemplate applicationTemplate) {
+    protected void setToolBar(ApplicationTemplate applicationTemplate){
         super.setToolBar(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
         String iconsPath = SEPARATOR + String.join(SEPARATOR,
-                manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-                manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
-        String scrnshoticonPath = String.join(SEPARATOR,
-                iconsPath,
-                manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
+                                                   manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                                                   manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
+        String scrnshoticonPath =
+                String.join(SEPARATOR, iconsPath, manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
         scrnshotButton = setToolbarButton(scrnshoticonPath,
-                manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
-                true);
+                                          manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
+                                          true);
         toolBar.getItems().add(scrnshotButton);
     }
 
     @Override
-    protected void setToolbarHandlers(ApplicationTemplate applicationTemplate) {
+    protected void setToolbarHandlers(ApplicationTemplate applicationTemplate){
         applicationTemplate.setActionComponent(new AppActions(applicationTemplate));
         newButton.setOnAction(e -> applicationTemplate.getActionComponent().handleNewRequest());
         saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
@@ -80,23 +81,24 @@ public final class AppUI extends UITemplate {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(){
         layout();
         setWorkspaceActions();
-        appPane.getStylesheets().add(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CSS_RESOURCE_PATH.name()));
+        appPane.getStylesheets()
+                .add(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CSS_RESOURCE_PATH.name()));
     }
 
     @Override
-    public void clear() {
+    public void clear(){
         textArea.clear();
         chart.getData().clear();
     }
 
-    public String getCurrentText() {
+    public String getCurrentText(){
         return textArea.getText();
     }
 
-    private void layout() {
+    private void layout(){
         PropertyManager manager = applicationTemplate.manager;
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -135,27 +137,28 @@ public final class AppUI extends UITemplate {
         VBox.setVgrow(appPane, Priority.ALWAYS);
     }
 
-    private void setWorkspaceActions() {
+    private void setWorkspaceActions(){
         setTextAreaActions();
     }
 
-    private void setTextAreaActions() {
+    private void setTextAreaActions(){
         textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                if (!newValue.equals(oldValue)) {
-                    if (!newValue.isEmpty()) {
+            try{
+                if (!newValue.equals(oldValue)){
+                    if (!newValue.isEmpty()){
                         ((AppActions) applicationTemplate.getActionComponent()).setIsUnsavedProperty(true);
-                        if (newValue.charAt(newValue.length() - 1) == '\n')
-                            hasNewText = true;
+                        if (newValue.charAt(newValue.length() - 1) == '\n') hasNewText = true;
                         newButton.setDisable(false);
                         saveButton.setDisable(false);
-                    } else {
+                    }
+                    else{
                         hasNewText = true;
                         newButton.setDisable(true);
                         saveButton.setDisable(true);
                     }
                 }
-            } catch (IndexOutOfBoundsException e) {
+            }
+            catch (IndexOutOfBoundsException e){
                 System.err.println(newValue);
             }
         });

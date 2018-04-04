@@ -7,7 +7,7 @@ package settings;
  * @author Ritwik Banerjee
  * @see vilij.settings.InitializationParams
  */
-public enum AppPropertyTypes {
+public enum AppPropertyTypes{
 
     /* resource files and folders */
     DATA_RESOURCE_PATH,

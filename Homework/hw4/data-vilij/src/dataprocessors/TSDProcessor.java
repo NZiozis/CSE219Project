@@ -17,21 +17,12 @@ import java.util.stream.Stream;
  * @author Ritwik Banerjee
  * @see XYChart
  */
-public final class TSDProcessor {
+public final class TSDProcessor{
 
-    public static class InvalidDataNameException extends Exception {
+    private Map<String,String>  dataLabels;
+    private Map<String,Point2D> dataPoints;
 
-        private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
-
-        public InvalidDataNameException(String name) {
-            super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
-        }
-    }
-
-    private Map<String, String>  dataLabels;
-    private Map<String, Point2D> dataPoints;
-
-    public TSDProcessor() {
+    public TSDProcessor(){
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
     }
@@ -42,27 +33,25 @@ public final class TSDProcessor {
      * @param tsdString the input data provided as a single {@link String}
      * @throws Exception if the input string does not follow the <code>.tsd</code> data format
      */
-    public void processString(String tsdString) throws Exception {
-        AtomicBoolean hadAnError   = new AtomicBoolean(false);
+    public void processString(String tsdString) throws Exception{
+        AtomicBoolean hadAnError = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
-        Stream.of(tsdString.split("\n"))
-              .map(line -> Arrays.asList(line.split("\t")))
-              .forEach(list -> {
-                  try {
-                      String   name  = checkedname(list.get(0));
-                      String   label = list.get(1);
-                      String[] pair  = list.get(2).split(",");
-                      Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
-                      dataLabels.put(name, label);
-                      dataPoints.put(name, point);
-                  } catch (Exception e) {
-                      errorMessage.setLength(0);
-                      errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
-                      hadAnError.set(true);
-                  }
-              });
-        if (errorMessage.length() > 0)
-            throw new Exception(errorMessage.toString());
+        Stream.of(tsdString.split("\n")).map(line -> Arrays.asList(line.split("\t"))).forEach(list -> {
+            try{
+                String name = checkedname(list.get(0));
+                String label = list.get(1);
+                String[] pair = list.get(2).split(",");
+                Point2D point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
+                dataLabels.put(name, label);
+                dataPoints.put(name, point);
+            }
+            catch (Exception e){
+                errorMessage.setLength(0);
+                errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
+                hadAnError.set(true);
+            }
+        });
+        if (errorMessage.length() > 0) throw new Exception(errorMessage.toString());
     }
 
     /**
@@ -70,10 +59,10 @@ public final class TSDProcessor {
      *
      * @param chart the specified chart
      */
-    void toChartData(XYChart<Number, Number> chart) {
+    void toChartData(XYChart<Number,Number> chart){
         Set<String> labels = new HashSet<>(dataLabels.values());
-        for (String label : labels) {
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        for (String label : labels){
+            XYChart.Series<Number,Number> series = new XYChart.Series<>();
             series.setName(label);
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
@@ -83,14 +72,22 @@ public final class TSDProcessor {
         }
     }
 
-    void clear() {
+    void clear(){
         dataPoints.clear();
         dataLabels.clear();
     }
 
-    private String checkedname(String name) throws InvalidDataNameException {
-        if (!name.startsWith("@"))
-            throw new InvalidDataNameException(name);
+    private String checkedname(String name) throws InvalidDataNameException{
+        if (!name.startsWith("@")) throw new InvalidDataNameException(name);
         return name;
+    }
+
+    public static class InvalidDataNameException extends Exception{
+
+        private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
+
+        public InvalidDataNameException(String name){
+            super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
+        }
     }
 }
