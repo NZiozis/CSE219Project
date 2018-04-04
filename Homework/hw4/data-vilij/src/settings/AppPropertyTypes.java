@@ -24,9 +24,15 @@ public enum AppPropertyTypes{
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
+    LOAD_DATA_TITLE,
+    INVALID_TEXT_ERROR_TITLE,
+    DUPLICATE_ERROR_TITLE,
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
+    LOAD_DATA,
+    INVALID_TEXT_ERROR_MESSAGE,
+    DUPLICATE_ERROR_MESSAGE,
 
     /* application-specific parameters */
     DATA_FILE_EXT,
@@ -37,4 +43,7 @@ public enum AppPropertyTypes{
     LEFT_PANE_TITLEFONT,
     LEFT_PANE_TITLESIZE,
     CHART_TITLE,
+
+    /* Extra Strings that don't have a designation */
+    ON_LINE,
 }

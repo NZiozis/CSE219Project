@@ -1,5 +1,7 @@
 package dataprocessors;
 
+import datastructures.TenLines;
+import datastructures.Tuple;
 import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.DataComponent;
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -22,17 +26,23 @@ import java.nio.file.Path;
  */
 public class AppData implements DataComponent{
 
+    public  TenLines<String>    tenLines;
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
+        this.tenLines = new TenLines<>();
     }
 
+    /**
+     * This method is meant to load the data into an Array List which then gets put into the tenLines and from there go
+     * and project that all of that data on the chart area.
+     */
     @Override
     public void loadData(Path dataFilePath){
-        // TODO: NOT A PART OF HW 1
+
     }
 
     public void loadData(String dataString){
@@ -68,5 +78,37 @@ public class AppData implements DataComponent{
 
     public void displayData(){
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+    }
+
+    /**
+     * This returns the index of an error if there is. If not, the Tuple.get_key() == -1
+     */
+    public Tuple<Integer,String> indexOfErrorOrDuplicates(ArrayList<String> arrayList){
+        Tuple<Integer,String> tuple = new Tuple<>(-1, "");
+        HashMap<String,Integer> map = new HashMap<>();
+        arrayList.forEach((String string) -> {
+            if (map.containsKey(string)){
+                tuple.set_key((arrayList.indexOf(string)));
+                tuple.set_value(string);
+                tuple.set_isDuplicate(true);
+            }
+            else{ map.put(string, 1); }
+        });
+
+        if (tuple.get_key() != -1) return tuple;
+
+        arrayList.forEach((String string) -> {
+            try{
+                processor.processString(string);
+            }
+            catch (Exception e){
+                tuple.set_key(arrayList.indexOf(string));
+                tuple.set_value(string);
+                tuple.set_isDuplicate(false);
+            }
+
+        });
+
+        return tuple;
     }
 }

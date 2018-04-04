@@ -23,9 +23,15 @@ functionality within the main workspace. -->
 
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
+        <property name="LOAD_DATA_TITLE" value="Load Data From File"/>
+        <property name="DUPLICATE_ERROR_TITLE" value="Duplicate Error"/>
+        <property name="INVALID_TEXT_ERROR_TITLE" value="Invalid Text"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
+        <property name="LOAD_DATA" value="Would you like to load in a file?"/>
+        <property name="LOAD_ACTION_RESULT" value="You have loaded a file with %d lines. %d have been displayed in the text area."/>
+        <property name="INVALID_TEXT_ERROR_MESSAGE" value="The file you have tried to load has a %s error on line %i"/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>

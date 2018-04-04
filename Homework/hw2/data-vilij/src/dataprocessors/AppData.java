@@ -29,13 +29,13 @@ public class AppData implements DataComponent{
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
 
-    public AppData (ApplicationTemplate applicationTemplate){
+    public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
     }
 
     @Override
-    public void loadData (Path dataFilePath){
+    public void loadData(Path dataFilePath){
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().clear();
         int counter = loadInTenLines();
         ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
@@ -51,7 +51,7 @@ public class AppData implements DataComponent{
 
     }
 
-    public int loadInTenLines (){
+    public int loadInTenLines(){
         ArrayList<String> arrayList = ((AppActions) applicationTemplate.getActionComponent()).getArrayList();
         int counter = 0;
         for (String s : arrayList){
@@ -65,7 +65,7 @@ public class AppData implements DataComponent{
         return counter;
     }
 
-    public void loadData (String dataString){
+    public void loadData(String dataString){
         try{
             processor.processString(dataString);
         }
@@ -80,7 +80,7 @@ public class AppData implements DataComponent{
     }
 
     @Override
-    public void saveData (Path dataFilePath){
+    public void saveData(Path dataFilePath){
         // NOTE: completing this method was not a part of HW 1. You may have implemented file saving from the
         // confirmation dialog elsewhere in a different way.
         try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))){
@@ -92,18 +92,18 @@ public class AppData implements DataComponent{
     }
 
     @Override
-    public void clear (){
+    public void clear(){
         processor.clear();
     }
 
-    public void displayData (){
+    public void displayData(){
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
     }
 
     /**
      * This returns the index of an error if there is. If not, the Tuple.get_key() == -1
      */
-    public Tuple<Integer,String> indexOfErrorOrDuplicates (ArrayList<String> arrayList){
+    public Tuple<Integer,String> indexOfErrorOrDuplicates(ArrayList<String> arrayList){
         Tuple<Integer,String> tuple = new Tuple<>(-1, "");
         HashMap<String,Integer> map = new HashMap<>();
         arrayList.forEach(string -> {
@@ -137,22 +137,22 @@ public class AppData implements DataComponent{
         T1      _value;
         boolean _isDuplicate;
 
-        public Tuple (T key, T1 value){
+        public Tuple(T key, T1 value){
             _key = key;
             _value = value;
         }
 
-        public T get_key ()                               { return _key; }
+        public T get_key()                               { return _key; }
 
-        public void set_key (T _key)                      { this._key = _key; }
+        public void set_key(T _key)                      { this._key = _key; }
 
-        public T1 get_value ()                            { return _value; }
+        public T1 get_value()                            { return _value; }
 
-        public void set_value (T1 _value)                 { this._value = _value; }
+        public void set_value(T1 _value)                 { this._value = _value; }
 
-        public boolean get_isDuplicate ()                 { return _isDuplicate; }
+        public boolean get_isDuplicate()                 { return _isDuplicate; }
 
-        public void set_isDuplicate (boolean _isDuplicate){ this._isDuplicate = _isDuplicate; }
+        public void set_isDuplicate(boolean _isDuplicate){ this._isDuplicate = _isDuplicate; }
     }
 
 }

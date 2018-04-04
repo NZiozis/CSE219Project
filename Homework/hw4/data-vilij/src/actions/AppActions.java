@@ -1,5 +1,7 @@
 package actions;
 
+import dataprocessors.AppData;
+import datastructures.Tuple;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -17,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -31,15 +35,15 @@ public final class AppActions implements ActionComponent{
     /**
      * Path to the data file currently active.
      */
-    Path                  dataFilePath;
+    private Path                  dataFilePath;
     /**
      * The boolean property marking whether or not there are any unsaved changes.
      */
-    SimpleBooleanProperty isUnsaved;
+    private SimpleBooleanProperty isUnsaved;
     /**
      * The application to which this class of actions belongs.
      */
-    private ApplicationTemplate applicationTemplate;
+    private ApplicationTemplate   applicationTemplate;
 
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
@@ -63,13 +67,25 @@ public final class AppActions implements ActionComponent{
 
     @Override
     public void handleSaveRequest(){
-        // TODO: NOT A PART OF HW 1
+        try{
+            if (!isUnsaved.get() || promptToSave()){
+                isUnsaved.set(false);
+            }
+        }
+        catch (IOException e){ errorHandlingHelper(); }
     }
 
     @Override
     public void handleLoadRequest(){
-        // TODO: NOT A PART OF HW 1
+        try{
+            if (promptToLoad()){
+                applicationTemplate.getDataComponent().clear();
+                applicationTemplate.getUIComponent().clear();
+            }
+        }
+        catch (IOException e){errorHandlingHelper();}
     }
+
 
     @Override
     public void handleExitRequest(){
@@ -79,14 +95,14 @@ public final class AppActions implements ActionComponent{
         catch (IOException e){ errorHandlingHelper(); }
     }
 
-    @Override
-    public void handlePrintRequest(){
-        // TODO: NOT A PART OF HW 1
+    public void handleScreenshotRequest(){
+        // TODO: Copy over and fix the code from hw2
     }
 
-    public void handleScreenshotRequest() throws IOException{
-        // TODO: NOT A PART OF HW 1
-    }
+    /**
+     * This is a place holder. I do not intend to implement this, but since we extend appActions it is required.
+     */
+    public void handlePrintRequest(){}
 
     /**
      * This helper method verifies that the user really wants to save their unsaved work, which they might not want to
@@ -115,7 +131,8 @@ public final class AppActions implements ActionComponent{
                 URL dataDirURL = getClass().getResource(dataDirPath);
 
                 if (dataDirURL == null){
-                    throw new FileNotFoundException(manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+                    throw new FileNotFoundException(
+                            manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
                 }
 
                 fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
@@ -142,8 +159,79 @@ public final class AppActions implements ActionComponent{
         return !dialog.getSelectedOption().equals(ConfirmationDialog.Option.CANCEL);
     }
 
-    private void save() throws IOException{
+    private void save(){
         applicationTemplate.getDataComponent().saveData(dataFilePath);
+        isUnsaved.set(false);
+    }
+
+
+    /**
+     * While similar to promptToSave() it does not offer a confirmation dialog. The prompt to choose a file will
+     * appear immediately and that option will load in the data to the tenLines, and from there have the activeArea
+     * displayed in the textArea.
+     */
+    private boolean promptToLoad() throws IOException{
+        PropertyManager manager = applicationTemplate.manager;
+        ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+        dialog.show(manager.getPropertyValue(AppPropertyTypes.LOAD_DATA_TITLE.name()),
+                    manager.getPropertyValue(AppPropertyTypes.LOAD_DATA.name()));
+
+        if (dialog.getSelectedOption() == null) return false;
+
+        if (dialog.getSelectedOption().equals(ConfirmationDialog.Option.YES)){
+
+            FileChooser fileChooser = new FileChooser();
+            String dataDirPath = SEPARATOR + manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name());
+            URL dataDirURL = getClass().getResource(dataDirPath);
+
+            if (dataDirURL == null){
+                throw new FileNotFoundException(
+                        manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+            }
+
+            fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
+            fileChooser.setTitle(manager.getPropertyValue(AppPropertyTypes.LOAD_DATA_TITLE.name()));
+
+            String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
+            String extension = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name());
+            ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+                                                            String.format("*%s", extension));
+
+            fileChooser.getExtensionFilters().add(extFilter);
+            File selected = fileChooser.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+            if (selected != null){
+                ArrayList<String> arrayList = new ArrayList<>();
+                Scanner s = new Scanner(new File(selected.toPath().toString())).useDelimiter("\n");
+                while (s.hasNextLine()){
+                    arrayList.add(s.nextLine() + "\n");
+                }
+
+                Tuple<Integer,String> errorTuple =
+                        ((AppData) applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayList);
+
+                if (errorTuple.get_key() == -1){
+                    dataFilePath = selected.toPath();
+                    ((AppData) applicationTemplate.getDataComponent()).tenLines.setTotalData(arrayList);
+                    load();
+                }
+                else{
+                    dataFilePath = null;
+                    if (errorTuple.get_isDuplicate()){ duplicateErrorHelper(errorTuple); }
+                    else{ invalidTextErrorHelper(errorTuple); }
+                }
+
+            }
+            else{
+                return false; // if user presses escape after initially selecting 'yes'
+            }
+        }
+
+        return !dialog.getSelectedOption().equals(ConfirmationDialog.Option.CANCEL);
+
+    }
+
+    private void load(){
+        applicationTemplate.getDataComponent().loadData(dataFilePath);
         isUnsaved.set(false);
     }
 
@@ -154,5 +242,27 @@ public final class AppActions implements ActionComponent{
         String errMsg = manager.getPropertyValue(PropertyTypes.SAVE_ERROR_MSG.name());
         String errInput = manager.getPropertyValue(AppPropertyTypes.SPECIFIED_FILE.name());
         dialog.show(errTitle, errMsg + errInput);
+    }
+
+    private void invalidTextErrorHelper(Tuple<Integer,String> tuple){
+        ErrorDialog dialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+        PropertyManager manager = applicationTemplate.manager;
+        String errTitle = manager.getPropertyValue(AppPropertyTypes.INVALID_TEXT_ERROR_TITLE.name());
+        String errMsg = manager.getPropertyValue(AppPropertyTypes.INVALID_TEXT_ERROR_MESSAGE.name());
+        String invalidElement = tuple.get_value();
+        String invalidIndex = tuple.get_key().toString();
+
+        dialog.show(errTitle, String.format(errMsg, invalidElement, invalidIndex));
+    }
+
+    private void duplicateErrorHelper(Tuple<Integer,String> tuple){
+        ErrorDialog dialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+        PropertyManager manager = applicationTemplate.manager;
+        String errTitle = manager.getPropertyValue(AppPropertyTypes.DUPLICATE_ERROR_TITLE.name());
+        String errMsg = manager.getPropertyValue(AppPropertyTypes.DUPLICATE_ERROR_MESSAGE.name());
+        String duplicateElement = tuple.get_value();
+        String duplicateIndex = tuple.get_key().toString();
+
+        dialog.show(errTitle, String.format(errMsg, duplicateElement, duplicateIndex));
     }
 }

@@ -51,10 +51,8 @@ public class TenLines<T>{
      * in from files.
      */
     private void update(){
-        int index = 0;
-        while (activeArea.size() < 10 || passiveArea.size() == 0){
-            activeArea.add(passiveArea.remove(index));
-            index++;
+        while ((activeArea.size() < 10) && (passiveArea.size() > 0)){
+            activeArea.add(passiveArea.remove(0));
         }
     }
 
