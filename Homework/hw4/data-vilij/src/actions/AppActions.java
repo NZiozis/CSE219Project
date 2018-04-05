@@ -99,6 +99,10 @@ public final class AppActions implements ActionComponent{
         // TODO: Copy over and fix the code from hw2
     }
 
+    public void handleEditDone(){
+
+    }
+
     /**
      * This is a place holder. I do not intend to implement this, but since we extend appActions it is required.
      */

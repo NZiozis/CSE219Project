@@ -13,6 +13,8 @@ functionality within the main workspace. -->
 
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="SCREENSHOT_TOOLTIP" value="Screenshot"/> <!-- will print current view of image to a file -->
+        <property name="EDIT_TEXT" value="Edit"/>
+        <property name="DONE_TEXT" value="Done"/>
 
         <!-- WARNING MESSAGES -->
         <property name="EXIT_WHILE_RUNNING_WARNING"

@@ -18,6 +18,8 @@ public enum AppPropertyTypes{
 
     /* tooltips for user interface buttons */
     SCREENSHOT_TOOLTIP,
+    EDIT_TEXT,
+    DONE_TEXT,
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,

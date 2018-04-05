@@ -35,12 +35,12 @@ public final class AppUI extends UITemplate{
     private ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private Button                   scrnshotButton;
-    // toolbar button to take a screenshot of the data
+    private Button                   scrnshotButton; // toolbar button to take a screenshot of the data
+    private Button                   editDoneButton; // toolbar button to edit the textArea when inputting new data
     private LineChart<Number,Number> chart;          // the chart where data will be displayed
-    private TextArea                 textArea;                        // text area for new data input
+    private TextArea                 textArea;       // text area for new data input
     private boolean                  hasNewText;
-    // whether or not the text area has any new data since last display
+
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -60,15 +60,16 @@ public final class AppUI extends UITemplate{
     protected void setToolBar(ApplicationTemplate applicationTemplate){
         super.setToolBar(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
-        String iconsPath = SEPARATOR + String.join(SEPARATOR,
-                                                   manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+        String iconsPath = SEPARATOR + String.join(SEPARATOR, manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
                                                    manager.getPropertyValue(ICONS_RESOURCE_PATH.name()));
         String scrnshoticonPath =
                 String.join(SEPARATOR, iconsPath, manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
-        scrnshotButton = setToolbarButton(scrnshoticonPath,
-                                          manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
-                                          true);
-        toolBar.getItems().add(scrnshotButton);
+        scrnshotButton =
+                setToolbarButton(scrnshoticonPath, manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
+                                 true);
+        editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
+
+        toolBar.getItems().addAll(scrnshotButton,editDoneButton);
     }
 
     @Override
@@ -78,6 +79,9 @@ public final class AppUI extends UITemplate{
         saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
+        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
+        scrnshotButton.setOnAction(
+                e -> ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest());
     }
 
     @Override
