@@ -38,14 +38,25 @@ public class AppData implements DataComponent{
 
     /**
      * This method is meant to load the data into an Array List which then gets put into the tenLines and from there go
-     * and project that all of that data on the chart area.
+     * and project that data on the chart area.
      */
     @Override
     public void loadData(Path dataFilePath){
+        int instances = tenLines.size();
+        StringBuilder builder = new StringBuilder();
+        String filename = dataFilePath.getFileName().toString();
 
+        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
+                String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
+                              instances, -1, filename));
+        ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(false);
+        tenLines.get_activeArea()
+                .forEach(builder::append);
+        loadData(builder.toString());
+        displayData();
     }
 
-    public void loadData(String dataString){
+    private void loadData(String dataString){
         try{
             processor.processString(dataString);
         }

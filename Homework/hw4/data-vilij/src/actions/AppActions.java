@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import settings.AppPropertyTypes;
+import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
 import vilij.components.Dialog;
@@ -77,10 +78,11 @@ public final class AppActions implements ActionComponent{
 
     @Override
     public void handleLoadRequest(){
+        applicationTemplate.getDataComponent().clear();
+        applicationTemplate.getUIComponent().clear();
         try{
             if (promptToLoad()){
-                applicationTemplate.getDataComponent().clear();
-                applicationTemplate.getUIComponent().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(true);
             }
         }
         catch (IOException e){errorHandlingHelper();}
@@ -100,8 +102,21 @@ public final class AppActions implements ActionComponent{
     }
 
     public void handleEditDone(){
+        PropertyManager manager = applicationTemplate.manager;
+        AppUI ui = ((AppUI) applicationTemplate.getUIComponent());
+        if ((ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name())))){
+
+            ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.DONE_TEXT.name()));
+            ui.getTextArea().setDisable(false);
+        }
+        else{
+
+            ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
+            ui.getTextArea().setDisable(true);
+        }
 
     }
+
 
     /**
      * This is a place holder. I do not intend to implement this, but since we extend appActions it is required.

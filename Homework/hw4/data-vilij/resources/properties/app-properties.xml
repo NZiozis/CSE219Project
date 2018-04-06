@@ -34,6 +34,8 @@ functionality within the main workspace. -->
         <property name="LOAD_DATA" value="Would you like to load in a file?"/>
         <property name="LOAD_ACTION_RESULT" value="You have loaded a file with %d lines. %d have been displayed in the text area."/>
         <property name="INVALID_TEXT_ERROR_MESSAGE" value="The file you have tried to load has a %s error on line %i"/>
+        <property name="NO_DATA_LOADED_IN_PLACEHOLDER" value="There is no data loaded from a file."/>
+        <property name="LOADED_DATA" value="%d instances with %d labels from %s. These labels are:"/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>

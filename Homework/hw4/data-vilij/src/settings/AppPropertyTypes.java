@@ -35,6 +35,9 @@ public enum AppPropertyTypes{
     LOAD_DATA,
     INVALID_TEXT_ERROR_MESSAGE,
     DUPLICATE_ERROR_MESSAGE,
+    NO_DATA_LOADED_IN_PLACEHOLDER,
+    LOADED_DATA,
+
 
     /* application-specific parameters */
     DATA_FILE_EXT,
@@ -46,6 +49,4 @@ public enum AppPropertyTypes{
     LEFT_PANE_TITLESIZE,
     CHART_TITLE,
 
-    /* Extra Strings that don't have a designation */
-    ON_LINE,
 }

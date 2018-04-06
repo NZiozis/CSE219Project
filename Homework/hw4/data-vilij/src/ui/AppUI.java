@@ -40,6 +40,7 @@ public final class AppUI extends UITemplate{
     private LineChart<Number,Number> chart;          // the chart where data will be displayed
     private TextArea                 textArea;       // text area for new data input
     private boolean                  hasNewText;
+    private Text                     loadedInFileText; // text displayed when
 
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
@@ -49,6 +50,22 @@ public final class AppUI extends UITemplate{
 
     public LineChart<Number,Number> getChart(){
         return chart;
+    }
+
+    public Button getEditDoneButton(){
+        return editDoneButton;
+    }
+
+    public TextArea getTextArea(){
+        return textArea;
+    }
+
+    public void setTextArea(String string){
+         textArea.setText(string);
+    }
+
+    public void setLoadedInFileText(String text){
+        this.loadedInFileText.setText(text);
     }
 
     @Override
@@ -69,7 +86,7 @@ public final class AppUI extends UITemplate{
                                  true);
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
 
-        toolBar.getItems().addAll(scrnshotButton,editDoneButton);
+        toolBar.getItems().addAll(scrnshotButton, editDoneButton);
     }
 
     @Override
@@ -79,9 +96,9 @@ public final class AppUI extends UITemplate{
         saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
-        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
         scrnshotButton.setOnAction(
                 e -> ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest());
+        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
     }
 
     @Override
@@ -123,11 +140,16 @@ public final class AppUI extends UITemplate{
         leftPanelTitle.setFont(Font.font(fontname, fontsize));
 
         textArea = new TextArea();
+        textArea.setDisable(true);
 
         HBox processButtonsBox = new HBox();
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
 
-        leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox);
+        loadedInFileText = new Text(manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
+        loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
+
+
+        leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText);
 
         StackPane rightPanel = new StackPane(chart);
         rightPanel.setMaxSize(windowWidth * 0.69, windowHeight * 0.69);

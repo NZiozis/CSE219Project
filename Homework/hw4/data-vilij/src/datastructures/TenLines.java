@@ -16,7 +16,7 @@ public class TenLines<T>{
 
     public TenLines(ArrayList<T> totalData){
         activeArea = new ArrayList<>();
-        passiveArea = totalData;
+        passiveArea = (ArrayList<T>) totalData.clone();
         this.totalData = totalData;
         update();
     }
@@ -34,6 +34,8 @@ public class TenLines<T>{
         return totalData;
     }
 
+    public int size(){ return totalData.size();}
+
     /**
      * this should only be called when new data is being loaded in. This completely resets the data that the
      * application is working with to the initial case. This should also only really be needed to be called when the
@@ -41,7 +43,7 @@ public class TenLines<T>{
      */
     public void setTotalData(ArrayList<T> totalData){
         this.totalData = totalData;
-        passiveArea = totalData;
+        passiveArea = (ArrayList<T>) totalData.clone();
         update();
     }
 
