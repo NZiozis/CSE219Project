@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -144,8 +145,12 @@ public final class AppUI extends UITemplate{
         loadedInFileText = new Text(manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
 
+        ScrollPane algorithmHouse = new ScrollPane();
+        StackPane algorithms = new StackPane();
 
-        leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText);
+        algorithmHouse.setContent(algorithms);
+
+        leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText, algorithmHouse);
 
         StackPane rightPanel = new StackPane(chart);
         rightPanel.setMaxSize(windowWidth * 0.69, windowHeight * 0.69);
