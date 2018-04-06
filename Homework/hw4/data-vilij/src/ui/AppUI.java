@@ -8,10 +8,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -146,7 +143,7 @@ public final class AppUI extends UITemplate{
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
 
         ScrollPane algorithmHouse = new ScrollPane();
-        StackPane algorithms = new StackPane();
+        Pane algorithms = new GridPane();
 
         algorithmHouse.setContent(algorithms);
 
