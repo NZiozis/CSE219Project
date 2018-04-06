@@ -60,10 +60,6 @@ public final class AppUI extends UITemplate{
         return textArea;
     }
 
-    public void setTextArea(String string){
-         textArea.setText(string);
-    }
-
     public void setLoadedInFileText(String text){
         this.loadedInFileText.setText(text);
     }

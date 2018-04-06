@@ -271,7 +271,7 @@ public final class AppActions implements ActionComponent{
         String invalidElement = tuple.get_value();
         String invalidIndex = tuple.get_key().toString();
 
-        dialog.show(errTitle, String.format(errMsg, invalidElement, invalidIndex));
+        dialog.show(errTitle, String.format(errMsg, invalidIndex, invalidElement));
     }
 
     private void duplicateErrorHelper(Tuple<Integer,String> tuple){
@@ -282,6 +282,6 @@ public final class AppActions implements ActionComponent{
         String duplicateElement = tuple.get_value();
         String duplicateIndex = tuple.get_key().toString();
 
-        dialog.show(errTitle, String.format(errMsg, duplicateElement, duplicateIndex));
+        dialog.show(errTitle, String.format(errMsg, duplicateIndex, duplicateElement));
     }
 }

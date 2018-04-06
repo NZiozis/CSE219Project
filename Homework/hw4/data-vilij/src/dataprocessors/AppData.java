@@ -49,11 +49,10 @@ public class AppData implements DataComponent{
         ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
                 String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
                               instances, -1, filename));
-        ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(false);
-        tenLines.get_activeArea()
-                .forEach(builder::append);
+        tenLines.get_activeArea().forEach(builder::append);
         loadData(builder.toString());
         displayData();
+        ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
     }
 
     private void loadData(String dataString){
@@ -99,7 +98,7 @@ public class AppData implements DataComponent{
         HashMap<String,Integer> map = new HashMap<>();
         arrayList.forEach((String string) -> {
             if (map.containsKey(string)){
-                tuple.set_key((arrayList.indexOf(string)));
+                tuple.set_key((arrayList.indexOf(string) +1));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(true);
             }
@@ -113,7 +112,7 @@ public class AppData implements DataComponent{
                 processor.processString(string);
             }
             catch (Exception e){
-                tuple.set_key(arrayList.indexOf(string));
+                tuple.set_key(arrayList.indexOf(string) + 1);
                 tuple.set_value(string);
                 tuple.set_isDuplicate(false);
             }

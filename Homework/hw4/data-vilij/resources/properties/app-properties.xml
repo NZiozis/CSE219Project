@@ -32,8 +32,12 @@ functionality within the main workspace. -->
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
         <property name="LOAD_DATA" value="Would you like to load in a file?"/>
-        <property name="LOAD_ACTION_RESULT" value="You have loaded a file with %d lines. %d have been displayed in the text area."/>
-        <property name="INVALID_TEXT_ERROR_MESSAGE" value="The file you have tried to load has a %s error on line %i"/>
+        <property name="LOAD_ACTION_RESULT"
+                  value="You have loaded a file with %d lines. %d have been displayed in the text area."/>
+        <property name="INVALID_TEXT_ERROR_MESSAGE"
+                  value="The file you have tried to load has an invalid input on line %s. It is: %s"/>
+        <property name="DUPLICATE_ERROR_MESSAGE"
+                  value="The file you have tried to load has a duplicate on line %s. It is: %s"/>
         <property name="NO_DATA_LOADED_IN_PLACEHOLDER" value="There is no data loaded from a file."/>
         <property name="LOADED_DATA" value="%d instances with %d labels from %s. These labels are:"/>
 
