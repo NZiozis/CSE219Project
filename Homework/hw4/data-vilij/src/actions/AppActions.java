@@ -151,7 +151,6 @@ public final class AppActions implements ActionComponent{
     }
 
     public void handleEditDone(){
-        //TODO This should display the data when the user clicks done and clear it when they click edit.
         PropertyManager manager = applicationTemplate.manager;
         AppUI ui = ((AppUI) applicationTemplate.getUIComponent());
         if ((ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name())))){
@@ -318,10 +317,20 @@ public final class AppActions implements ActionComponent{
         isUnsaved.set(false);
     }
 
+
+    /**
+     * The types of algorithms will be updated once per the loading off the application. However, the algorithms of
+     * that type that are available will be updated everytime that directory is entered. Essentially, ToggleGroup
+     * algorithmTypes will be updates once and only once in the following method. However, in populateAlgorithms, the
+     * ToggleGroup algorithm will be update everytime the subdirectory containing the actual algorithms is entered.
+     */
     public void populateAlgorithmTypes(ToggleGroup algorithmTypes, File algorithmsDir){
+        //TODO Toggle Group does not apply when loaded in. So, make sure this is the case
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
+        int counter = 0;
         for (String directory : directories != null ? directories : new String[0]){
             RadioButton radioButton = new RadioButton(directory);
+            ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
             radioButton.setToggleGroup(algorithmTypes);
         }
     }

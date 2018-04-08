@@ -58,14 +58,16 @@ public class AppData implements DataComponent{
         loadData(builder.toString());
         displayData();
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
-//        ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
-//                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
-    }
+        }
 
 
     public void loadData(String dataString){
         try{
             processor.processString(dataString);
+            //TODO This is where the list of algorithm types should be populated.
+            ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
+                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
+
         }
         catch (Exception e){
             ErrorDialog dialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
