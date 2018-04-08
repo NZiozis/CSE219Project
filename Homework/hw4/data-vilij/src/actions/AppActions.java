@@ -166,7 +166,7 @@ public final class AppActions implements ActionComponent{
 
 
     /**
-     * This is a place holder. I do not intend to implement this, but since we extend appActions it is required.
+     * This is a place holder. I do not intend to implement this, but since we implement ActionComponent it is required.
      */
     public void handlePrintRequest(){}
 

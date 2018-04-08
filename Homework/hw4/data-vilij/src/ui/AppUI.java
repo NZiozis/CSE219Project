@@ -3,7 +3,6 @@ package ui;
 import actions.AppActions;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
@@ -29,6 +28,9 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
  */
 public final class AppUI extends UITemplate{
 
+
+    // This will display the algorithm types and then the algorithms available to be chosen from as well as the option to configure them
+    public  GridPane            loadedAlgorithms;
     /**
      * The application to which this class of actions belongs.
      */
@@ -42,7 +44,9 @@ public final class AppUI extends UITemplate{
     private boolean                  hasNewText;
     private Text                     loadedInFileText; // text displayed when
     private ToggleGroup              algorithmTypes;   // this will hold the algoTypes in the form of radio buttons
-    private ToggleGroup              algorithms;       // This will hold the algoritms of the currently selected type.
+    private ToggleGroup              algorithms;       // this will hold the algoritms of the currently selected type.
+    private Button                   selectButton;
+    // this will confirm the choice of the person selecting from the radio buttons
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -154,14 +158,17 @@ public final class AppUI extends UITemplate{
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
 
         ScrollPane algorithmHouse = new ScrollPane();
-        GridPane algorithms = new GridPane();
-        algorithmHouse.setContent(algorithms);
+        loadedAlgorithms = new GridPane();
+        algorithmHouse.setContent(loadedAlgorithms);
+
+        selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
 
         //TODO so what you have to do here is find a way to add the radio buttons, not the groups. It might not make
         // sense to do this on initialization, at least the for the second case. There should be a way to toggle back
         // and forth as well as see the relevant ones for each type without bugs. Maybe a foreach is in order?
 
-        leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText, algorithmHouse);
+        leftPanel.getChildren()
+                .addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText, algorithmHouse, selectButton);
 
         StackPane rightPanel = new StackPane(chart);
         rightPanel.setMaxSize(windowWidth * 0.69, windowHeight * 0.69);

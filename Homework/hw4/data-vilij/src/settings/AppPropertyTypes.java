@@ -21,6 +21,7 @@ public enum AppPropertyTypes{
     SCREENSHOT_TOOLTIP,
     EDIT_TEXT,
     DONE_TEXT,
+    SELECT_TEXT,
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
