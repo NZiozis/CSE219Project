@@ -3,6 +3,12 @@ package actions;
 import dataprocessors.AppData;
 import datastructures.Tuple;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import settings.AppPropertyTypes;
@@ -15,6 +21,8 @@ import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -98,7 +106,47 @@ public final class AppActions implements ActionComponent{
     }
 
     public void handleScreenshotRequest(){
-        // TODO: Copy over and fix the code from hw2
+        PropertyManager manager = applicationTemplate.manager;
+        LineChart<Number,Number> chart = ((AppUI) applicationTemplate.getUIComponent()).getChart();
+        WritableImage image = chart.snapshot(new SnapshotParameters(), null);
+
+        FileChooser fileChooser = new FileChooser();
+        String dataDirPath = SEPARATOR + manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name());
+        URL dataDirURL = getClass().getResource(dataDirPath);
+
+        if (dataDirURL == null){
+            ErrorDialog dataDirNotFound = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+            dataDirNotFound.show(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()),
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+        }
+
+
+        assert dataDirURL != null;
+        fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
+        fileChooser.setTitle(manager.getPropertyValue(SAVE_WORK_TITLE.name()));
+        String description = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_DESC.name());
+        String extension = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name());
+        ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+                                                        String.format("*%s", extension));
+
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.SCRNSHT_INITIAL.name()));
+        File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+
+        if (selected != null){
+            RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
+            try{
+                ImageIO.write(renderedImage, AppPropertyTypes.SCRNSHT_FILE_EXT.name(), selected);
+            }
+            catch (IOException e){
+                ErrorDialog screenShotError = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                screenShotError.show(
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_TITLE.name()),
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_MESSAGE.name()));
+
+            }
+        }
     }
 
     public void handleEditDone(){
@@ -110,7 +158,6 @@ public final class AppActions implements ActionComponent{
             ui.getTextArea().setDisable(false);
         }
         else{
-
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
             ui.getTextArea().setDisable(true);
         }
@@ -253,6 +300,15 @@ public final class AppActions implements ActionComponent{
         applicationTemplate.getDataComponent().loadData(dataFilePath);
         isUnsaved.set(false);
     }
+
+    public void populateAlgorithmTypes(ToggleGroup algorithmTypes, File algorithmsDir){
+        String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
+        for (String directory : directories != null ? directories : new String[0]){
+            RadioButton radioButton = new RadioButton(directory);
+            radioButton.setToggleGroup(algorithmTypes);
+        }
+    }
+
 
     private void errorHandlingHelper(){
         ErrorDialog dialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);

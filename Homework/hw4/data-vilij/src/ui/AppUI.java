@@ -3,11 +3,13 @@ package ui;
 import actions.AppActions;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -39,11 +41,20 @@ public final class AppUI extends UITemplate{
     private TextArea                 textArea;       // text area for new data input
     private boolean                  hasNewText;
     private Text                     loadedInFileText; // text displayed when
-
+    private ToggleGroup              algorithmTypes;   // this will hold the algoTypes in the form of radio buttons
+    private ToggleGroup              algorithms;       // This will hold the algoritms of the currently selected type.
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+    }
+
+    public ToggleGroup getAlgorithms(){
+        return algorithms;
+    }
+
+    public ToggleGroup getAlgorithmTypes(){
+        return algorithmTypes;
     }
 
     public LineChart<Number,Number> getChart(){
@@ -143,9 +154,12 @@ public final class AppUI extends UITemplate{
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
 
         ScrollPane algorithmHouse = new ScrollPane();
-        Pane algorithms = new GridPane();
-
+        GridPane algorithms = new GridPane();
         algorithmHouse.setContent(algorithms);
+
+        //TODO so what you have to do here is find a way to add the radio buttons, not the groups. It might not make
+        // sense to do this on initialization, at least the for the second case. There should be a way to toggle back
+        // and forth as well as see the relevant ones for each type without bugs. Maybe a foreach is in order?
 
         leftPanel.getChildren().addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText, algorithmHouse);
 

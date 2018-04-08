@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import actions.AppActions;
 import datastructures.TenLines;
 import datastructures.Tuple;
 import settings.AppPropertyTypes;
@@ -11,6 +12,7 @@ import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -29,11 +31,14 @@ public class AppData implements DataComponent{
     public  TenLines<String>    tenLines;
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
+    private File                algorithmsDir;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
         this.tenLines = new TenLines<>();
+        this.algorithmsDir =
+                new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
     }
 
     /**
@@ -53,7 +58,10 @@ public class AppData implements DataComponent{
         loadData(builder.toString());
         displayData();
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
+        ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
+                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
     }
+
 
     private void loadData(String dataString){
         try{
@@ -98,7 +106,7 @@ public class AppData implements DataComponent{
         HashMap<String,Integer> map = new HashMap<>();
         arrayList.forEach((String string) -> {
             if (map.containsKey(string)){
-                tuple.set_key((arrayList.indexOf(string) +1));
+                tuple.set_key((arrayList.indexOf(string) + 1));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(true);
             }
