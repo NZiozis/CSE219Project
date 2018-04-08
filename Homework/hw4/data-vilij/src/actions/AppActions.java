@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
@@ -150,16 +151,32 @@ public final class AppActions implements ActionComponent{
     }
 
     public void handleEditDone(){
+        //TODO This should display the data when the user clicks done and clear it when they click edit.
         PropertyManager manager = applicationTemplate.manager;
         AppUI ui = ((AppUI) applicationTemplate.getUIComponent());
         if ((ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name())))){
-
+            applicationTemplate.getDataComponent().clear();
+            ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.DONE_TEXT.name()));
             ui.getTextArea().setDisable(false);
         }
         else{
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
             ui.getTextArea().setDisable(true);
+            String data = ((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText();
+            String[] dataArray = data.split("\n");
+            ArrayList<String> arrayListData = new ArrayList<>();
+            Collections.addAll(arrayListData, dataArray);
+            Tuple<Integer,String> errorTuple =
+                    ((AppData) applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayListData);
+            if (errorTuple.get_key() == -1){
+                ((AppData) applicationTemplate.getDataComponent()).loadData(data);
+                ((AppData) applicationTemplate.getDataComponent()).displayData();
+            }
+            else{
+                if (errorTuple.get_isDuplicate()){ duplicateErrorHelper(errorTuple); }
+                else{ invalidTextErrorHelper(errorTuple); }
+            }
         }
 
     }

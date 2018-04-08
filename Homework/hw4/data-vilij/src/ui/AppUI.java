@@ -37,16 +37,15 @@ public final class AppUI extends UITemplate{
     private ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private Button                   scrnshotButton; // toolbar button to take a screenshot of the data
-    private Button                   editDoneButton; // toolbar button to edit the textArea when inputting new data
-    private LineChart<Number,Number> chart;          // the chart where data will be displayed
-    private TextArea                 textArea;       // text area for new data input
+    private Button                   scrnshotButton;   // toolbar button to take a screenshot of the data
+    private Button                   editDoneButton;   // toolbar button to edit the textArea when inputting new data
+    private LineChart<Number,Number> chart;            // the chart where data will be displayed
+    private TextArea                 textArea;         // text area for new data input
     private boolean                  hasNewText;
     private Text                     loadedInFileText; // text displayed when
     private ToggleGroup              algorithmTypes;   // this will hold the algoTypes in the form of radio buttons
     private ToggleGroup              algorithms;       // this will hold the algoritms of the currently selected type.
-    private Button                   selectButton;
-    // this will confirm the choice of the person selecting from the radio buttons
+    private Button                   selectButton;     // selected choice from radio buttons
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -149,6 +148,8 @@ public final class AppUI extends UITemplate{
         leftPanelTitle.setFont(Font.font(fontname, fontsize));
 
         textArea = new TextArea();
+        textArea.setMaxSize(windowWidth * 0.29, windowHeight * 0.25);
+        textArea.setMinSize(windowWidth * 0.29, windowHeight * 0.25);
         textArea.setDisable(true);
 
         HBox processButtonsBox = new HBox();

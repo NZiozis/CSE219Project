@@ -58,12 +58,12 @@ public class AppData implements DataComponent{
         loadData(builder.toString());
         displayData();
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
-        ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
-                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
+//        ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
+//                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
     }
 
 
-    private void loadData(String dataString){
+    public void loadData(String dataString){
         try{
             processor.processString(dataString);
         }
@@ -105,12 +105,13 @@ public class AppData implements DataComponent{
         Tuple<Integer,String> tuple = new Tuple<>(-1, "");
         HashMap<String,Integer> map = new HashMap<>();
         arrayList.forEach((String string) -> {
-            if (map.containsKey(string)){
+            String[] temp = string.split("\t");
+            if (map.containsKey(temp[0])){
                 tuple.set_key((arrayList.indexOf(string) + 1));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(true);
             }
-            else{ map.put(string, 1); }
+            else{ map.put(temp[0], 1); }
         });
 
         if (tuple.get_key() != -1) return tuple;
