@@ -128,7 +128,7 @@ public final class AppActions implements ActionComponent{
         fileChooser.setTitle(manager.getPropertyValue(SAVE_WORK_TITLE.name()));
         String description = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_DESC.name());
         String extension = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name());
-        ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+        ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (*%s)", description, extension),
                                                         String.format("*%s", extension));
 
         fileChooser.getExtensionFilters().add(extFilter);
@@ -222,8 +222,8 @@ public final class AppActions implements ActionComponent{
 
                 String description = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name());
                 String extension = manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name());
-                ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
-                                                                String.format("*.%s", extension));
+                ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (*%s)", description, extension),
+                                                                String.format("*%s", extension));
 
                 fileChooser.getExtensionFilters().add(extFilter);
                 File selected = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());

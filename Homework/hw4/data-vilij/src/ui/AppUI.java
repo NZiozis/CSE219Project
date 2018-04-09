@@ -68,6 +68,10 @@ public final class AppUI extends UITemplate{
         return editDoneButton;
     }
 
+    public Button getScrnshotButton(){
+        return scrnshotButton;
+    }
+
     public TextArea getTextArea(){
         return textArea;
     }

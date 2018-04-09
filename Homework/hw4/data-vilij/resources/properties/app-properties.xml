@@ -48,6 +48,9 @@ functionality within the main workspace. -->
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
+        <property name="SCRNSHT_INITIAL" value="Untitled.png"/>
+        <property name="SCRNSHT_FILE_EXT" value=".png"/>
+        <property name="SCRNSHT_FILE_DESC" value="PNG"/>
         <property name="LEFT_PANE_TITLE" value="Data File"/>
         <property name="LEFT_PANE_TITLEFONT" value="SansSerif"/>
         <property name="LEFT_PANE_TITLESIZE" value="18"/>
