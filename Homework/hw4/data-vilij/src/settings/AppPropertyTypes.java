@@ -54,5 +54,6 @@ public enum AppPropertyTypes{
     LEFT_PANE_TITLEFONT,
     LEFT_PANE_TITLESIZE,
     CHART_TITLE,
+    BACK,
 
 }

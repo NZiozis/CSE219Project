@@ -324,14 +324,26 @@ public final class AppActions implements ActionComponent{
      * algorithmTypes will be updates once and only once in the following method. However, in populateAlgorithms, the
      * ToggleGroup algorithm will be update everytime the subdirectory containing the actual algorithms is entered.
      */
-    public void populateAlgorithmTypes(ToggleGroup algorithmTypes, File algorithmsDir){
+    public void populaetAlgorithms(ToggleGroup algorithms, File algorithmsDir){
         //TODO Toggle Group does not apply when loaded in. So, make sure this is the case
-        String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
         int counter = 0;
-        for (String directory : directories != null ? directories : new String[0]){
-            RadioButton radioButton = new RadioButton(directory);
-            ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
-            radioButton.setToggleGroup(algorithmTypes);
+        ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().removeAll();
+        String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
+        if (directories.length != 0){
+            for (String directory : directories){
+                RadioButton radioButton = new RadioButton(directory);
+                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
+                radioButton.setToggleGroup(algorithms);
+            }
+        }
+        else{
+            String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
+            assert algorithmNames != null;
+            for (String algorithmN : algorithmNames){
+                RadioButton radioButton = new RadioButton(algorithmN);
+                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
+                radioButton.setToggleGroup(algorithms);
+            }
         }
     }
 

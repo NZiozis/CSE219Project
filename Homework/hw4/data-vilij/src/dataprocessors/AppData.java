@@ -18,7 +18,9 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -50,12 +52,21 @@ public class AppData implements DataComponent{
         int instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
         String filename = dataFilePath.toString();
-
-        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
-                String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
-                              instances, -1, filename));
+        HashSet labels = new HashSet();
+        tenLines.get_totalData().forEach(point -> {
+            String[] pointT = point.split("\t");
+            labels.add(pointT[1]);
+        });
         tenLines.get_activeArea().forEach(builder::append);
         loadData(builder.toString());
+        StringBuilder loadedText = new StringBuilder(
+                String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
+                              instances, labels.size(), filename));
+        loadedText.append("\n");
+        for (Object element : labels)
+            loadedText.append(element).append("\n");
+
+        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(loadedText.toString());
         displayData();
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
     }
@@ -64,9 +75,22 @@ public class AppData implements DataComponent{
     public void loadData(String dataString){
         try{
             processor.processString(dataString);
+            ArrayList<String> dataArray = new ArrayList<>(Arrays.asList(dataString.split("\n")));
+            HashSet labels = new HashSet();
+            dataArray.forEach(point -> {
+                String[] pointT = point.split("\t");
+                labels.add(pointT[1]);
+            });
+            int instances = dataArray.size();
+            ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
+                    String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
+                                  instances, labels.size(),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.TEXT_AREA.name())));
+
+
             //TODO This is where the list of algorithm types should be populated.
-            ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
-                    ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
+            ((AppActions) applicationTemplate.getActionComponent()).populaetAlgorithms(
+                    ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms(), algorithmsDir);
 
         }
         catch (Exception e){

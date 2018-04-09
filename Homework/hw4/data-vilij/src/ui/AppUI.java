@@ -5,10 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -17,6 +14,8 @@ import settings.AppPropertyTypes;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
+
+import java.io.File;
 
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
@@ -43,7 +42,6 @@ public final class AppUI extends UITemplate{
     private TextArea                 textArea;         // text area for new data input
     private boolean                  hasNewText;
     private Text                     loadedInFileText; // text displayed when
-    private ToggleGroup              algorithmTypes;   // this will hold the algoTypes in the form of radio buttons
     private ToggleGroup              algorithms;       // this will hold the algoritms of the currently selected type.
     private Button                   selectButton;     // selected choice from radio buttons
 
@@ -54,10 +52,6 @@ public final class AppUI extends UITemplate{
 
     public ToggleGroup getAlgorithms(){
         return algorithms;
-    }
-
-    public ToggleGroup getAlgorithmTypes(){
-        return algorithmTypes;
     }
 
     public LineChart<Number,Number> getChart(){
@@ -166,7 +160,6 @@ public final class AppUI extends UITemplate{
         loadedAlgorithms = new GridPane();
         algorithmHouse.setContent(loadedAlgorithms);
 
-        algorithmTypes = new ToggleGroup();
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
 
@@ -191,6 +184,7 @@ public final class AppUI extends UITemplate{
 
     private void setWorkspaceActions(){
         setTextAreaActions();
+        setSelectButtonActions();
     }
 
     private void setTextAreaActions(){
@@ -213,6 +207,20 @@ public final class AppUI extends UITemplate{
             catch (IndexOutOfBoundsException e){
                 System.err.println(newValue);
             }
+        });
+    }
+
+    private void setSelectButtonActions(){
+        selectButton.setOnMouseClicked(event -> {
+            Toggle selectedToggle = algorithms.getSelectedToggle();
+            AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
+            File algorithmsDir =
+                    new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+            if (selectedToggle.toString()
+                    .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+                appActions.populaetAlgorithms(algorithms, algorithmsDir);
+            }
+
         });
     }
 
