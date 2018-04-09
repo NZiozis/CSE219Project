@@ -221,6 +221,12 @@ public final class AppUI extends UITemplate{
                 appActions.populaetAlgorithms(algorithms, algorithmsDir);
             }
 
+            if (algorithms.getToggles().contains("Classification")){
+                algorithmsDir = new File(algorithmsDir.toString() + selectedToggle);
+                appActions.populaetAlgorithms(algorithms, algorithmsDir);
+            }
+
+
         });
     }
 

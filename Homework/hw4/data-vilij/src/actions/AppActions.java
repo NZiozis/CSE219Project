@@ -337,6 +337,9 @@ public final class AppActions implements ActionComponent{
             }
         }
         else{
+            RadioButton back = new RadioButton(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()));
+            ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(back, 0, counter++);
+
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
             assert algorithmNames != null;
             for (String algorithmN : algorithmNames){
