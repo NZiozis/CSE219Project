@@ -1,7 +1,11 @@
 package dataprocessors;
 
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Tooltip;
+import javafx.stage.PopupWindow;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,7 +26,7 @@ public final class TSDProcessor{
     private Map<String,String>  dataLabels;
     private Map<String,Point2D> dataPoints;
 
-    public TSDProcessor(){
+    TSDProcessor(){
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
     }
@@ -66,10 +70,11 @@ public final class TSDProcessor{
             series.setName(label);
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+                series.getData().add(new XYChart.Data<>(point.getX(), point.getY(), entry.getKey().substring(1)));
             });
             chart.getData().add(series);
         }
+        addTooltips(chart);
     }
 
     void clear(){
@@ -82,11 +87,29 @@ public final class TSDProcessor{
         return name;
     }
 
+    private void addTooltips(XYChart<Number,Number> chart){
+        for (int i = 0; i < chart.getData().size(); i++){
+            for (XYChart.Data<Number,Number> data : chart.getData().get(i).getData()){
+                Node node = data.getNode();
+                node.setCursor(Cursor.HAND);
+                Tooltip t;
+                if (data.getExtraValue() == null){
+                    t = new Tooltip("null");
+                }
+                else{
+                    t = new Tooltip(data.getExtraValue().toString());
+                }
+                t.setAnchorLocation(PopupWindow.AnchorLocation.CONTENT_BOTTOM_RIGHT);
+                Tooltip.install(node, t);
+            }
+        }
+    }
+
     public static class InvalidDataNameException extends Exception{
 
         private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
 
-        public InvalidDataNameException(String name){
+        InvalidDataNameException(String name){
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
         }
     }

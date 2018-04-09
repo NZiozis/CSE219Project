@@ -58,7 +58,7 @@ public class AppData implements DataComponent{
         loadData(builder.toString());
         displayData();
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
-        }
+    }
 
 
     public void loadData(String dataString){
@@ -66,7 +66,7 @@ public class AppData implements DataComponent{
             processor.processString(dataString);
             //TODO This is where the list of algorithm types should be populated.
             ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithmTypes(
-                ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
+                    ((AppUI) applicationTemplate.getUIComponent()).getAlgorithmTypes(), algorithmsDir);
 
         }
         catch (Exception e){
