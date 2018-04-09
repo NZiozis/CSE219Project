@@ -166,6 +166,8 @@ public final class AppUI extends UITemplate{
         loadedAlgorithms = new GridPane();
         algorithmHouse.setContent(loadedAlgorithms);
 
+        algorithmTypes = new ToggleGroup();
+        algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
 
         //TODO so what you have to do here is find a way to add the radio buttons, not the groups. It might not make

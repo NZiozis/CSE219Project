@@ -49,7 +49,7 @@ public class AppData implements DataComponent{
     public void loadData(Path dataFilePath){
         int instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
-        String filename = dataFilePath.getFileName().toString();
+        String filename = dataFilePath.toString();
 
         ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
                 String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
