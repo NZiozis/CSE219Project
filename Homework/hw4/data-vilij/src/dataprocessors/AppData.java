@@ -82,13 +82,17 @@ public class AppData implements DataComponent{
                 labels.add(pointT[1]);
             });
             int instances = dataArray.size();
-            ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
+
+            StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
                                   instances, labels.size(),
                                   applicationTemplate.manager.getPropertyValue(AppPropertyTypes.TEXT_AREA.name())));
+            loadedText.append("\n");
+            for (Object element : labels)
+                loadedText.append(element).append("\n");
 
+            ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(loadedText.toString());
 
-            //TODO This is where the list of algorithm types should be populated.
             ((AppActions) applicationTemplate.getActionComponent()).populaetAlgorithms(
                     ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms(), algorithmsDir);
 
