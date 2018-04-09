@@ -1,7 +1,18 @@
 public class ShapeFactory{
 
-    public ShapeType getShape(ShapeType st){
-        return st;
+    public Shape getShape(ShapeType st){
+
+        switch (st){
+            case CIRCLE:
+                return new Circle();
+            case RECTANGLE:
+                return new Rectangle();
+            case SQUARE:
+                return new Square();
+            default:
+                return null;
+        }
+
     }
 
 }
