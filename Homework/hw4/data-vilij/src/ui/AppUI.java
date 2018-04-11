@@ -50,6 +50,10 @@ public final class AppUI extends UITemplate{
         this.applicationTemplate = applicationTemplate;
     }
 
+    public Button getSaveButton(){
+        return saveButton;
+    }
+
     public ToggleGroup getAlgorithms(){
         return algorithms;
     }
@@ -189,6 +193,7 @@ public final class AppUI extends UITemplate{
         setTextAreaActions();
         setSelectButtonActions();
         editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
+        saveButton.disableProperty().bind(((AppActions) applicationTemplate.getActionComponent()).isUnsavedProperty().not());
     }
 
     private void setTextAreaActions(){
@@ -199,12 +204,11 @@ public final class AppUI extends UITemplate{
                         ((AppActions) applicationTemplate.getActionComponent()).setIsUnsavedProperty(true);
                         if (newValue.charAt(newValue.length() - 1) == '\n') hasNewText = true;
                         newButton.setDisable(false);
-                        saveButton.setDisable(false);
                     }
                     else{
+                        ((AppActions) applicationTemplate.getActionComponent()).setIsUnsavedProperty(false);
                         hasNewText = true;
                         newButton.setDisable(true);
-                        saveButton.setDisable(true);
                     }
                 }
             }

@@ -62,6 +62,10 @@ public final class AppActions implements ActionComponent{
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
 
+    public SimpleBooleanProperty isUnsavedProperty(){
+        return isUnsaved;
+    }
+
     @Override
     public void handleNewRequest(){
         try{
@@ -70,6 +74,7 @@ public final class AppActions implements ActionComponent{
                 applicationTemplate.getUIComponent().clear();
                 isUnsaved.set(false);
                 dataFilePath = null;
+                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(false);
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
             }
@@ -82,6 +87,7 @@ public final class AppActions implements ActionComponent{
         try{
             if (!isUnsaved.get() || promptToSave()){
                 isUnsaved.set(false);
+                ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         }
         catch (IOException e){ errorHandlingHelper(); }
