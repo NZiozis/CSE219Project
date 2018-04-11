@@ -317,7 +317,6 @@ public final class AppActions implements ActionComponent{
         isUnsaved.set(false);
     }
 
-
     /**
      * The types of algorithms will be updated once per the loading off the application. However, the algorithms of
      * that type that are available will be updated everytime that directory is entered. Essentially, ToggleGroup
