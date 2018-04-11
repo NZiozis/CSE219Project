@@ -229,20 +229,25 @@ public final class AppUI extends UITemplate{
     }
 
     private void setSelectButtonActions(){
+
         selectButton.setOnMouseClicked(event -> {
             RadioButton selectedToggle = (RadioButton) algorithms.getSelectedToggle();
             AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
             File algorithmsDir =
                     new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
-            if (selectedToggle.getText()
-                    .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-                appActions.populateAlgorithms(algorithms, algorithmsDir);
-            }
+            try{
+                if (selectedToggle.getText()
+                        .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+                    appActions.populateAlgorithms(algorithms, algorithmsDir);
+                }
 
-            else{
-                algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
-                appActions.populateAlgorithms(algorithms, algorithmsDir);
+                else{
+                    algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
+                    appActions.populateAlgorithms(algorithms, algorithmsDir);
+                }
             }
+            catch (NullPointerException ignored){}
         });
+
     }
 }

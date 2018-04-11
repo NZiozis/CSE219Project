@@ -39,6 +39,7 @@ public class ConfirmationDialog extends Stage implements Dialog {
     private Label confirmationMessage = new Label();
     private Option selectedOption;
 
+
     private ConfirmationDialog() { /* empty constructor */ }
 
     public static ConfirmationDialog getDialog() {

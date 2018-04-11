@@ -6,8 +6,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -357,16 +361,29 @@ public final class AppActions implements ActionComponent{
 
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
             assert algorithmNames != null;
-            for (String algorithmN : algorithmNames){
-                RadioButton radioButton = new RadioButton(algorithmN);
+            for (String algoName : algorithmNames){
+                RadioButton radioButton = new RadioButton(algoName);
 
-                // Remove the ++ in the next line when working on the configuration button
-                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
-//                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(
-//                        ((AppUI) applicationTemplate.getUIComponent()).getConfigurationButton(), 1, counter++);
+                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter);
+                Button configurationButton = createNewConfigurationButton(algoName);
+                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(configurationButton, 1, counter++);
                 radioButton.setToggleGroup(algorithms);
             }
         }
+    }
+
+    private Button createNewConfigurationButton(String algoName){
+        Button configurationButton = new Button(null, new ImageView(new Image(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_ICON_PATH.name()))));
+        Tooltip tooltip = new Tooltip(
+                algoName + applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TOOLTIP.name()));
+        configurationButton.setTooltip(tooltip);
+        configurationButton.getStyleClass().add("configuration-button");
+        //TODO fix this so that the configuration dialog appears when the button is pressed and the data is obtained.
+        configurationButton.setOnMouseClicked(event -> System.out.println("hello"));
+
+        return configurationButton;
+
     }
 
     private void errorHandlingHelper(){
