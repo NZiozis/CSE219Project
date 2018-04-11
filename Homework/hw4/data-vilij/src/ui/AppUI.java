@@ -90,9 +90,8 @@ public final class AppUI extends UITemplate{
         scrnshotButton =
                 setToolbarButton(scrnshoticonPath, manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_TOOLTIP.name()),
                                  true);
-        editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
 
-        toolBar.getItems().addAll(scrnshotButton, editDoneButton);
+        toolBar.getItems().add(scrnshotButton);
     }
 
     @Override
@@ -104,7 +103,6 @@ public final class AppUI extends UITemplate{
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         scrnshotButton.setOnAction(
                 e -> ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest());
-        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
     }
 
     @Override
@@ -148,27 +146,32 @@ public final class AppUI extends UITemplate{
         textArea = new TextArea();
         textArea.setMaxSize(windowWidth * 0.29, windowHeight * 0.25);
         textArea.setMinSize(windowWidth * 0.29, windowHeight * 0.25);
-        textArea.setDisable(true);
+        textArea.setVisible(false);
 
         HBox processButtonsBox = new HBox();
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
 
         loadedInFileText = new Text(manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
+        loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
         ScrollPane algorithmHouse = new ScrollPane();
         loadedAlgorithms = new GridPane();
         algorithmHouse.setContent(loadedAlgorithms);
+        algorithmHouse.visibleProperty().bind(textArea.visibleProperty());
 
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
+        selectButton.visibleProperty().bind(textArea.visibleProperty());
 
-        //TODO so what you have to do here is find a way to add the radio buttons, not the groups. It might not make
-        // sense to do this on initialization, at least the for the second case. There should be a way to toggle back
-        // and forth as well as see the relevant ones for each type without bugs. Maybe a foreach is in order?
+        editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
+        editDoneButton.visibleProperty().bind(textArea.visibleProperty());
 
         leftPanel.getChildren()
-                .addAll(leftPanelTitle, textArea, processButtonsBox, loadedInFileText, algorithmHouse, selectButton);
+                .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
+                        selectButton);
+
+        leftPanelTitle.visibleProperty().bind(textArea.visibleProperty());
 
         StackPane rightPanel = new StackPane(chart);
         rightPanel.setMaxSize(windowWidth * 0.69, windowHeight * 0.69);
@@ -185,6 +188,7 @@ public final class AppUI extends UITemplate{
     private void setWorkspaceActions(){
         setTextAreaActions();
         setSelectButtonActions();
+        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
     }
 
     private void setTextAreaActions(){
@@ -227,5 +231,4 @@ public final class AppUI extends UITemplate{
             }
         });
     }
-
 }

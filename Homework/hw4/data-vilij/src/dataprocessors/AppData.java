@@ -52,7 +52,7 @@ public class AppData implements DataComponent{
         int instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
         String filename = dataFilePath.toString();
-        HashSet labels = new HashSet();
+        HashSet<String> labels = new HashSet<>();
         tenLines.get_totalData().forEach(point -> {
             String[] pointT = point.split("\t");
             labels.add(pointT[1]);
@@ -76,7 +76,7 @@ public class AppData implements DataComponent{
         try{
             processor.processString(dataString);
             ArrayList<String> dataArray = new ArrayList<>(Arrays.asList(dataString.split("\n")));
-            HashSet labels = new HashSet();
+            HashSet<String> labels = new HashSet<>();
             dataArray.forEach(point -> {
                 String[] pointT = point.split("\t");
                 labels.add(pointT[1]);

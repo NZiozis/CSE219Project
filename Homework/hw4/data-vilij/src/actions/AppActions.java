@@ -70,6 +70,8 @@ public final class AppActions implements ActionComponent{
                 applicationTemplate.getUIComponent().clear();
                 isUnsaved.set(false);
                 dataFilePath = null;
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
             }
         }
         catch (IOException e){ errorHandlingHelper(); }
@@ -92,6 +94,8 @@ public final class AppActions implements ActionComponent{
         try{
             if (promptToLoad()){
                 ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
             }
         }
         catch (IOException e){errorHandlingHelper();}
