@@ -75,6 +75,8 @@ public final class AppActions implements ActionComponent{
                 isUnsaved.set(false);
                 dataFilePath = null;
                 ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(false);
+                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton()
+                        .setText(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
             }
@@ -87,7 +89,7 @@ public final class AppActions implements ActionComponent{
         try{
             if (!isUnsaved.get() || promptToSave()){
                 isUnsaved.set(false);
-                ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         }
         catch (IOException e){ errorHandlingHelper(); }
@@ -163,7 +165,8 @@ public final class AppActions implements ActionComponent{
     public void handleEditDone(){
         PropertyManager manager = applicationTemplate.manager;
         AppUI ui = ((AppUI) applicationTemplate.getUIComponent());
-        if ((ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name())))){
+
+        if (ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()))){
             applicationTemplate.getDataComponent().clear();
             ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.DONE_TEXT.name()));
@@ -337,6 +340,7 @@ public final class AppActions implements ActionComponent{
         int counter = 0;
         ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
         ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().clear();
+        ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
         if (directories != null && directories.length != 0){
             for (String directory : directories){
@@ -355,7 +359,11 @@ public final class AppActions implements ActionComponent{
             assert algorithmNames != null;
             for (String algorithmN : algorithmNames){
                 RadioButton radioButton = new RadioButton(algorithmN);
+
+                // Remove the ++ in the next line when working on the configuration button
                 ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
+//                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(
+//                        ((AppUI) applicationTemplate.getUIComponent()).getConfigurationButton(), 1, counter++);
                 radioButton.setToggleGroup(algorithms);
             }
         }

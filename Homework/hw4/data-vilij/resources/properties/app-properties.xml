@@ -12,9 +12,11 @@ functionality within the main workspace. -->
 
         <!-- USER INTERFACE ICON FILES -->
         <property name="SCREENSHOT_ICON" value="screenshot.png"/>
+        <property name="CONFIGURATION_ICON_PATH" value="gui/icons/configure.png"/>
 
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="SCREENSHOT_TOOLTIP" value="Screenshot"/> <!-- will print current view of image to a file -->
+        <property name="CONFIGURATION_TOOLTIP" value="Configuration"/>
         <property name="EDIT_TEXT" value="Edit"/>
         <property name="DONE_TEXT" value="Done"/>
         <property name="SELECT_TEXT" value="Select"/>

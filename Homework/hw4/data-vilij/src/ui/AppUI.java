@@ -36,18 +36,23 @@ public final class AppUI extends UITemplate{
     private ApplicationTemplate applicationTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private Button                   scrnshotButton;   // toolbar button to take a screenshot of the data
-    private Button                   editDoneButton;   // toolbar button to edit the textArea when inputting new data
-    private LineChart<Number,Number> chart;            // the chart where data will be displayed
-    private TextArea                 textArea;         // text area for new data input
+    private Button                   scrnshotButton;      // toolbar button to take a screenshot of the data
+    private Button                   editDoneButton;      // toolbar button to edit the textArea when inputting new data
+    private LineChart<Number,Number> chart;               // the chart where data will be displayed
+    private TextArea                 textArea;            // text area for new data input
     private boolean                  hasNewText;
-    private Text                     loadedInFileText; // text displayed when
-    private ToggleGroup              algorithms;       // this will hold the algorithms of the currently selected type.
-    private Button                   selectButton;     // selected choice from radio buttons
+    private Text                     loadedInFileText;    // text displayed when
+    private ToggleGroup              algorithms;
+    // this will hold the algorithms of the currently selected type.
+    private Button                   selectButton;        // selected choice from radio buttons
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+    }
+
+    public Button getSelectButton(){
+        return selectButton;
     }
 
     public Button getSaveButton(){
@@ -163,10 +168,14 @@ public final class AppUI extends UITemplate{
         loadedAlgorithms = new GridPane();
         algorithmHouse.setContent(loadedAlgorithms);
         algorithmHouse.visibleProperty().bind(textArea.visibleProperty());
+        algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
+        algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
+
 
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
         selectButton.visibleProperty().bind(textArea.visibleProperty());
+        selectButton.setDisable(true);
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
@@ -193,7 +202,8 @@ public final class AppUI extends UITemplate{
         setTextAreaActions();
         setSelectButtonActions();
         editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
-        saveButton.disableProperty().bind(((AppActions) applicationTemplate.getActionComponent()).isUnsavedProperty().not());
+        saveButton.disableProperty()
+                .bind(((AppActions) applicationTemplate.getActionComponent()).isUnsavedProperty().not());
     }
 
     private void setTextAreaActions(){
