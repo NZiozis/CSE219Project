@@ -42,10 +42,10 @@ public final class AppUI extends UITemplate{
     private TextArea                 textArea;         // text area for new data input
     private boolean                  hasNewText;
     private Text                     loadedInFileText; // text displayed when
-    private ToggleGroup              algorithms;       // this will hold the algoritms of the currently selected type.
+    private ToggleGroup              algorithms;       // this will hold the algorithms of the currently selected type.
     private Button                   selectButton;     // selected choice from radio buttons
 
-    public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
+    AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
     }
@@ -212,21 +212,19 @@ public final class AppUI extends UITemplate{
 
     private void setSelectButtonActions(){
         selectButton.setOnMouseClicked(event -> {
-            Toggle selectedToggle = algorithms.getSelectedToggle();
+            RadioButton selectedToggle = (RadioButton) algorithms.getSelectedToggle();
             AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
             File algorithmsDir =
                     new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
-            if (selectedToggle.toString()
+            if (selectedToggle.getText()
                     .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-                appActions.populaetAlgorithms(algorithms, algorithmsDir);
+                appActions.populateAlgorithms(algorithms, algorithmsDir);
             }
 
-            if (algorithms.getToggles().contains("Classification")){
-                algorithmsDir = new File(algorithmsDir.toString() + selectedToggle);
-                appActions.populaetAlgorithms(algorithms, algorithmsDir);
+            else{
+                algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
+                appActions.populateAlgorithms(algorithms, algorithmsDir);
             }
-
-
         });
     }
 

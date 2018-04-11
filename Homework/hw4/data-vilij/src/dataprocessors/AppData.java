@@ -93,7 +93,7 @@ public class AppData implements DataComponent{
 
             ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(loadedText.toString());
 
-            ((AppActions) applicationTemplate.getActionComponent()).populaetAlgorithms(
+            ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithms(
                     ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms(), algorithmsDir);
 
         }

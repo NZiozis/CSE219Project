@@ -324,12 +324,12 @@ public final class AppActions implements ActionComponent{
      * algorithmTypes will be updates once and only once in the following method. However, in populateAlgorithms, the
      * ToggleGroup algorithm will be update everytime the subdirectory containing the actual algorithms is entered.
      */
-    public void populaetAlgorithms(ToggleGroup algorithms, File algorithmsDir){
-        //TODO Toggle Group does not apply when loaded in. So, make sure this is the case
+    public void populateAlgorithms(ToggleGroup algorithms, File algorithmsDir){
         int counter = 0;
-        ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().removeAll();
+        ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
+        ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().clear();
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
-        if (directories.length != 0){
+        if (directories != null && directories.length != 0){
             for (String directory : directories){
                 RadioButton radioButton = new RadioButton(directory);
                 ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
@@ -337,8 +337,10 @@ public final class AppActions implements ActionComponent{
             }
         }
         else{
-            RadioButton back = new RadioButton(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()));
+            RadioButton back =
+                    new RadioButton(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()));
             ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(back, 0, counter++);
+            back.setToggleGroup(algorithms);
 
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
             assert algorithmNames != null;
@@ -349,7 +351,6 @@ public final class AppActions implements ActionComponent{
             }
         }
     }
-
 
     private void errorHandlingHelper(){
         ErrorDialog dialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
