@@ -364,21 +364,36 @@ public final class AppActions implements ActionComponent{
             loadedAlgorithms.add(back, 0, counter++);
             back.setToggleGroup(algorithms);
 
+            String[] algoTypeChecker = algorithmsDir.toString().split("/");
+            String algoType = algoTypeChecker[algoTypeChecker.length - 1];
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
             assert algorithmNames != null;
-            for (String algoName : algorithmNames){
-                RadioButton radioButton = new RadioButton(algoName);
+            if (algoType.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERING.name()))){
 
-                loadedAlgorithms.add(radioButton, 0, counter);
-                Button configurationButton = createNewConfigurationButton(algoName);
-                loadedAlgorithms.add(configurationButton, 1, counter++);
-                radioButton.setToggleGroup(algorithms);
+                for (String algoName : algorithmNames){
+                    RadioButton radioButton = new RadioButton(algoName);
+
+                    loadedAlgorithms.add(radioButton, 0, counter);
+                    Button configurationButton = createNewConfigurationButton(algoName, true);
+                    loadedAlgorithms.add(configurationButton, 1, counter++);
+                    radioButton.setToggleGroup(algorithms);
+                }
+            }
+            else{
+                for (String algoName : algorithmNames){
+                    RadioButton radioButton = new RadioButton(algoName);
+
+                    loadedAlgorithms.add(radioButton, 0, counter);
+                    Button configurationButton = createNewConfigurationButton(algoName, false);
+                    loadedAlgorithms.add(configurationButton, 1, counter++);
+                    radioButton.setToggleGroup(algorithms);
+                }
             }
         }
         return loadedAlgorithms;
     }
 
-    private Button createNewConfigurationButton(String algoName){
+    private Button createNewConfigurationButton(String algoName, boolean isClustering){
         Button configurationButton = new Button(null, new ImageView(new Image(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_ICON_PATH.name()))));
         Tooltip tooltip = new Tooltip(
@@ -386,7 +401,7 @@ public final class AppActions implements ActionComponent{
         configurationButton.setTooltip(tooltip);
         configurationButton.getStyleClass().add("configuration-button");
 
-        ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate);
+        ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate, isClustering);
         dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
         configurationButton.setOnMouseClicked(event -> dialog.show(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TITLE.name()), null));

@@ -34,6 +34,7 @@ public class AppData implements DataComponent{
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
     private File                algorithmsDir;
+    private HashSet<String>     labels;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
@@ -41,6 +42,10 @@ public class AppData implements DataComponent{
         this.tenLines = new TenLines<>();
         this.algorithmsDir =
                 new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+    }
+
+    public HashSet<String> getLabels(){
+        return labels;
     }
 
     /**
@@ -52,7 +57,7 @@ public class AppData implements DataComponent{
         int instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
         String filename = dataFilePath.toString();
-        HashSet<String> labels = new HashSet<>();
+        labels = new HashSet<>();
         tenLines.get_totalData().forEach(point -> {
             String[] pointT = point.split("\t");
             labels.add(pointT[1]);
