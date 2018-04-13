@@ -342,9 +342,13 @@ public final class AppActions implements ActionComponent{
      * algorithmTypes will be updates once and only once in the following method. However, in populateAlgorithms, the
      * ToggleGroup algorithm will be update everytime the subdirectory containing the actual algorithms is entered.
      */
-    public GridPane populateAlgorithms(ToggleGroup algorithms, File algorithmsDir){
+    public GridPane populateAlgorithms(ToggleGroup algorithms, String algorithmsDirectory){
         GridPane loadedAlgorithms = new GridPane();
         int counter = 0;
+        String location = SEPARATOR + algorithmsDirectory;
+        URL locationURL = getClass().getResource(location);
+        File algorithmsDir = new File(
+                locationURL.toString().substring(5)); //This is here to get rid of the file: in front of the URL
         ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
         ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
 
@@ -355,7 +359,8 @@ public final class AppActions implements ActionComponent{
                 RadioButton radioButton = new RadioButton(directory);
                 loadedAlgorithms.add(radioButton, 0, counter++);
                 radioButton.setToggleGroup(algorithms);
-                if (directory.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION.name()))){
+                if (directory.equals(
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION.name()))){
                     radioButton.disableProperty()
                             .bind(((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().not());
                 }

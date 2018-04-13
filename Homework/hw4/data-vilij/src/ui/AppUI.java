@@ -18,7 +18,6 @@ import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
-import java.io.File;
 import java.util.HashMap;
 
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
@@ -193,11 +192,10 @@ public final class AppUI extends UITemplate{
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
 
         loadedAlgorithms = ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithms(algorithms,
-                                                                                                      new File(
-                                                                                                              applicationTemplate.manager
-                                                                                                                      .getPropertyValue(
-                                                                                                                              AppPropertyTypes.ALGORITHMS_PATH
-                                                                                                                                      .name())));
+                                                                                                      applicationTemplate.manager
+                                                                                                              .getPropertyValue(
+                                                                                                                      AppPropertyTypes.ALGORITHMS_PATH
+                                                                                                                              .name()));
         algorithmHouse.setContent(loadedAlgorithms);
 
         //TODO insert an appropriate image here for the run button
@@ -258,8 +256,8 @@ public final class AppUI extends UITemplate{
         selectButton.setOnMouseClicked(event -> {
             RadioButton selectedToggle = (RadioButton) algorithms.getSelectedToggle();
             AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
-            File algorithmsDir =
-                    new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+            String algorithmsDir =
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
 
             try{
                 if (previouslyLoaded.containsKey(selectedToggle.getText())){
@@ -285,7 +283,7 @@ public final class AppUI extends UITemplate{
                     }
 
                     else{
-                        algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
+                        algorithmsDir = algorithmsDir.toString() + SEPARATOR + selectedToggle.getText();
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
                         algorithmIsSelected.set(false);
                     }

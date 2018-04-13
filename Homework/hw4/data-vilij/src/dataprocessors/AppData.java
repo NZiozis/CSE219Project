@@ -13,7 +13,6 @@ import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 import vilij.templates.ApplicationTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -31,11 +30,11 @@ import java.util.HashSet;
  */
 public class AppData implements DataComponent{
 
-    public  TenLines<String>    tenLines;
-    private TSDProcessor        processor;
-    private ApplicationTemplate applicationTemplate;
-    private File                algorithmsDir;
-    private HashSet<String>     labels;
+    public  TenLines<String>      tenLines;
+    private TSDProcessor          processor;
+    private ApplicationTemplate   applicationTemplate;
+    private String                algorithmsDir;
+    private HashSet<String>       labels;
     private SimpleBooleanProperty hasTwoLabels;
 
     public AppData(ApplicationTemplate applicationTemplate){
@@ -43,8 +42,7 @@ public class AppData implements DataComponent{
         this.applicationTemplate = applicationTemplate;
         this.tenLines = new TenLines<>();
         this.labels = new HashSet<>();
-        this.algorithmsDir =
-                new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+        this.algorithmsDir = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
         hasTwoLabels = new SimpleBooleanProperty(false);
     }
 
@@ -78,7 +76,7 @@ public class AppData implements DataComponent{
         if (labels.size() == 2){
             hasTwoLabels.set(true);
         }
-        else {
+        else{
             hasTwoLabels.set(false);
         }
 
