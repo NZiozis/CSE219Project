@@ -347,8 +347,7 @@ public final class AppActions implements ActionComponent{
         int counter = 0;
         String location = SEPARATOR + algorithmsDirectory;
         URL locationURL = getClass().getResource(location);
-        File algorithmsDir = new File(
-                locationURL.toString().substring(5)); //This is here to get rid of the file: in front of the URL
+        File algorithmsDir = new File(locationURL.getFile());
         ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
         ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
 
