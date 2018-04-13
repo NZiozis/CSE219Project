@@ -64,7 +64,7 @@ public class AppData implements DataComponent{
     public void loadData(Path dataFilePath){
         int instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
-        String filename = dataFilePath.getFileName().toString();
+        String filename = dataFilePath.toString();
         labels = new HashSet<>();
         tenLines.get_totalData().forEach(point -> {
             String[] pointT = point.split("\t");
