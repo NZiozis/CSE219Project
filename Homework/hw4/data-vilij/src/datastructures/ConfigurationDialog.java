@@ -21,7 +21,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
     private ApplicationTemplate applicationTemplate;
     private TextArea            maxIterations;
     private TextArea            updateInterval;
-    private CheckBox continuousRun;
+    private CheckBox            continuousRun;
 
     public ConfigurationDialog(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
@@ -34,16 +34,32 @@ public class ConfigurationDialog extends Stage implements Dialog{
         showAndWait();                   // open the dialog and wait for the user to click the close button
     }
 
+    private void invalidInputHandler(TextArea textArea){
+        try{
+            int fault = Integer.parseInt(textArea.getText());
+            if (fault < 1){
+                throw new Exception();
+            }
+            textArea.setText(textArea.getText());
+        }
+        catch (Exception e){
+            textArea.setText("1");
+        }
+    }
+
+
     @Override
     public void init(Stage owner){
 
-        initModality(Modality.WINDOW_MODAL); // modal => messages are blocked from reaching other windows
+        initModality(Modality.WINDOW_MODAL);
         initOwner(owner);
 
         Button confirmationButton = new Button(Option.CONFIRM.name());
         confirmationButton.setOnMouseClicked(event -> {
-            maxIterations.setText(maxIterations.getText());
-            updateInterval.setText(updateInterval.getText());
+
+            invalidInputHandler(maxIterations);
+            invalidInputHandler(updateInterval);
+
             continuousRun.setSelected(continuousRun.isSelected());
             this.close();
         });
@@ -60,16 +76,16 @@ public class ConfigurationDialog extends Stage implements Dialog{
                 new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.MAX_ITERATIONS_TEXT.name())), 0,
                 0);
         maxIterations = new TextArea();
-        maxIterations.setMaxSize(100,30);
-        maxIterations.setMinSize(100,30);
+        maxIterations.setMaxSize(100, 30);
+        maxIterations.setMinSize(100, 30);
         settingsPane.add(maxIterations, 1, 0);
 
         settingsPane.add(
                 new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.UPDATE_INTERVAL_TEXT.name())), 0,
                 1);
         updateInterval = new TextArea();
-        updateInterval.setMaxSize(100,30);
-        updateInterval.setMinSize(100,30);
+        updateInterval.setMaxSize(100, 30);
+        updateInterval.setMinSize(100, 30);
         settingsPane.add(updateInterval, 1, 1);
 
         settingsPane.add(
@@ -102,7 +118,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
         return updateInterval;
     }
 
-    //TODO find a way to make unique dialogs appear that way the data is unique per algorithm
     public enum Option{
         CONFIRM("Confirm");
 
