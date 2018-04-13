@@ -3,6 +3,7 @@ package dataprocessors;
 import actions.AppActions;
 import datastructures.TenLines;
 import datastructures.Tuple;
+import javafx.beans.property.SimpleBooleanProperty;
 import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.DataComponent;
@@ -35,6 +36,7 @@ public class AppData implements DataComponent{
     private ApplicationTemplate applicationTemplate;
     private File                algorithmsDir;
     private HashSet<String>     labels;
+    private SimpleBooleanProperty hasTwoLabels;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
@@ -43,10 +45,15 @@ public class AppData implements DataComponent{
         this.labels = new HashSet<>();
         this.algorithmsDir =
                 new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+        hasTwoLabels = new SimpleBooleanProperty(false);
     }
 
     public HashSet<String> getLabels(){
         return labels;
+    }
+
+    public SimpleBooleanProperty hasTwoLabelsProperty(){
+        return hasTwoLabels;
     }
 
     /**
@@ -68,6 +75,10 @@ public class AppData implements DataComponent{
         StringBuilder loadedText = new StringBuilder(
                 String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
                               instances, labels.size(), filename));
+        if (labels.size() == 2){
+            hasTwoLabels.set(true);
+        }
+
         loadedText.append("\n");
         for (Object element : labels)
             loadedText.append(element).append("\n");

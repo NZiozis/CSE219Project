@@ -356,9 +356,9 @@ public final class AppActions implements ActionComponent{
                 RadioButton radioButton = new RadioButton(directory);
                 loadedAlgorithms.add(radioButton, 0, counter++);
                 radioButton.setToggleGroup(algorithms);
-                if (directory.equals(applicationTemplate.manager.getPropertyValue(
-                        AppPropertyTypes.CLUSTERING.name())) && ((AppData) applicationTemplate.getDataComponent()).getLabels().size() != 2){
-                    //radioButton.setDisable(true);
+                if (directory.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERING.name()))){
+                    radioButton.disableProperty()
+                            .bind(((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().not());
                 }
                 else{
                     radioButton.setDisable(false);
@@ -396,7 +396,8 @@ public final class AppActions implements ActionComponent{
                     radioButton.setToggleGroup(algorithms);
                 }
             }
-        } return loadedAlgorithms;
+        }
+        return loadedAlgorithms;
     }
 
     private Button createNewConfigurationButton(String algoName, boolean isClustering){
