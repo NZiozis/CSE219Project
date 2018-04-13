@@ -35,6 +35,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
@@ -50,7 +51,7 @@ public final class AppActions implements ActionComponent{
     /**
      * Path to the data file currently active.
      */
-    private Path dataFilePath;
+    private Path                  dataFilePath;
     /**
      * The boolean property marking whether or not there are any unsaved changes.
      */
@@ -58,7 +59,8 @@ public final class AppActions implements ActionComponent{
     /**
      * The application to which this class of actions belongs.
      */
-    private ApplicationTemplate applicationTemplate;
+    private ApplicationTemplate   applicationTemplate;
+
 
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
@@ -346,6 +348,8 @@ public final class AppActions implements ActionComponent{
         ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
         ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().clear();
         ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
+
+
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
         if (directories != null && directories.length != 0){
             for (String directory : directories){
@@ -380,10 +384,11 @@ public final class AppActions implements ActionComponent{
                 algoName + applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TOOLTIP.name()));
         configurationButton.setTooltip(tooltip);
         configurationButton.getStyleClass().add("configuration-button");
-        //TODO fix this so that the configuration dialog appears when the button is pressed and the data is obtained.
+
         ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate);
         dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
-        configurationButton.setOnMouseClicked(event -> dialog.show("Test", "test"));
+        configurationButton.setOnMouseClicked(event -> dialog.show(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TITLE.name()), null));
 
         return configurationButton;
 

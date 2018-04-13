@@ -30,7 +30,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
     @Override
     public void show(String dialogTitle, String message){
         setTitle(dialogTitle);           // set the title of the dialog
-
         showAndWait();                   // open the dialog and wait for the user to click the close button
     }
 
@@ -46,7 +45,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
             textArea.setText("1");
         }
     }
-
 
     @Override
     public void init(Stage owner){

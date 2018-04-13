@@ -33,6 +33,7 @@ functionality within the main workspace. -->
         <property name="LOAD_DATA_TITLE" value="Load Data From File"/>
         <property name="DUPLICATE_ERROR_TITLE" value="Duplicate Error"/>
         <property name="INVALID_TEXT_ERROR_TITLE" value="Invalid Text"/>
+        <property name="CONFIGURATION_TITLE" value="Configuration Settings"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>

@@ -34,7 +34,8 @@ public enum AppPropertyTypes{
     SCREENSHOT_ERROR_TITLE,
     LOAD_DATA_TITLE,
     INVALID_TEXT_ERROR_TITLE,
-    DUPLICATE_ERROR_TITLE
+    DUPLICATE_ERROR_TITLE,
+    CONFIGURATION_TITLE
 
     /* application-specific messages */,
     SAVE_UNSAVED_WORK,
