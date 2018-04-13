@@ -78,6 +78,9 @@ public class AppData implements DataComponent{
         if (labels.size() == 2){
             hasTwoLabels.set(true);
         }
+        else {
+            hasTwoLabels.set(false);
+        }
 
         loadedText.append("\n");
         for (Object element : labels)

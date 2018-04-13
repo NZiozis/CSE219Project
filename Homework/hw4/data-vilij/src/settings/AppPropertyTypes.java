@@ -62,6 +62,7 @@ public enum AppPropertyTypes{
     CHART_TITLE,
     BACK,
     CLUSTERING,
+    CLASSIFICATION,
     LABELS_NUM,
 
 }

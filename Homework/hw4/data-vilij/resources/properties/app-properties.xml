@@ -63,7 +63,9 @@ functionality within the main workspace. -->
         <property name="DISPLAY_BUTTON_TEXT" value="Display Data"/>
         <property name="BACK" value="Back"/>
         <property name="CLUSTERING" value="Clustering"/>
+        <property name="CLASSIFICATION" value="Classification"/>
         <property name="LABELS_NUM" value="Number of Labels"/>
+
 
     </property_list>
     <property_options_list/>

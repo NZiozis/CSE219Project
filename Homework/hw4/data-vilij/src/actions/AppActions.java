@@ -356,7 +356,7 @@ public final class AppActions implements ActionComponent{
                 RadioButton radioButton = new RadioButton(directory);
                 loadedAlgorithms.add(radioButton, 0, counter++);
                 radioButton.setToggleGroup(algorithms);
-                if (directory.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERING.name()))){
+                if (directory.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION.name()))){
                     radioButton.disableProperty()
                             .bind(((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().not());
                 }
