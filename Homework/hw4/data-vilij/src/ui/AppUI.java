@@ -47,6 +47,7 @@ public final class AppUI extends UITemplate{
     // this will hold the algorithms of the currently selected type.
     private Button                   selectButton;        // selected choice from radio buttons
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
+    private ScrollPane               algorithmHouse;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -167,8 +168,7 @@ public final class AppUI extends UITemplate{
         loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
         loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
-        ScrollPane algorithmHouse = new ScrollPane();
-        algorithmHouse.setContent(loadedAlgorithms);
+        algorithmHouse = new ScrollPane();
         algorithmHouse.visibleProperty().bind(textArea.visibleProperty());
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
         algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
@@ -182,12 +182,13 @@ public final class AppUI extends UITemplate{
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
 
-        loadedAlgorithms = ((AppActions)applicationTemplate.getActionComponent()).populateAlgorithms(algorithms,
-                                                                                                     new File(
-                                                                                                             applicationTemplate.manager
-                                                                                                                     .getPropertyValue(
-                                                                                                                             AppPropertyTypes.ALGORITHMS_PATH
-                                                                                                                                     .name())));
+        loadedAlgorithms = ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithms(algorithms,
+                                                                                                      new File(
+                                                                                                              applicationTemplate.manager
+                                                                                                                      .getPropertyValue(
+                                                                                                                              AppPropertyTypes.ALGORITHMS_PATH
+                                                                                                                                      .name())));
+        algorithmHouse.setContent(loadedAlgorithms);
         leftPanel.getChildren()
                 .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
                         selectButton);
@@ -246,6 +247,7 @@ public final class AppUI extends UITemplate{
 
             if (previouslyLoaded.containsKey(selectedToggle.getText())){
                 loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
+                algorithmHouse.setContent(loadedAlgorithms);
             }
             else{
                 try{
@@ -260,6 +262,7 @@ public final class AppUI extends UITemplate{
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
                     }
                     loadedAlgorithms = temp;
+                    algorithmHouse.setContent(loadedAlgorithms);
                     previouslyLoaded.put(selectedToggle.getText(), temp);
                 }
                 catch (NullPointerException ignored){}
