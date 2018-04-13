@@ -17,6 +17,7 @@ public enum AppPropertyTypes{
     /* user interface icon file names */
     SCREENSHOT_ICON,
     CONFIGURATION_ICON_PATH,
+    RUN_BUTTON_ICON_PATH,
 
     /* tooltips for user interface buttons */
     SCREENSHOT_TOOLTIP,

@@ -7,6 +7,8 @@ import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -68,10 +70,6 @@ public final class AppUI extends UITemplate{
 
     public Button getSelectButton(){
         return selectButton;
-    }
-
-    public Button getSaveButton(){
-        return saveButton;
     }
 
     public ToggleGroup getAlgorithms(){
@@ -203,7 +201,8 @@ public final class AppUI extends UITemplate{
         algorithmHouse.setContent(loadedAlgorithms);
 
         //TODO insert an appropriate image here for the run button
-        runButton = new Button("run");
+        runButton = new Button(null, new ImageView(
+                new Image(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_BUTTON_ICON_PATH.name()))));
         runButton.visibleProperty().bind(algorithmIsSelected);
         runButton.disableProperty().bind((algorithmIsSelected.and(configurationValid)).not());
         leftPanel.getChildren()
