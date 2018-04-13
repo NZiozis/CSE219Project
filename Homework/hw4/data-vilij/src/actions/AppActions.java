@@ -96,7 +96,6 @@ public final class AppActions implements ActionComponent{
         try{
             if (!isUnsaved.get() || promptToSave()){
                 isUnsaved.set(false);
-                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         }
         catch (IOException e){ errorHandlingHelper(); }

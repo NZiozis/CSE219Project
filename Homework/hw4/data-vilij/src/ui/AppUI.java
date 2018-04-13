@@ -169,15 +169,15 @@ public final class AppUI extends UITemplate{
         leftPanelTitle.setFont(Font.font(fontname, fontsize));
 
         textArea = new TextArea();
-        textArea.setMaxSize(windowWidth * 0.29, windowHeight * 0.25);
-        textArea.setMinSize(windowWidth * 0.29, windowHeight * 0.25);
+        textArea.setMaxSize(windowWidth * 0.25, windowHeight * 0.25);
+        textArea.setMinSize(windowWidth * 0.25, windowHeight * 0.25);
         textArea.setVisible(false);
 
         HBox processButtonsBox = new HBox();
         HBox.setHgrow(processButtonsBox, Priority.ALWAYS);
 
         loadedInFileText = new Text(manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
-        loadedInFileText.setWrappingWidth(leftPanel.getMaxWidth());
+        loadedInFileText.setWrappingWidth(windowWidth * 0.25);
         loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
         algorithmHouse = new ScrollPane();
