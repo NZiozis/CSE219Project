@@ -26,7 +26,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
     private TextArea            updateInterval;
     private CheckBox            continuousRun;
     private boolean             isClustering;
-    private ComboBox            numLables;
+    private ComboBox<String>    numLables;
     private String              numberOfLabelsChosen;
 
     public ConfigurationDialog(ApplicationTemplate applicationTemplate, boolean isClustering){
@@ -63,18 +63,18 @@ public class ConfigurationDialog extends Stage implements Dialog{
         confirmationButton.setOnMouseClicked(event -> {
 
 
-            String graceful  = invalidInputHandler(maxIterations.getText());
+            String graceful = invalidInputHandler(maxIterations.getText());
             maxIterations.setText(graceful);
             String degradation = invalidInputHandler(updateInterval.getText());
             updateInterval.setText(degradation);
 
             if (isClustering){
-                numberOfLabelsChosen = invalidInputHandler((String)numLables.getValue());
+                numberOfLabelsChosen = invalidInputHandler(numLables.getValue());
                 numLables.setValue(numberOfLabelsChosen);
             }
 
             continuousRun.setSelected(continuousRun.isSelected());
-            ((AppUI)applicationTemplate.getUIComponent()).setConfigurationValid(true);
+            ((AppUI) applicationTemplate.getUIComponent()).setConfigurationValid(true);
             this.close();
         });
         int rowIndex = 0;
@@ -106,7 +106,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
         if (isClustering){
             settingsPane.add(new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LABELS_NUM.name())),
                              0, rowIndex);
-            numLables = new ComboBox();
+            numLables = new ComboBox<>();
             for (int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLabels().size(); i++){
                 numLables.getItems().add(i + 1 + "");
             }
@@ -118,7 +118,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
                 new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONTINUOUS_RUN_TEXT.name())), 0,
                 rowIndex);
         continuousRun = new CheckBox();
-        settingsPane.add(continuousRun, 1, rowIndex++);
+        settingsPane.add(continuousRun, 1, rowIndex);
 
 
         VBox messagePane = new VBox(settingsPane, buttonBox);

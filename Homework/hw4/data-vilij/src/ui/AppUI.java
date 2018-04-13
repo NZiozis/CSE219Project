@@ -283,7 +283,7 @@ public final class AppUI extends UITemplate{
                     }
 
                     else{
-                        algorithmsDir = algorithmsDir.toString() + SEPARATOR + selectedToggle.getText();
+                        algorithmsDir = algorithmsDir + SEPARATOR + selectedToggle.getText();
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
                         algorithmIsSelected.set(false);
                     }
