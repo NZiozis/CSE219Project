@@ -36,12 +36,19 @@ public class TenLines<T>{
 
     public int size(){ return totalData.size();}
 
+    private void clear(){
+        this.totalData.clear();
+        this.activeArea.clear();
+        this.passiveArea.clear();
+    }
+
     /**
      * this should only be called when new data is being loaded in. This completely resets the data that the
      * application is working with to the initial case. This should also only really be needed to be called when the
      * default constructor is used as this is already handled in the other version.
      */
     public void setTotalData(ArrayList<T> totalData){
+        clear();
         this.totalData = totalData;
         passiveArea = (ArrayList<T>) totalData.clone();
         update();

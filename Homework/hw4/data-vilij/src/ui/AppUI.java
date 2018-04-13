@@ -245,12 +245,13 @@ public final class AppUI extends UITemplate{
             File algorithmsDir =
                     new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
 
-            if (previouslyLoaded.containsKey(selectedToggle.getText())){
-                loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
-                algorithmHouse.setContent(loadedAlgorithms);
-            }
-            else{
-                try{
+            try{
+                if (previouslyLoaded.containsKey(selectedToggle.getText())){
+                    loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
+                    algorithmHouse.setContent(loadedAlgorithms);
+                }
+                else{
+
                     GridPane temp;
                     if (selectedToggle.getText()
                             .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
@@ -265,8 +266,8 @@ public final class AppUI extends UITemplate{
                     algorithmHouse.setContent(loadedAlgorithms);
                     previouslyLoaded.put(selectedToggle.getText(), temp);
                 }
-                catch (NullPointerException ignored){}
             }
+            catch (NullPointerException ignored){}
         });
 
     }

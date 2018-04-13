@@ -40,6 +40,7 @@ public class AppData implements DataComponent{
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
         this.tenLines = new TenLines<>();
+        this.labels = new HashSet<>();
         this.algorithmsDir =
                 new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
     }
