@@ -130,6 +130,7 @@ public final class AppUI extends UITemplate{
     public void clear(){
         textArea.clear();
         chart.getData().clear();
+        previouslyLoaded.clear();
     }
 
     public String getCurrentText(){
@@ -258,10 +259,19 @@ public final class AppUI extends UITemplate{
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
                     }
 
+                    else if (selectedToggle.getText()
+                            .contains(applicationTemplate.manager.getPropertyValue(
+                                    AppPropertyTypes.JAVA_FILE_EXT.name()))){
+                        temp = loadedAlgorithms;
+                        System.out.println("test");
+
+                    }
+
                     else{
                         algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
                     }
+
                     loadedAlgorithms = temp;
                     algorithmHouse.setContent(loadedAlgorithms);
                     previouslyLoaded.put(selectedToggle.getText(), temp);

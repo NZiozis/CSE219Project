@@ -51,6 +51,7 @@ public enum AppPropertyTypes{
     /* application-specific parameters */
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
+    JAVA_FILE_EXT,
     TEXT_AREA,
     SCRNSHT_INITIAL,
     SCRNSHT_FILE_EXT,
