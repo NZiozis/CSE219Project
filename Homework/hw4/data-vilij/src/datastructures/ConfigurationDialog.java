@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import settings.AppPropertyTypes;
+import ui.AppUI;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 
@@ -73,6 +74,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
             }
 
             continuousRun.setSelected(continuousRun.isSelected());
+            ((AppUI)applicationTemplate.getUIComponent()).setConfigurationValid(true);
             this.close();
         });
         int rowIndex = 0;

@@ -1,6 +1,7 @@
 package ui;
 
 import actions.AppActions;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
@@ -48,11 +49,21 @@ public final class AppUI extends UITemplate{
     private Button                   selectButton;        // selected choice from radio buttons
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
     private ScrollPane               algorithmHouse;
+    private String                   selectedAlgorithm;
+    private SimpleBooleanProperty    configurationValid;
+    private SimpleBooleanProperty    algorithmIsSelected;
+    private Button                   runButton;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
         previouslyLoaded = new HashMap<>();
+        configurationValid = new SimpleBooleanProperty(false);
+        algorithmIsSelected = new SimpleBooleanProperty(false);
+    }
+
+    public void setConfigurationValid(boolean configurationValid){
+        this.configurationValid.set(configurationValid);
     }
 
     public Button getSelectButton(){
@@ -190,9 +201,14 @@ public final class AppUI extends UITemplate{
                                                                                                                               AppPropertyTypes.ALGORITHMS_PATH
                                                                                                                                       .name())));
         algorithmHouse.setContent(loadedAlgorithms);
+
+        //TODO insert an appropriate image here for the run button
+        runButton = new Button("run");
+        runButton.visibleProperty().bind(algorithmIsSelected);
+        runButton.disableProperty().bind((algorithmIsSelected.and(configurationValid)).not());
         leftPanel.getChildren()
                 .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
-                        selectButton);
+                        selectButton, runButton);
 
         leftPanelTitle.visibleProperty().bind(textArea.visibleProperty());
 
@@ -257,19 +273,22 @@ public final class AppUI extends UITemplate{
                     if (selectedToggle.getText()
                             .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+                        algorithmIsSelected.set(false);
                     }
 
                     else if (selectedToggle.getText()
                             .contains(applicationTemplate.manager.getPropertyValue(
                                     AppPropertyTypes.JAVA_FILE_EXT.name()))){
                         temp = loadedAlgorithms;
-                        System.out.println("test");
-
+                        selectedAlgorithm = selectedToggle.getText();
+                        algorithmIsSelected.set(true);
+                        configurationValid.set(false);
                     }
 
                     else{
                         algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
                         temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+                        algorithmIsSelected.set(false);
                     }
 
                     loadedAlgorithms = temp;
