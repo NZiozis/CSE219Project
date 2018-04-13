@@ -14,6 +14,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import settings.AppPropertyTypes;
@@ -35,7 +36,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
@@ -343,10 +343,10 @@ public final class AppActions implements ActionComponent{
      * algorithmTypes will be updates once and only once in the following method. However, in populateAlgorithms, the
      * ToggleGroup algorithm will be update everytime the subdirectory containing the actual algorithms is entered.
      */
-    public void populateAlgorithms(ToggleGroup algorithms, File algorithmsDir){
+    public GridPane populateAlgorithms(ToggleGroup algorithms, File algorithmsDir){
+        GridPane loadedAlgorithms = new GridPane();
         int counter = 0;
         ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
-        ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.getChildren().clear();
         ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
 
 
@@ -354,14 +354,14 @@ public final class AppActions implements ActionComponent{
         if (directories != null && directories.length != 0){
             for (String directory : directories){
                 RadioButton radioButton = new RadioButton(directory);
-                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter++);
+                loadedAlgorithms.add(radioButton, 0, counter++);
                 radioButton.setToggleGroup(algorithms);
             }
         }
         else{
             RadioButton back =
                     new RadioButton(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()));
-            ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(back, 0, counter++);
+            loadedAlgorithms.add(back, 0, counter++);
             back.setToggleGroup(algorithms);
 
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
@@ -369,12 +369,13 @@ public final class AppActions implements ActionComponent{
             for (String algoName : algorithmNames){
                 RadioButton radioButton = new RadioButton(algoName);
 
-                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(radioButton, 0, counter);
+                loadedAlgorithms.add(radioButton, 0, counter);
                 Button configurationButton = createNewConfigurationButton(algoName);
-                ((AppUI) applicationTemplate.getUIComponent()).loadedAlgorithms.add(configurationButton, 1, counter++);
+                loadedAlgorithms.add(configurationButton, 1, counter++);
                 radioButton.setToggleGroup(algorithms);
             }
         }
+        return loadedAlgorithms;
     }
 
     private Button createNewConfigurationButton(String algoName){

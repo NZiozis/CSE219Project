@@ -16,6 +16,7 @@ import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
 import java.io.File;
+import java.util.HashMap;
 
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
@@ -29,7 +30,6 @@ public final class AppUI extends UITemplate{
 
 
     // This will display the algorithm types and then the algorithms available to be chosen from as well as the option to configure them
-    public  GridPane            loadedAlgorithms;
     /**
      * The application to which this class of actions belongs.
      */
@@ -42,14 +42,16 @@ public final class AppUI extends UITemplate{
     private TextArea                 textArea;            // text area for new data input
     private boolean                  hasNewText;
     private Text                     loadedInFileText;    // text displayed when
+    private GridPane                 loadedAlgorithms;
     private ToggleGroup              algorithms;
     // this will hold the algorithms of the currently selected type.
     private Button                   selectButton;        // selected choice from radio buttons
+    private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
-        ;
+        previouslyLoaded = new HashMap<>();
     }
 
     public Button getSelectButton(){
@@ -166,7 +168,6 @@ public final class AppUI extends UITemplate{
         loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
         ScrollPane algorithmHouse = new ScrollPane();
-        loadedAlgorithms = new GridPane();
         algorithmHouse.setContent(loadedAlgorithms);
         algorithmHouse.visibleProperty().bind(textArea.visibleProperty());
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
@@ -181,6 +182,12 @@ public final class AppUI extends UITemplate{
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
 
+        loadedAlgorithms = ((AppActions)applicationTemplate.getActionComponent()).populateAlgorithms(algorithms,
+                                                                                                     new File(
+                                                                                                             applicationTemplate.manager
+                                                                                                                     .getPropertyValue(
+                                                                                                                             AppPropertyTypes.ALGORITHMS_PATH
+                                                                                                                                     .name())));
         leftPanel.getChildren()
                 .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
                         selectButton);
@@ -236,18 +243,27 @@ public final class AppUI extends UITemplate{
             AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
             File algorithmsDir =
                     new File(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
-            try{
-                if (selectedToggle.getText()
-                        .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-                    appActions.populateAlgorithms(algorithms, algorithmsDir);
-                }
 
-                else{
-                    algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
-                    appActions.populateAlgorithms(algorithms, algorithmsDir);
-                }
+            if (previouslyLoaded.containsKey(selectedToggle.getText())){
+                loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
             }
-            catch (NullPointerException ignored){}
+            else{
+                try{
+                    GridPane temp;
+                    if (selectedToggle.getText()
+                            .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+                        temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+                    }
+
+                    else{
+                        algorithmsDir = new File(algorithmsDir.toString() + "/" + selectedToggle.getText());
+                        temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+                    }
+                    loadedAlgorithms = temp;
+                    previouslyLoaded.put(selectedToggle.getText(), temp);
+                }
+                catch (NullPointerException ignored){}
+            }
         });
 
     }
