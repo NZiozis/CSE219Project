@@ -49,6 +49,7 @@ public final class AppUI extends UITemplate{
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+        ;
     }
 
     public Button getSelectButton(){

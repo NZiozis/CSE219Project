@@ -43,6 +43,9 @@ public enum AppPropertyTypes{
     DUPLICATE_ERROR_MESSAGE,
     NO_DATA_LOADED_IN_PLACEHOLDER,
     LOADED_DATA,
+    MAX_ITERATIONS_TEXT,
+    UPDATE_INTERVAL_TEXT,
+    CONTINUOUS_RUN_TEXT,
 
     /* application-specific parameters */
     DATA_FILE_EXT,

@@ -1,6 +1,7 @@
 package actions;
 
 import dataprocessors.AppData;
+import datastructures.ConfigurationDialog;
 import datastructures.Tuple;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -49,7 +50,7 @@ public final class AppActions implements ActionComponent{
     /**
      * Path to the data file currently active.
      */
-    private Path                  dataFilePath;
+    private Path dataFilePath;
     /**
      * The boolean property marking whether or not there are any unsaved changes.
      */
@@ -57,7 +58,7 @@ public final class AppActions implements ActionComponent{
     /**
      * The application to which this class of actions belongs.
      */
-    private ApplicationTemplate   applicationTemplate;
+    private ApplicationTemplate applicationTemplate;
 
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
@@ -380,7 +381,9 @@ public final class AppActions implements ActionComponent{
         configurationButton.setTooltip(tooltip);
         configurationButton.getStyleClass().add("configuration-button");
         //TODO fix this so that the configuration dialog appears when the button is pressed and the data is obtained.
-        configurationButton.setOnMouseClicked(event -> System.out.println("hello"));
+        ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate);
+        dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
+        configurationButton.setOnMouseClicked(event -> dialog.show("Test", "test"));
 
         return configurationButton;
 

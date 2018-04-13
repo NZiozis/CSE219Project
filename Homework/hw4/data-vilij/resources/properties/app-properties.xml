@@ -43,6 +43,9 @@ functionality within the main workspace. -->
                   value="The file you have tried to load has a duplicate on line %s. It is: %s"/>
         <property name="NO_DATA_LOADED_IN_PLACEHOLDER" value="There is no data loaded in."/>
         <property name="LOADED_DATA" value="%d instances with %d labels from %s. These labels are:"/>
+        <property name="MAX_ITERATIONS_TEXT" value="Max Iterations:"/>
+        <property name="UPDATE_INTERVAL_TEXT" value="Update Interval:"/>
+        <property name="CONTINUOUS_RUN_TEXT" value="Continuous Run?"/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>
