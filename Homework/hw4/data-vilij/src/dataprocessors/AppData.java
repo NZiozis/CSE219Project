@@ -80,6 +80,8 @@ public class AppData implements DataComponent{
             hasTwoLabels.set(false);
         }
 
+        ((AppUI)applicationTemplate.getUIComponent()).setDataLoadedIn(true);
+
         loadedText.append("\n");
         for (Object element : labels)
             loadedText.append(element).append("\n");
@@ -107,6 +109,8 @@ public class AppData implements DataComponent{
             else{
                 hasTwoLabels.set(false);
             }
+
+            ((AppUI)applicationTemplate.getUIComponent()).setDataLoadedIn(true);
 
             StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),

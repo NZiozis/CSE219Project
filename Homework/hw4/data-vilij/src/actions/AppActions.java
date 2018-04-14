@@ -78,6 +78,7 @@ public final class AppActions implements ActionComponent{
         ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
         ((AppData)applicationTemplate.getDataComponent()).hasTwoLabelsProperty().set(false);
+        ((AppUI)applicationTemplate.getUIComponent()).setDataLoadedIn(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();

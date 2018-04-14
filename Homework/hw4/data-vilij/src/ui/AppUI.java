@@ -48,12 +48,13 @@ public final class AppUI extends UITemplate{
     private ToggleGroup              algorithms;
     // this will hold the algorithms of the currently selected type.
     private Button                   selectButton;        // selected choice from radio buttons
+    private Button                   runButton;
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
     private ScrollPane               algorithmHouse;
     private String                   selectedAlgorithm;
     private SimpleBooleanProperty    configurationValid;
     private SimpleBooleanProperty    algorithmIsSelected;
-    private Button                   runButton;
+    private SimpleBooleanProperty    dataLoadedIn;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -61,6 +62,11 @@ public final class AppUI extends UITemplate{
         previouslyLoaded = new HashMap<>();
         configurationValid = new SimpleBooleanProperty(false);
         algorithmIsSelected = new SimpleBooleanProperty(false);
+        dataLoadedIn = new SimpleBooleanProperty(false);
+    }
+
+    public void setDataLoadedIn(boolean dataLoadedIn){
+        this.dataLoadedIn.set(dataLoadedIn);
     }
 
     public void setConfigurationValid(boolean configurationValid){
@@ -178,14 +184,14 @@ public final class AppUI extends UITemplate{
         loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
         algorithmHouse = new ScrollPane();
-        algorithmHouse.visibleProperty().bind(textArea.visibleProperty());
+        algorithmHouse.visibleProperty().bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
         algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
 
 
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
-        selectButton.visibleProperty().bind(textArea.visibleProperty());
+        selectButton.visibleProperty().bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         selectButton.setDisable(true);
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
@@ -198,7 +204,6 @@ public final class AppUI extends UITemplate{
                                                                                                                               .name()));
         algorithmHouse.setContent(loadedAlgorithms);
 
-        //TODO insert an appropriate image here for the run button
         runButton = new Button(null, new ImageView(
                 new Image(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_BUTTON_ICON_PATH.name()))));
         runButton.visibleProperty().bind(algorithmIsSelected);
