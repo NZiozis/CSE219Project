@@ -101,6 +101,13 @@ public class AppData implements DataComponent{
             });
             int instances = dataArray.size();
 
+            if (labels.size() == 2){
+                hasTwoLabels.set(true);
+            }
+            else{
+                hasTwoLabels.set(false);
+            }
+
             StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
                                   instances, labels.size(),

@@ -75,6 +75,9 @@ public final class AppActions implements ActionComponent{
 
     @Override
     public void handleNewRequest(){
+        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
+        ((AppData)applicationTemplate.getDataComponent()).hasTwoLabelsProperty().set(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();
