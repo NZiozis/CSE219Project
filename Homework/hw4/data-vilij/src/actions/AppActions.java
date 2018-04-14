@@ -77,8 +77,8 @@ public final class AppActions implements ActionComponent{
     public void handleNewRequest(){
         ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
-        ((AppData)applicationTemplate.getDataComponent()).hasTwoLabelsProperty().set(false);
-        ((AppUI)applicationTemplate.getUIComponent()).setDataLoadedIn(false);
+        ((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().set(false);
+        ((AppUI) applicationTemplate.getUIComponent()).setDataLoadedIn(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();
@@ -197,8 +197,8 @@ public final class AppActions implements ActionComponent{
             }
             else{
                 ui.setDataLoadedIn(false);
-                ui.setLoadedInFileText(
-                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
+                ui.setLoadedInFileText(applicationTemplate.manager.getPropertyValue(
+                        AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
                 if (errorTuple.get_isDuplicate()){ duplicateErrorHelper(errorTuple); }
                 else{ invalidTextErrorHelper(errorTuple); }
             }
@@ -381,7 +381,14 @@ public final class AppActions implements ActionComponent{
             loadedAlgorithms.add(back, 0, counter++);
             back.setToggleGroup(algorithms);
 
-            String[] algoTypeChecker = algorithmsDir.toString().split("/");
+            String[] algoTypeChecker;
+            if (System.getProperty("os.name").toLowerCase().contains("win")){
+                algoTypeChecker = algorithmsDir.toString().split(File.separator + File.separator);
+            }
+            else{
+                algoTypeChecker = algorithmsDir.toString().split(SEPARATOR);
+            }
+
             String algoType = algoTypeChecker[algoTypeChecker.length - 1];
             String[] algorithmNames = algorithmsDir.list((file, name) -> new File(file, name).isFile());
             assert algorithmNames != null;
