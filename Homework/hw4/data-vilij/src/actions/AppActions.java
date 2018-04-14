@@ -196,6 +196,9 @@ public final class AppActions implements ActionComponent{
                 ((AppData) applicationTemplate.getDataComponent()).displayData();
             }
             else{
+                ui.setDataLoadedIn(false);
+                ui.setLoadedInFileText(
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
                 if (errorTuple.get_isDuplicate()){ duplicateErrorHelper(errorTuple); }
                 else{ invalidTextErrorHelper(errorTuple); }
             }
