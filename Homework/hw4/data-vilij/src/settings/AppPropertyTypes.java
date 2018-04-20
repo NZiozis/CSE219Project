@@ -68,5 +68,7 @@ public enum AppPropertyTypes{
     CLUSTERING,
     CLASSIFICATION,
     LABELS_NUM,
+    RUN_TEXT,
+    CLASS_PATH_JOINER,
 
 }

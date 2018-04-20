@@ -69,7 +69,8 @@ functionality within the main workspace. -->
         <property name="CLUSTERING" value="Clustering"/>
         <property name="CLASSIFICATION" value="Classification"/>
         <property name="LABELS_NUM" value="Number of Labels"/>
-
+        <property name="RUN_TEXT" value="run"/>
+        <property name="CLASS_PATH_JOINER" value="."/>
 
     </property_list>
     <property_options_list/>

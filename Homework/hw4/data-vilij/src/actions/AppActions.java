@@ -32,6 +32,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -206,6 +207,21 @@ public final class AppActions implements ActionComponent{
 
     }
 
+
+    //TODO This should also have access to the config data, so it might be easy to pass it as an arg and then use it to create the algorithm
+    public void handleRunRequest(){
+        String referencePath = ((AppUI)applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
+        try{
+            Class<?> algorithm = Class.forName(referencePath);
+            Method run =
+                    algorithm.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
+            //TODO figure out how to take this method and run it on the algorithm
+        }
+        catch (ClassNotFoundException | NoSuchMethodException e){
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * This is a place holder. I do not intend to implement this, but since we implement ActionComponent it is required.
@@ -398,7 +414,7 @@ public final class AppActions implements ActionComponent{
                     RadioButton radioButton = new RadioButton(algoName);
 
                     loadedAlgorithms.add(radioButton, 0, counter);
-                    Button configurationButton = createNewConfigurationButton(algoName, true);
+                    Button configurationButton = createNewConfigurationButton(algoName, true, counter);
                     loadedAlgorithms.add(configurationButton, 1, counter++);
                     radioButton.setToggleGroup(algorithms);
                 }
@@ -408,7 +424,7 @@ public final class AppActions implements ActionComponent{
                     RadioButton radioButton = new RadioButton(algoName);
 
                     loadedAlgorithms.add(radioButton, 0, counter);
-                    Button configurationButton = createNewConfigurationButton(algoName, false);
+                    Button configurationButton = createNewConfigurationButton(algoName, false, counter);
                     loadedAlgorithms.add(configurationButton, 1, counter++);
                     radioButton.setToggleGroup(algorithms);
                 }
@@ -417,7 +433,7 @@ public final class AppActions implements ActionComponent{
         return loadedAlgorithms;
     }
 
-    private Button createNewConfigurationButton(String algoName, boolean isClustering){
+    private Button createNewConfigurationButton(String algoName, boolean isClustering, Integer counter){
         Button configurationButton = new Button(null, new ImageView(new Image(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_ICON_PATH.name()))));
         Tooltip tooltip = new Tooltip(
@@ -425,7 +441,7 @@ public final class AppActions implements ActionComponent{
         configurationButton.setTooltip(tooltip);
         configurationButton.getStyleClass().add("configuration-button");
 
-        ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate, isClustering);
+        ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate, isClustering, counter);
         dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
         configurationButton.setOnMouseClicked(event -> dialog.show(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TITLE.name()), null));

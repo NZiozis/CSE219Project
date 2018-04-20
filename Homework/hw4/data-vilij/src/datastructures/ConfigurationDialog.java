@@ -28,10 +28,12 @@ public class ConfigurationDialog extends Stage implements Dialog{
     private boolean             isClustering;
     private ComboBox<String>    numLables;
     private String              numberOfLabelsChosen;
+    private Integer             row;
 
-    public ConfigurationDialog(ApplicationTemplate applicationTemplate, boolean isClustering){
+    public ConfigurationDialog(ApplicationTemplate applicationTemplate, boolean isClustering, Integer row){
         this.applicationTemplate = applicationTemplate;
         this.isClustering = isClustering;
+        this.row = row;
     }
 
     @Override
@@ -60,23 +62,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
         initOwner(owner);
 
         Button confirmationButton = new Button(Option.CONFIRM.name());
-        confirmationButton.setOnMouseClicked(event -> {
-
-
-            String graceful = invalidInputHandler(maxIterations.getText());
-            maxIterations.setText(graceful);
-            String degradation = invalidInputHandler(updateInterval.getText());
-            updateInterval.setText(degradation);
-
-            if (isClustering){
-                numberOfLabelsChosen = invalidInputHandler(numLables.getValue());
-                numLables.setValue(numberOfLabelsChosen);
-            }
-
-            continuousRun.setSelected(continuousRun.isSelected());
-            ((AppUI) applicationTemplate.getUIComponent()).setConfigurationValid(true);
-            this.close();
-        });
         int rowIndex = 0;
 
         HBox buttonBox = new HBox(5);
@@ -125,6 +110,26 @@ public class ConfigurationDialog extends Stage implements Dialog{
         messagePane.setAlignment(Pos.CENTER);
         messagePane.setPadding(new Insets(10, 20, 20, 20));
         messagePane.setSpacing(10);
+
+        confirmationButton.setOnMouseClicked(event -> {
+
+            String graceful = invalidInputHandler(maxIterations.getText());
+            maxIterations.setText(graceful);
+            String degradation = invalidInputHandler(updateInterval.getText());
+            updateInterval.setText(degradation);
+
+            if (isClustering){
+                numberOfLabelsChosen = invalidInputHandler(numLables.getValue());
+                numLables.setValue(numberOfLabelsChosen);
+            }
+
+            continuousRun.setSelected(continuousRun.isSelected());
+            if (this.row.equals(((AppUI)applicationTemplate.getUIComponent()).getCurrentAlgoIndex())){
+                ((AppUI) applicationTemplate.getUIComponent()).setConfigurationValid(true);
+            }
+
+            this.close();
+        });
 
         this.setScene(new Scene(messagePane));
     }

@@ -39,7 +39,8 @@ public final class AppUI extends UITemplate{
 
     @SuppressWarnings("FieldCanBeLocal")
     private Button                   scrnshotButton;      // toolbar button to take a screenshot of the data
-    private Button                   editDoneButton;      // toolbar button to edit the textArea when inputting new data
+    private Button                   editDoneButton;
+    // toolbar button to edit the textArea when inputting new data
     private LineChart<Number,Number> chart;               // the chart where data will be displayed
     private TextArea                 textArea;            // text area for new data input
     private boolean                  hasNewText;
@@ -51,10 +52,13 @@ public final class AppUI extends UITemplate{
     private Button                   runButton;
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
     private ScrollPane               algorithmHouse;
-    private String                   selectedAlgorithm;
+    private StringBuilder            classPathtoAlgorithm;
+    // this will contain the class path to the algorithm for Reflection purposes
     private SimpleBooleanProperty    configurationValid;
     private SimpleBooleanProperty    algorithmIsSelected;
     private SimpleBooleanProperty    dataLoadedIn;
+    private RadioButton              selectedToggle;
+    private Integer                  currentAlgoIndex;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -63,6 +67,17 @@ public final class AppUI extends UITemplate{
         configurationValid = new SimpleBooleanProperty(false);
         algorithmIsSelected = new SimpleBooleanProperty(false);
         dataLoadedIn = new SimpleBooleanProperty(false);
+        classPathtoAlgorithm = new StringBuilder();
+        classPathtoAlgorithm.append(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+    }
+
+    public Integer getCurrentAlgoIndex(){
+        return currentAlgoIndex;
+    }
+
+    public StringBuilder getClassPathtoAlgorithm(){
+        return classPathtoAlgorithm;
     }
 
     public void setDataLoadedIn(boolean dataLoadedIn){
@@ -232,6 +247,7 @@ public final class AppUI extends UITemplate{
         setTextAreaActions();
         setSelectButtonActions();
         editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
+        runButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleRunRequest());
         saveButton.disableProperty()
                 .bind(((AppActions) applicationTemplate.getActionComponent()).isUnsavedProperty().not());
     }
@@ -261,48 +277,91 @@ public final class AppUI extends UITemplate{
     private void setSelectButtonActions(){
 
         selectButton.setOnMouseClicked(event -> {
-            RadioButton selectedToggle = (RadioButton) algorithms.getSelectedToggle();
-            AppActions appActions = (AppActions) applicationTemplate.getActionComponent();
+            selectedToggle = (RadioButton) algorithms.getSelectedToggle();
             String algorithmsDir =
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
 
             try{
                 if (previouslyLoaded.containsKey(selectedToggle.getText())){
-                    loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
-                    algorithmHouse.setContent(loadedAlgorithms);
+                    loadInPreviouslyLoaded();
                 }
                 else{
-
-                    GridPane temp;
-                    if (selectedToggle.getText()
-                            .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-                        temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
-                        algorithmIsSelected.set(false);
-                    }
-
-                    /*This else if block is why I re-added the file extensions, if a better way becomes apparent, fix this*/
-                    else if (selectedToggle.getText()
-                            .contains(applicationTemplate.manager.getPropertyValue(
-                                    AppPropertyTypes.CLASS_FILE_EXT.name()))){
-                        temp = loadedAlgorithms;
-                        selectedAlgorithm = selectedToggle.getText();
-                        algorithmIsSelected.set(true);
-                        configurationValid.set(false);
-                    }
-
-                    else{
-                        algorithmsDir = algorithmsDir + SEPARATOR + selectedToggle.getText();
-                        temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
-                        algorithmIsSelected.set(false);
-                    }
-
-                    loadedAlgorithms = temp;
-                    algorithmHouse.setContent(loadedAlgorithms);
-                    previouslyLoaded.put(selectedToggle.getText(), temp);
+                    loadInNew(algorithmsDir);
                 }
+
             }
+            /*This is ignored because it only throws this when the user fails to pick a radio button*/
             catch (NullPointerException ignored){}
         });
 
     }
+
+    private void loadInPreviouslyLoaded() throws NullPointerException{
+        loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
+        algorithmHouse.setContent(loadedAlgorithms);
+        if (selectedToggle.getText()
+                .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf("."), classPathtoAlgorithm.length());
+            algorithmIsSelected.set(false);
+            configurationValid.set(false);
+        }
+        else{
+            classPathtoAlgorithm.append(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
+                    .append(selectedToggle.getText());
+
+            if (selectedToggle.getText()
+                    .contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
+                currentAlgoIndex = loadedAlgorithms.getChildren().indexOf(selectedToggle) / 2 +
+                                   1; // This equation accounts for the other elements that are inside of the GridPane
+                algorithmIsSelected.set(true);
+                configurationValid.set(false);
+            }
+            else{
+                algorithmIsSelected.set(false);
+                configurationValid.set(false);
+            }
+        }
+    }
+
+    private void loadInNew(String algorithmsDir) throws NullPointerException{
+        GridPane temp;
+        AppActions appActions = ((AppActions) applicationTemplate.getActionComponent());
+        if (selectedToggle.getText()
+                .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf("."), classPathtoAlgorithm.length());
+            temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+            algorithmIsSelected.set(false);
+            configurationValid.set(false);
+        }
+
+        else{
+
+            classPathtoAlgorithm.append(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
+                    .append(selectedToggle.getText());
+
+            /*This else if block is why I re-added the file extensions, if a better way becomes apparent, fix this*/
+            if (selectedToggle.getText()
+                    .contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
+                temp = loadedAlgorithms;
+                currentAlgoIndex = temp.getChildren().indexOf(selectedToggle) / 2 + 1;
+                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf("."), classPathtoAlgorithm.length());
+                algorithmIsSelected.set(true);
+                configurationValid.set(false);
+            }
+
+            else{
+                algorithmsDir = algorithmsDir + SEPARATOR + selectedToggle.getText();
+                temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+                algorithmIsSelected.set(false);
+                configurationValid.set(false);
+            }
+        }
+
+        loadedAlgorithms = temp;
+        algorithmHouse.setContent(loadedAlgorithms);
+        previouslyLoaded.put(selectedToggle.getText(), temp);
+    }
+
 }
