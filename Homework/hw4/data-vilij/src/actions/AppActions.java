@@ -395,8 +395,6 @@ public final class AppActions implements ActionComponent{
             if (algoType.equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERING.name()))){
 
                 for (String algoName : algorithmNames){
-                    int endName = algoName.indexOf(".");
-                    algoName = algoName.substring(0,endName);
                     RadioButton radioButton = new RadioButton(algoName);
 
                     loadedAlgorithms.add(radioButton, 0, counter);
@@ -407,8 +405,6 @@ public final class AppActions implements ActionComponent{
             }
             else{
                 for (String algoName : algorithmNames){
-                    int endName = algoName.indexOf(".");
-                    algoName = algoName.substring(0,endName);
                     RadioButton radioButton = new RadioButton(algoName);
 
                     loadedAlgorithms.add(radioButton, 0, counter);

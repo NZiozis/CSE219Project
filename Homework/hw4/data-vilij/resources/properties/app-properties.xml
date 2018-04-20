@@ -35,6 +35,7 @@ functionality within the main workspace. -->
         <property name="DUPLICATE_ERROR_TITLE" value="Duplicate Error"/>
         <property name="INVALID_TEXT_ERROR_TITLE" value="Invalid Text"/>
         <property name="CONFIGURATION_TITLE" value="Configuration Settings"/>
+        <property name="ALGORITHM_NOT_FOUND" value="Algorithm not found"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
@@ -48,11 +49,12 @@ functionality within the main workspace. -->
         <property name="MAX_ITERATIONS_TEXT" value="Max Iterations:"/>
         <property name="UPDATE_INTERVAL_TEXT" value="Update Interval:"/>
         <property name="CONTINUOUS_RUN_TEXT" value="Continuous Run?"/>
+        <property name="ALGORITHM_NOT_FOUND_MESSAGE" value="This either was not found or does not have a run method."/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
-        <property name="JAVA_FILE_EXT" value=".java"/>
+        <property name="CLASS_FILE_EXT" value=".class"/>
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
         <property name="SCRNSHT_INITIAL" value="Untitled.png"/>

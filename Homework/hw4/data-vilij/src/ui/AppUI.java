@@ -280,7 +280,7 @@ public final class AppUI extends UITemplate{
 
                     else if (selectedToggle.getText()
                             .contains(applicationTemplate.manager.getPropertyValue(
-                                    AppPropertyTypes.JAVA_FILE_EXT.name()))){
+                                    AppPropertyTypes.CLASS_FILE_EXT.name()))){
                         temp = loadedAlgorithms;
                         selectedAlgorithm = selectedToggle.getText();
                         algorithmIsSelected.set(true);

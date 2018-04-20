@@ -36,7 +36,8 @@ public enum AppPropertyTypes{
     LOAD_DATA_TITLE,
     INVALID_TEXT_ERROR_TITLE,
     DUPLICATE_ERROR_TITLE,
-    CONFIGURATION_TITLE
+    CONFIGURATION_TITLE,
+    ALGORITHM_NOT_FOUND
 
     /* application-specific messages */,
     SAVE_UNSAVED_WORK,
@@ -48,11 +49,12 @@ public enum AppPropertyTypes{
     MAX_ITERATIONS_TEXT,
     UPDATE_INTERVAL_TEXT,
     CONTINUOUS_RUN_TEXT,
+    ALGORITHM_NOT_FOUND_MESSAGE,
 
     /* application-specific parameters */
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
-    JAVA_FILE_EXT,
+    CLASS_FILE_EXT,
     TEXT_AREA,
     SCRNSHT_INITIAL,
     SCRNSHT_FILE_EXT,
