@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Ritwik Banerjee
  */
-public abstract class Classifier implements Algorithm {
+public abstract class Classifier implements Algorithm{
 
     /**
      * See Appendix C of the SRS. Defining the output as a
@@ -21,6 +21,6 @@ public abstract class Classifier implements Algorithm {
      */
     protected List<Integer> output;
 
-    public List<Integer> getOutput() { return output; }
+    public List<Integer> getOutput(){ return output; }
 
 }

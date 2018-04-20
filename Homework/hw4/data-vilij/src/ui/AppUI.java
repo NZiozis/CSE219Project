@@ -184,14 +184,16 @@ public final class AppUI extends UITemplate{
         loadedInFileText.visibleProperty().bind(textArea.visibleProperty());
 
         algorithmHouse = new ScrollPane();
-        algorithmHouse.visibleProperty().bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
+        algorithmHouse.visibleProperty()
+                .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
         algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
 
 
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
-        selectButton.visibleProperty().bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
+        selectButton.visibleProperty()
+                .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         selectButton.setDisable(true);
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
@@ -278,6 +280,7 @@ public final class AppUI extends UITemplate{
                         algorithmIsSelected.set(false);
                     }
 
+                    /*This else if block is why I re-added the file extensions, if a better way becomes apparent, fix this*/
                     else if (selectedToggle.getText()
                             .contains(applicationTemplate.manager.getPropertyValue(
                                     AppPropertyTypes.CLASS_FILE_EXT.name()))){
