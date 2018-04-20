@@ -301,7 +301,9 @@ public final class AppUI extends UITemplate{
         algorithmHouse.setContent(loadedAlgorithms);
         if (selectedToggle.getText()
                 .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf("."), classPathtoAlgorithm.length());
+            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
+                                        classPathtoAlgorithm.length());
             algorithmIsSelected.set(false);
             configurationValid.set(false);
         }
@@ -346,7 +348,9 @@ public final class AppUI extends UITemplate{
                     .contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
                 temp = loadedAlgorithms;
                 currentAlgoIndex = temp.getChildren().indexOf(selectedToggle) / 2 + 1;
-                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf("."), classPathtoAlgorithm.length());
+                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf(
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
+                                            classPathtoAlgorithm.length());
                 algorithmIsSelected.set(true);
                 configurationValid.set(false);
             }

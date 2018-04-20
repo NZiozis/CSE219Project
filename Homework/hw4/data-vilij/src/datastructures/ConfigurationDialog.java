@@ -19,6 +19,8 @@ import ui.AppUI;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 
+import java.util.ArrayList;
+
 public class ConfigurationDialog extends Stage implements Dialog{
 
     private ApplicationTemplate applicationTemplate;
@@ -29,6 +31,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
     private ComboBox<String>    numLables;
     private String              numberOfLabelsChosen;
     private Integer             row;
+    private Integer             chosenNumberOfLabels;
 
     public ConfigurationDialog(ApplicationTemplate applicationTemplate, boolean isClustering, Integer row){
         this.applicationTemplate = applicationTemplate;
@@ -124,9 +127,23 @@ public class ConfigurationDialog extends Stage implements Dialog{
             }
 
             continuousRun.setSelected(continuousRun.isSelected());
-            if (this.row.equals(((AppUI)applicationTemplate.getUIComponent()).getCurrentAlgoIndex())){
+            if (this.row.equals(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgoIndex())){
                 ((AppUI) applicationTemplate.getUIComponent()).setConfigurationValid(true);
             }
+
+            ArrayList<Integer> externalConfig =
+                    ((AppData) applicationTemplate.getDataComponent()).getCurrentAlgorithmConfiguration();
+
+            externalConfig.clear();
+
+            externalConfig.add(Integer.parseInt(maxIterations.getText()));
+            externalConfig.add(Integer.parseInt(updateInterval.getText()));
+            if (isClustering) externalConfig.add(Integer.parseInt(numLables.getValue()));
+
+            /*Here, 1 means that it is selected and 0 means that it isn't*/
+            if (continuousRun.isSelected()){ externalConfig.add(1); }
+            else{ externalConfig.add(0); }
+
 
             this.close();
         });

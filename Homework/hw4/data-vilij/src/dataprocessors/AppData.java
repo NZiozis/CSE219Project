@@ -36,6 +36,7 @@ public class AppData implements DataComponent{
     private String                algorithmsDir;
     private HashSet<String>       labels;
     private SimpleBooleanProperty hasTwoLabels;
+    private ArrayList<Integer>    currentAlgorithmConfiguration;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
@@ -52,6 +53,10 @@ public class AppData implements DataComponent{
 
     public SimpleBooleanProperty hasTwoLabelsProperty(){
         return hasTwoLabels;
+    }
+
+    public ArrayList<Integer> getCurrentAlgorithmConfiguration(){
+        return currentAlgorithmConfiguration;
     }
 
     /**
