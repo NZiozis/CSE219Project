@@ -1,3 +1,20 @@
 package algorithms.Classification;
 
-public class Small{}
+import algorithms.Classifier;
+
+public class Small extends Classifier{
+    @Override
+    public int getMaxIterations(){
+        return 0;
+    }
+
+    @Override
+    public int getUpdateInterval(){
+        return 0;
+    }
+
+    @Override
+    public boolean tocontinue(){
+        return false;
+    }
+}
