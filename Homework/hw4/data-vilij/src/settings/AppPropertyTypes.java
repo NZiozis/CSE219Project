@@ -70,5 +70,6 @@ public enum AppPropertyTypes{
     LABELS_NUM,
     RUN_TEXT,
     CLASS_PATH_JOINER,
+    NULL_STRING,
 
 }

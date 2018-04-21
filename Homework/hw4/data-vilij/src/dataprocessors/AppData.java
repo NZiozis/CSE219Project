@@ -44,7 +44,8 @@ public class AppData implements DataComponent{
         this.tenLines = new TenLines<>();
         this.labels = new HashSet<>();
         this.algorithmsDir = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
-        hasTwoLabels = new SimpleBooleanProperty(false);
+        this.hasTwoLabels = new SimpleBooleanProperty(false);
+        this.currentAlgorithmConfiguration = new ArrayList<>();
     }
 
     public HashSet<String> getLabels(){
@@ -76,7 +77,7 @@ public class AppData implements DataComponent{
         tenLines.get_activeArea().forEach(builder::append);
         loadData(builder.toString());
         int numberOfLabels;
-        if (labels.contains("null")){
+        if (labels.contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()))){
             numberOfLabels = labels.size() - 1;
         }
         else{ numberOfLabels = labels.size(); }
@@ -116,7 +117,7 @@ public class AppData implements DataComponent{
             int instances = dataArray.size();
             int numberOfLabels;
 
-            if (labels.contains("null")){
+            if (labels.contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()))){
                 numberOfLabels = labels.size() - 1;
             }
             else{ numberOfLabels = labels.size(); }

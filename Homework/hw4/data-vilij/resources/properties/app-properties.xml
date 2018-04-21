@@ -58,7 +58,7 @@ functionality within the main workspace. -->
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
         <property name="SCRNSHT_INITIAL" value="Untitled.png"/>
-        <property name="SCRNSHT_FILE_EXT" value=".png"/>
+        <property name="SCRNSHT_FILE_EXT" value="png"/>
         <property name="SCRNSHT_FILE_DESC" value="PNG"/>
         <property name="LEFT_PANE_TITLE" value="Data File"/>
         <property name="LEFT_PANE_TITLEFONT" value="SansSerif"/>
@@ -71,6 +71,7 @@ functionality within the main workspace. -->
         <property name="LABELS_NUM" value="Number of Labels"/>
         <property name="RUN_TEXT" value="run"/>
         <property name="CLASS_PATH_JOINER" value="."/>
+        <property name="NULL_STRING" value="null"/>
 
     </property_list>
     <property_options_list/>

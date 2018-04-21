@@ -151,8 +151,8 @@ public final class AppActions implements ActionComponent{
         fileChooser.setTitle(manager.getPropertyValue(SAVE_WORK_TITLE.name()));
         String description = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_DESC.name());
         String extension = manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name());
-        ExtensionFilter extFilter =
-                new ExtensionFilter(String.format("%s (*%s)", description, extension), String.format("*%s", extension));
+        ExtensionFilter extFilter = new ExtensionFilter(String.format("%s (.*%s)", description, extension),
+                                                        String.format("*%s", extension));
 
         fileChooser.getExtensionFilters().add(extFilter);
         fileChooser.setInitialFileName(manager.getPropertyValue(AppPropertyTypes.SCRNSHT_INITIAL.name()));
@@ -161,7 +161,9 @@ public final class AppActions implements ActionComponent{
         if (selected != null){
             RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
             try{
-                ImageIO.write(renderedImage, AppPropertyTypes.SCRNSHT_FILE_EXT.name(), selected);
+                ImageIO.write(renderedImage,
+                              applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCRNSHT_FILE_EXT.name()),
+                              selected);
             }
             catch (IOException e){
                 ErrorDialog screenShotError = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
@@ -208,16 +210,18 @@ public final class AppActions implements ActionComponent{
     }
 
 
-    //TODO This should also have access to the config data, so it might be easy to pass it as an arg and then use it to create the algorithm
+    //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
         String referencePath = ((AppUI) applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
         try{
             Class<?> algorithm = Class.forName(referencePath);
+            //TODO create an instance of the class with the configuration data obtained already.
             Method run =
                     algorithm.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
-            //TODO figure out how to take this method and run it on the algorithm
+            //TODO figure out how to take this method and run it on the algorithm or the new instance that should be obtained
         }
         catch (ClassNotFoundException | NoSuchMethodException e){
+            //TODO replace this with something that isn't a stack trace
             e.printStackTrace();
         }
 
