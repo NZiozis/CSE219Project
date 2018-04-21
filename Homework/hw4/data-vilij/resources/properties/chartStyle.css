@@ -33,14 +33,6 @@
     -fx-stroke: transparent;
 }
 
-/*.default-color0.chart-series-line {*/
-    /*-fx-stroke: black;*/
-/*}*/
-
-.default-color0.chart-line-symbol {
-    -fx-background-color: black, white;
-}
-
 .axis {
     -fx-tick-label-fill: #914800;
     -fx-tick-length: 20;
@@ -65,3 +57,17 @@
     -fx-min-height: 36px;
     -fx-background-color: transparent;
 }
+
+.classification-line {
+    -fx-stroke: black;
+}
+
+/*.default-color0.chart-series-line {*/
+/*-fx-stroke: black;*/
+/*}*/
+
+/*
+.default-color0.chart-line-symbol {
+    -fx-background-color: black, white;
+}
+*/

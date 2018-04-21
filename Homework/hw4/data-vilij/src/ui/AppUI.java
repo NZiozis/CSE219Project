@@ -331,7 +331,9 @@ public final class AppUI extends UITemplate{
         AppActions appActions = ((AppActions) applicationTemplate.getActionComponent());
         if (selectedToggle.getText()
                 .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
-            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf("."), classPathtoAlgorithm.length());
+            classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
+                                        classPathtoAlgorithm.length());
             temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
             algorithmIsSelected.set(false);
             configurationValid.set(false);

@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RandomClassifier extends Classifier{
 
     private static final Random RAND = new Random();
-    private final int maxIterations;
-    private final int updateInterval;
+    private final int           maxIterations;
+    private final int           updateInterval;
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
     @SuppressWarnings("FieldCanBeLocal")
     // this mock classifier doesn't actually use the data, but a real classifier will
-    private DataSet dataset;
+    private       DataSet       dataset;
 
     public RandomClassifier(DataSet dataset, int maxIterations, int updateInterval, boolean tocontinue){
         this.dataset = dataset;

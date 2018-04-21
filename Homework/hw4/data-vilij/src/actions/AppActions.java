@@ -210,7 +210,7 @@ public final class AppActions implements ActionComponent{
 
     //TODO This should also have access to the config data, so it might be easy to pass it as an arg and then use it to create the algorithm
     public void handleRunRequest(){
-        String referencePath = ((AppUI)applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
+        String referencePath = ((AppUI) applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
         try{
             Class<?> algorithm = Class.forName(referencePath);
             Method run =

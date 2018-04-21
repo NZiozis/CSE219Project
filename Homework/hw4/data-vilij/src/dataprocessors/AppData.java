@@ -75,10 +75,17 @@ public class AppData implements DataComponent{
         });
         tenLines.get_activeArea().forEach(builder::append);
         loadData(builder.toString());
+        int numberOfLabels;
+        if (labels.contains("null")){
+            numberOfLabels = labels.size() - 1;
+        }
+        else{ numberOfLabels = labels.size(); }
+
         StringBuilder loadedText = new StringBuilder(
                 String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
-                              instances, labels.size(), filename));
-        if (labels.size() == 2){
+                              instances, numberOfLabels, filename));
+
+        if (numberOfLabels == 2){
             hasTwoLabels.set(true);
         }
         else{
@@ -107,8 +114,14 @@ public class AppData implements DataComponent{
                 labels.add(pointT[1]);
             });
             int instances = dataArray.size();
+            int numberOfLabels;
 
-            if (labels.size() == 2){
+            if (labels.contains("null")){
+                numberOfLabels = labels.size() - 1;
+            }
+            else{ numberOfLabels = labels.size(); }
+
+            if (numberOfLabels == 2){
                 hasTwoLabels.set(true);
             }
             else{
@@ -119,7 +132,7 @@ public class AppData implements DataComponent{
 
             StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
-                                  instances, labels.size(),
+                                  instances, numberOfLabels,
                                   applicationTemplate.manager.getPropertyValue(AppPropertyTypes.TEXT_AREA.name())));
             loadedText.append("\n");
             for (Object element : labels)
