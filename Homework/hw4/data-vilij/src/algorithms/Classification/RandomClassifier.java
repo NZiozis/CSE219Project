@@ -55,8 +55,6 @@ public class RandomClassifier extends Classifier{
         return tocontinue.get();
     }
 
-    public List<Integer> getOutput(){ return output; }
-
     @Override
     public void run(){
         for (int i = 1; i <= updateInterval; i++){

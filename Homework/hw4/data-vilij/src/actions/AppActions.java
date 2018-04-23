@@ -40,7 +40,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
@@ -235,7 +234,6 @@ public final class AppActions implements ActionComponent{
             runMethod.invoke(algorithm);
             Object dataString = getOutput.invoke(algorithm);
             System.out.println(dataString);
-//            ((AppData) applicationTemplate.getDataComponent()).loadData(dataString);
             //TODO then figure out how to project this data onto the chart
         }
         catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
