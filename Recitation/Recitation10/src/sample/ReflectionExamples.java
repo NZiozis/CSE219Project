@@ -19,6 +19,7 @@ public class ReflectionExamples{
         // example of how to create an instance using reflection
         MyClass mc1 = (MyClass) konstructor.newInstance(2, "two");
         MyClass mc2 = (MyClass) konstructor.newInstance(2, "Two");
+        MyClass mc3 = (MyClass) konstructor.newInstance(2, "two");
 
 
         Method[] methods = klass.getDeclaredMethods();
@@ -26,8 +27,9 @@ public class ReflectionExamples{
         for (Method method : methods){
 
             boolean answer = (boolean) method.invoke(mc1, mc2);
+            boolean answer2 = (boolean) method.invoke(mc1,mc3);
 
-            if (!answer){
+            if (!answer && answer2){
                 System.out.println(method.getName());
             }
 
