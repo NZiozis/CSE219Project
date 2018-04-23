@@ -1,5 +1,6 @@
 package actions;
 
+import algorithms.Algorithm;
 import dataprocessors.AppData;
 import datastructures.ConfigurationDialog;
 import datastructures.Tuple;
@@ -32,6 +33,8 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
@@ -209,19 +212,31 @@ public final class AppActions implements ActionComponent{
 
     }
 
-
     //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
         String referencePath = ((AppUI) applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
         try{
-            Class<?> algorithm = Class.forName(referencePath);
-            //TODO create an instance of the class with the configuration data obtained already.
-            Method run =
-                    algorithm.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
-            //TODO figure out how to take this method and run it on the algorithm or the new instance that should be obtained
+            Class<?> klass = Class.forName(referencePath);
+            Constructor konstructor = klass.getConstructors()[0];
+
+            ArrayList<Integer> currentConfig =
+                    ((AppData) applicationTemplate.getDataComponent()).getCurrentAlgorithmConfiguration();
+            boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
+
+            Algorithm algorithm = (Algorithm) konstructor.newInstance(null, currentConfig.get(0), currentConfig.get(1),
+                                                                      continuousRun);
+
+            Method runMethod =
+                    klass.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
+
+            runMethod.invoke(algorithm);
+            //TODO then figure out how to project this data onto the chart
         }
-        catch (ClassNotFoundException | NoSuchMethodException e){
-            //TODO replace this with something that isn't a stack trace
+        catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
+            // This should never occur during the normal use of this version of the program as all classes that are
+            // chosen should implement Algorithm which has a default run method, and the files are read directly from
+            // the directory they are located in and are not hardcoded. This error could occur if the user deleted an
+            // algorithm after the program was started, but this doesn't need to be handled yet.
             e.printStackTrace();
         }
 
