@@ -6,6 +6,7 @@ import algorithms.DataSet;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,15 +55,19 @@ public class RandomClassifier extends Classifier{
         return tocontinue.get();
     }
 
+    public List<Integer> getOutput(){ return output; }
+
     @Override
     public void run(){
-        for (int i = 1; i <= maxIterations && tocontinue(); i++){
+        for (int i = 1; i <= updateInterval; i++){
             int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
             int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
             int constant = new Double(RAND.nextDouble() * 100).intValue();
 
             // this is the real output of the classifier
             output = Arrays.asList(xCoefficient, yCoefficient, constant);
+
+            // put() method here. Check Banerjee slides for this
 
             // everything below is just for internal viewing of how the output is changing
             // in the final project, such changes will be dynamically visible in the UI

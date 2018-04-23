@@ -36,8 +36,6 @@ public class ReflectionExamples{
 
         }
 
-
-        // your code should be here (hint: you may need to create more instances beyond the one created above)
     }
 
     public static class MyClass{
