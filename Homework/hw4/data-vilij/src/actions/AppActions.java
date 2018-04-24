@@ -3,6 +3,7 @@ package actions;
 import algorithms.Algorithm;
 import dataprocessors.AppData;
 import datastructures.ConfigurationDialog;
+import datastructures.Drop;
 import datastructures.Tuple;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -38,9 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -51,6 +50,8 @@ import static vilij.templates.UITemplate.SEPARATOR;
  * @author Ritwik Banerjee
  */
 public final class AppActions implements ActionComponent{
+
+    private List<Integer> output;
 
     /**
      * Path to the data file currently active.
@@ -75,6 +76,14 @@ public final class AppActions implements ActionComponent{
 
     public SimpleBooleanProperty isUnsavedProperty(){
         return isUnsaved;
+    }
+
+    public List<Integer> getOutput(){
+        return output;
+    }
+
+    public void setOutput(List<Integer> output){
+        this.output = output;
     }
 
     @Override
@@ -215,6 +224,7 @@ public final class AppActions implements ActionComponent{
     //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
         String referencePath = ((AppUI) applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
+
         try{
             Class<?> klass = Class.forName(referencePath);
             Constructor konstructor = klass.getConstructors()[0];
@@ -223,19 +233,35 @@ public final class AppActions implements ActionComponent{
                     ((AppData) applicationTemplate.getDataComponent()).getCurrentAlgorithmConfiguration();
             boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
-            Algorithm algorithm = (Algorithm) konstructor.newInstance(null, currentConfig.get(0), currentConfig.get(1),
-                                                                      continuousRun);
+            Drop drop = new Drop();
+            Algorithm algorithm =
+                    (Algorithm) konstructor.newInstance(null, drop, currentConfig.get(0), currentConfig.get(1),
+                                                        continuousRun);
+            Consumer consumer = new Consumer(drop);
 
             Method runMethod =
                     klass.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
 
             Method getOutput = klass.getMethod("getOutput");
 
-            runMethod.invoke(algorithm);
-            Object dataString = getOutput.invoke(algorithm);
-            System.out.println(dataString);
+            // This is how we get the data from the consumer
+            drop.emptyProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue){
+                    ((AppActions) applicationTemplate.getActionComponent()).setOutput(output);
+                }
+            });
+
+            Thread algorithmThread = new Thread(algorithm);
+            algorithmThread.setName("Algorithm Thread");
+            (new Thread(algorithm)).start();
+
+//            runMethod.invoke(algorithm);
+//            Object dataString = getOutput.invoke(algorithm);
+//            System.out.println(dataString);
             //TODO then figure out how to project this data onto the chart
+            //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
         }
+
         catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
             // This should never occur during the normal use of this version of the program as all classes that are
             // chosen should implement Algorithm which has a default run method, and the files are read directly from
@@ -310,7 +336,6 @@ public final class AppActions implements ActionComponent{
         applicationTemplate.getDataComponent().saveData(dataFilePath);
         isUnsaved.set(false);
     }
-
 
     /**
      * While similar to promptToSave() it does not offer a confirmation dialog. The prompt to choose a file will
@@ -502,5 +527,31 @@ public final class AppActions implements ActionComponent{
         String duplicateIndex = tuple.get_key().toString();
 
         dialog.show(errTitle, String.format(errMsg, duplicateIndex, duplicateElement));
+    }
+
+    public class Consumer implements Runnable{
+
+        private Drop          drop;
+        private List<Integer> output;
+
+
+        public Consumer(Drop drop){
+            this.drop = drop;
+        }
+
+        public List<Integer> getOutput(){
+            return output;
+        }
+
+        @Override
+        public void run(){
+            output = drop.take();
+
+            try{
+                Random random = new Random();
+                Thread.sleep(random.nextInt(500));
+            }
+            catch (InterruptedException ignore){}
+        }
     }
 }

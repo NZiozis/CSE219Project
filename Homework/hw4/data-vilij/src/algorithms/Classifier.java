@@ -1,5 +1,7 @@
 package algorithms;
 
+import datastructures.Drop;
+
 import java.util.List;
 
 /**
@@ -20,6 +22,7 @@ public abstract class Classifier implements Algorithm{
      * See 3.4.4 of the SRS.
      */
     protected List<Integer> output;
+    protected Drop drop;
 
     public List<Integer> getOutput(){ return output; }
 
