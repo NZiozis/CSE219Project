@@ -4,8 +4,6 @@ import algorithms.Classifier;
 import algorithms.DataSet;
 import datastructures.Drop;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +38,6 @@ public class RandomClassifier extends Classifier{
         RandomClassifier classifier = new RandomClassifier(dataset, new Drop(), 100, 5, true);
         classifier.run(); // no multithreading yet
     }*/
-
     @Override
     public int getMaxIterations(){
         return maxIterations;
@@ -70,8 +67,13 @@ public class RandomClassifier extends Classifier{
             // in the final project, such changes will be dynamically visible in the UI
             if (i % updateInterval == 0 || i >= maxIterations){
                 drop.put(output);
-                if (i >= maxIterations)
-                    drop.put(null);
+
+                try{
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException ignored){}
+
+                if (i >= maxIterations) drop.put(null);
                 System.out.printf("Iteration number %d: ", i); //
                 flush();
             }

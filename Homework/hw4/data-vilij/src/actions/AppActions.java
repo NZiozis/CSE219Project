@@ -260,11 +260,16 @@ public final class AppActions implements ActionComponent{
 
         //TODO add the proper css for this series so that it is visible as a line
         XYChart.Series<Number,Number> classificationLine = new XYChart.Series<>();
+        classificationLine.setName("classificationLine");
         classificationLine.getData().add(new XYChart.Data<>(minX, YvalForMinX));
         classificationLine.getData().add(new XYChart.Data<>(maxX, YvalForMaxX));
 
+
         LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
         chart.getData().add(0, classificationLine);
+        classificationLine.getNode().getStyleClass().add("series-classificationLine");
+        classificationLine.getData().forEach(
+                element -> element.getNode().getStyleClass().add("series-classificationLine-symbol"));
     }
 
     private double formula(double xVal, int a, int b, int c){
@@ -324,27 +329,42 @@ public final class AppActions implements ActionComponent{
 
 
         output = drop.take();
-        //TODO get the boolean property that the run button is associated to
-//        .setDisable(true);
+
+
         if (output == null){
             System.out.println("output is null");
-            //reset whatever property it is that prevents it from entering start running and disable the run button until a new thing is started or set again.
-            // This can possibly be the simple boolean that is updated to make sure that a valid configuration is
-            // present in to run on. Make the user have to reconfirm that they want to run the algorithm again
+            ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
+            firstIteration = true;
         }
         else{
             LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
             if (continuousRun){
+                ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
+                firstIteration = true;
                 while (output != null){
+                    //TODO run through this loop in debugger, isn't updating the chart as expected.
+
                     makeline(output.get(0), output.get(1), output.get(2));
                     createAlgorithmThread(algorithm);
                     algorithmThread.start();
+
+                    try{
+                        wait();
+                    }
+                    catch (InterruptedException ignored){}
+
                     output = drop.take();
 //                    chart.getData().remove(0);
                 }
             }
             else{
                 makeline(output.get(0), output.get(1), output.get(2));
+
+                try{
+                    wait(500);
+                }
+                catch (InterruptedException ignored){}
+
 //                chart.getData().remove(0);
             }
         }
