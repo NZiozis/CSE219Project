@@ -59,6 +59,7 @@ public final class AppActions implements ActionComponent{
     private Thread        algorithmThread;
     private Algorithm     algorithm;
     private boolean firstIteration = true;
+    private XYChart.Series<Number,Number> previousSeries;
 
     /**
      * Path to the data file currently active.
@@ -241,8 +242,13 @@ public final class AppActions implements ActionComponent{
      */
     private void makeline(int a, int b, int c){
         ArrayList<String> data = ( (AppData) applicationTemplate.getDataComponent() ).getTenLines().get_totalData();
+        LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
         ArrayList<Double> xVals = new ArrayList<>();
         data.forEach(line -> xVals.add(Double.parseDouble(line.split("\t")[2].split(",")[0])));
+
+        if (chart.getData().contains(previousSeries)){
+            chart.getData().remove(previousSeries);
+        }
 
         double maxX = xVals.get(0);
         double minX = maxX;
@@ -265,16 +271,16 @@ public final class AppActions implements ActionComponent{
         classificationLine.getData().add(new XYChart.Data<>(maxX, YvalForMaxX));
 
 
-        LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
         chart.getData().add(0, classificationLine);
         classificationLine.getNode().getStyleClass().add("series-classificationLine");
         classificationLine.getData().forEach(
                 element -> element.getNode().getStyleClass().add("series-classificationLine-symbol"));
+        previousSeries = classificationLine;
     }
 
     private double formula(double xVal, int a, int b, int c){
 
-        double xCoefficient = ( (double) a ) / b;
+        double xCoefficient = ( (double) -a ) / b;
         double intercept = ( (double) c ) / b;
 
         return xCoefficient * xVal + intercept;
@@ -318,7 +324,6 @@ public final class AppActions implements ActionComponent{
 
         boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
-        //TODO fix the line two below this, this is a logical error and will result in multiple threads editing different things, not the desired output
         if (firstIteration){
             createAlgorithmInstance(currentConfig, continuousRun);
             firstIteration = false;
@@ -337,40 +342,26 @@ public final class AppActions implements ActionComponent{
             firstIteration = true;
         }
         else{
-            LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
             if (continuousRun){
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
                 firstIteration = true;
+
                 while (output != null){
                     //TODO run through this loop in debugger, isn't updating the chart as expected.
 
                     makeline(output.get(0), output.get(1), output.get(2));
+
                     createAlgorithmThread(algorithm);
                     algorithmThread.start();
 
-                    try{
-                        wait();
-                    }
-                    catch (InterruptedException ignored){}
-
                     output = drop.take();
-//                    chart.getData().remove(0);
                 }
             }
+
             else{
                 makeline(output.get(0), output.get(1), output.get(2));
-
-                try{
-                    wait(500);
-                }
-                catch (InterruptedException ignored){}
-
-//                chart.getData().remove(0);
             }
         }
-
-        //TODO this is when the run button should be enabled again
-//        .setDisable(false);
     }
 
     /**

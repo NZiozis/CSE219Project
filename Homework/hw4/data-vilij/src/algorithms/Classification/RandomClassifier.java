@@ -69,11 +69,12 @@ public class RandomClassifier extends Classifier{
                 drop.put(output);
 
                 try{
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                 }
                 catch (InterruptedException ignored){}
 
                 if (i >= maxIterations) drop.put(null);
+
                 System.out.printf("Iteration number %d: ", i); //
                 flush();
             }

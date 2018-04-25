@@ -68,6 +68,7 @@
 
 .series-classificationLine {
     -fx-stroke: black;
+    -fx-background-color: black, white;
 }
 
 .series-classificationLine-symbol {
