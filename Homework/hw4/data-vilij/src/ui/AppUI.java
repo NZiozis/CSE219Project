@@ -59,6 +59,8 @@ public final class AppUI extends UITemplate{
     private SimpleBooleanProperty    dataLoadedIn;
     private RadioButton              selectedToggle;
     private Integer                  currentAlgoIndex;
+    private SimpleBooleanProperty    isRunning;          // Tells if the algorithm is currently running
+
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -70,6 +72,7 @@ public final class AppUI extends UITemplate{
         classPathtoAlgorithm = new StringBuilder();
         classPathtoAlgorithm.append(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+        isRunning = new SimpleBooleanProperty(false);
     }
 
     public Integer getCurrentAlgoIndex(){
@@ -114,6 +117,10 @@ public final class AppUI extends UITemplate{
 
     public void setLoadedInFileText(String text){
         this.loadedInFileText.setText(text);
+    }
+
+    public SimpleBooleanProperty isRunningProperty(){
+        return isRunning;
     }
 
     @Override

@@ -36,10 +36,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 
 import static vilij.settings.PropertyTypes.SAVE_WORK_TITLE;
 import static vilij.templates.UITemplate.SEPARATOR;
@@ -52,6 +54,7 @@ import static vilij.templates.UITemplate.SEPARATOR;
 public final class AppActions implements ActionComponent{
 
     private List<Integer> output;
+    private Drop          drop;
 
     /**
      * Path to the data file currently active.
@@ -70,6 +73,7 @@ public final class AppActions implements ActionComponent{
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
         this.isUnsaved = new SimpleBooleanProperty(false);
+        this.drop = new Drop();
     }
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
@@ -88,21 +92,21 @@ public final class AppActions implements ActionComponent{
 
     @Override
     public void handleNewRequest(){
-        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(
+        ( (AppUI) applicationTemplate.getUIComponent() ).setLoadedInFileText(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
-        ((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().set(false);
-        ((AppUI) applicationTemplate.getUIComponent()).setDataLoadedIn(false);
+        ( (AppData) applicationTemplate.getDataComponent() ).hasTwoLabelsProperty().set(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();
                 applicationTemplate.getUIComponent().clear();
                 isUnsaved.set(false);
                 dataFilePath = null;
-                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(false);
-                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton()
-                        .setText(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
-                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
-                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(false);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setText(
+                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
+                ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setVisible(true);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setDisable(true);
             }
         }
         catch (IOException e){ errorHandlingHelper(); }
@@ -124,9 +128,9 @@ public final class AppActions implements ActionComponent{
         applicationTemplate.getUIComponent().clear();
         try{
             if (promptToLoad()){
-                ((AppUI) applicationTemplate.getUIComponent()).getEditDoneButton().setDisable(true);
-                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setVisible(true);
-                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setDisable(true);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(true);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setVisible(true);
+                ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setDisable(true);
             }
         }
         catch (IOException e){errorHandlingHelper();}
@@ -134,6 +138,7 @@ public final class AppActions implements ActionComponent{
 
 
     @Override
+    //TODO edit this so that it takes care of algorithm running when trying to exit case
     public void handleExitRequest(){
         try{
             if (!isUnsaved.get() || promptToSave()) System.exit(0);
@@ -143,7 +148,7 @@ public final class AppActions implements ActionComponent{
 
     public void handleScreenshotRequest(){
         PropertyManager manager = applicationTemplate.manager;
-        LineChart<Number,Number> chart = ((AppUI) applicationTemplate.getUIComponent()).getChart();
+        LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
         WritableImage image = chart.snapshot(new SnapshotParameters(), null);
 
         FileChooser fileChooser = new FileChooser();
@@ -152,9 +157,10 @@ public final class AppActions implements ActionComponent{
 
         if (dataDirURL == null){
             ErrorDialog dataDirNotFound = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-            dataDirNotFound.show(
-                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()),
-                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
+            dataDirNotFound.show(applicationTemplate.manager
+                                         .getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()),
+                                 applicationTemplate.manager
+                                         .getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
         }
 
 
@@ -179,9 +185,10 @@ public final class AppActions implements ActionComponent{
             }
             catch (IOException e){
                 ErrorDialog screenShotError = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                screenShotError.show(
-                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_TITLE.name()),
-                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_MESSAGE.name()));
+                screenShotError.show(applicationTemplate.manager
+                                             .getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_TITLE.name()),
+                                     applicationTemplate.manager
+                                             .getPropertyValue(AppPropertyTypes.SCREENSHOT_ERROR_MESSAGE.name()));
 
             }
         }
@@ -189,26 +196,26 @@ public final class AppActions implements ActionComponent{
 
     public void handleEditDone(){
         PropertyManager manager = applicationTemplate.manager;
-        AppUI ui = ((AppUI) applicationTemplate.getUIComponent());
+        AppUI ui = ( (AppUI) applicationTemplate.getUIComponent() );
 
         if (ui.getEditDoneButton().getText().equals(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()))){
             applicationTemplate.getDataComponent().clear();
-            ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+            ( (AppUI) applicationTemplate.getUIComponent() ).getChart().getData().clear();
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.DONE_TEXT.name()));
             ui.getTextArea().setDisable(false);
         }
         else{
             ui.getEditDoneButton().setText(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
             ui.getTextArea().setDisable(true);
-            String data = ((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText();
+            String data = ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().getText();
             String[] dataArray = data.split("\n");
             ArrayList<String> arrayListData = new ArrayList<>();
             Collections.addAll(arrayListData, dataArray);
             Tuple<Integer,String> errorTuple =
-                    ((AppData) applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayListData);
+                    ( (AppData) applicationTemplate.getDataComponent() ).indexOfErrorOrDuplicates(arrayListData);
             if (errorTuple.get_key() == -1){
-                ((AppData) applicationTemplate.getDataComponent()).loadData(data);
-                ((AppData) applicationTemplate.getDataComponent()).displayData();
+                ( (AppData) applicationTemplate.getDataComponent() ).loadData(data);
+                ( (AppData) applicationTemplate.getDataComponent() ).displayData();
             }
             else{
                 ui.setDataLoadedIn(false);
@@ -221,48 +228,27 @@ public final class AppActions implements ActionComponent{
 
     }
 
-    //Reminder, the config data is now located in the AppData file
-    public void handleRunRequest(){
-        String referencePath = ((AppUI) applicationTemplate.getUIComponent()).getClassPathtoAlgorithm().toString();
+
+    //TODO then figure out how to project this data onto the chart
+    //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
+
+    private void startRunning(ArrayList<?> currentConfig, boolean continuousRun){
+        String referencePath = ( (AppUI) applicationTemplate.getUIComponent() ).getClassPathtoAlgorithm().toString();
 
         try{
             Class<?> klass = Class.forName(referencePath);
             Constructor konstructor = klass.getConstructors()[0];
 
-            ArrayList<Integer> currentConfig =
-                    ((AppData) applicationTemplate.getDataComponent()).getCurrentAlgorithmConfiguration();
-            boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
-
-            Drop drop = new Drop();
-            Algorithm algorithm =
-                    (Algorithm) konstructor.newInstance(null, drop, currentConfig.get(0), currentConfig.get(1),
-                                                        continuousRun);
-            Consumer consumer = new Consumer(drop);
-
-            Method runMethod =
-                    klass.getMethod(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TEXT.name()));
-
-            Method getOutput = klass.getMethod("getOutput");
+            Algorithm algorithm = (Algorithm) konstructor
+                    .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), continuousRun);
 
             // This is how we get the data from the consumer
-            drop.emptyProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    ((AppActions) applicationTemplate.getActionComponent()).setOutput(output);
-                }
-            });
-
             Thread algorithmThread = new Thread(algorithm);
             algorithmThread.setName("Algorithm Thread");
-            (new Thread(algorithm)).start();
-
-//            runMethod.invoke(algorithm);
-//            Object dataString = getOutput.invoke(algorithm);
-//            System.out.println(dataString);
-            //TODO then figure out how to project this data onto the chart
-            //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
+            algorithmThread.start();
         }
 
-        catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e){
             // This should never occur during the normal use of this version of the program as all classes that are
             // chosen should implement Algorithm which has a default run method, and the files are read directly from
             // the directory they are located in and are not hardcoded. This error could occur if the user deleted an
@@ -270,6 +256,73 @@ public final class AppActions implements ActionComponent{
             e.printStackTrace();
         }
 
+    }
+
+
+    private double formula(double xVal, int a, int b, int c){
+
+        double xCoefficient = -a / b;
+        double intercept = -c / b;
+
+        return xCoefficient * xVal + intercept;
+    }
+
+    /**
+     * This is here to take the output of the algorithm and put it into mx+b=y form and put it on the chart
+     * minX is the minimum x value from the given data set
+     * maxX is the maximum x value from the given data set
+     * Both are required because they give the base points for out series that will be displayed on the chart
+     */
+    private void makeline(int a, int b, int c){
+        ArrayList<String> data = ( (AppData) applicationTemplate.getDataComponent() ).getTenLines().get_totalData();
+        ArrayList<Double> xVals = new ArrayList<>();
+        data.forEach(line -> xVals.add(Double.parseDouble(line.split("\t")[2].split(",")[0])));
+
+        double maxX = xVals.indexOf(Collections.max(xVals));
+        double minX = xVals.indexOf(Collections.min(xVals));
+
+        double YvalForMinX = formula(minX, a, b, c);
+        double YvalForMaxX = formula(maxX, a, b, c);
+
+
+    }
+
+
+    //Reminder, the config data is now located in the AppData file
+    public void handleRunRequest(){
+
+        ArrayList<Integer> currentConfig =
+                ( (AppData) applicationTemplate.getDataComponent() ).getCurrentAlgorithmConfiguration();
+
+        boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
+
+        //TODO fix the line two below this, this is a logical error and will result in multiple threads editing different things, not the desired output
+        if (!( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().get()){
+            startRunning(currentConfig, continuousRun);
+        }
+
+        output = drop.take();
+        //TODO get the boolean property that the run button is associated to
+//        .setDisable(true);
+        if (output == null){
+            //reset whatever property it is that prevents it from entering start running and disable the run button until a new thing is started or set again.
+            // This can possibly be the simple boolean that is updated to make sure that a valid configuration is
+            // present in to run on. Make the user have to reconfirm that they want to run the algorithm again
+        }
+        else{
+            if (continuousRun){
+                while (output != null){
+                    makeline(output.get(0), output.get(1), output.get(2));
+                    output = drop.take();
+                }
+            }
+            else{
+                makeline(output.get(0), output.get(1), output.get(2));
+            }
+        }
+
+        //TODO this is when the run button should be enabled again
+//        .setDisable(false);
     }
 
     /**
@@ -379,11 +432,11 @@ public final class AppActions implements ActionComponent{
                 }
 
                 Tuple<Integer,String> errorTuple =
-                        ((AppData) applicationTemplate.getDataComponent()).indexOfErrorOrDuplicates(arrayList);
+                        ( (AppData) applicationTemplate.getDataComponent() ).indexOfErrorOrDuplicates(arrayList);
 
                 if (errorTuple.get_key() == -1){
                     dataFilePath = selected.toPath();
-                    ((AppData) applicationTemplate.getDataComponent()).tenLines.setTotalData(arrayList);
+                    ( (AppData) applicationTemplate.getDataComponent() ).tenLines.setTotalData(arrayList);
                     load();
                 }
                 else{
@@ -419,8 +472,8 @@ public final class AppActions implements ActionComponent{
         String location = SEPARATOR + algorithmsDirectory;
         URL locationURL = getClass().getResource(location);
         File algorithmsDir = new File(locationURL.getFile());
-        ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms().getToggles().clear();
-        ((AppUI) applicationTemplate.getUIComponent()).getSelectButton().setDisable(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).getAlgorithms().getToggles().clear();
+        ( (AppUI) applicationTemplate.getUIComponent() ).getSelectButton().setDisable(false);
 
 
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
@@ -429,10 +482,10 @@ public final class AppActions implements ActionComponent{
                 RadioButton radioButton = new RadioButton(directory);
                 loadedAlgorithms.add(radioButton, 0, counter++);
                 radioButton.setToggleGroup(algorithms);
-                if (directory.equals(
-                        applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION.name()))){
+                if (directory
+                        .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION.name()))){
                     radioButton.disableProperty()
-                            .bind(((AppData) applicationTemplate.getDataComponent()).hasTwoLabelsProperty().not());
+                               .bind(( (AppData) applicationTemplate.getDataComponent() ).hasTwoLabelsProperty().not());
                 }
                 else{
                     radioButton.setDisable(false);
@@ -491,8 +544,8 @@ public final class AppActions implements ActionComponent{
 
         ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate, isClustering, counter);
         dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
-        configurationButton.setOnMouseClicked(event -> dialog.show(
-                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TITLE.name()), null));
+        configurationButton.setOnMouseClicked(event -> dialog
+                .show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TITLE.name()), null));
 
         return configurationButton;
 
@@ -527,31 +580,5 @@ public final class AppActions implements ActionComponent{
         String duplicateIndex = tuple.get_key().toString();
 
         dialog.show(errTitle, String.format(errMsg, duplicateIndex, duplicateElement));
-    }
-
-    public class Consumer implements Runnable{
-
-        private Drop          drop;
-        private List<Integer> output;
-
-
-        public Consumer(Drop drop){
-            this.drop = drop;
-        }
-
-        public List<Integer> getOutput(){
-            return output;
-        }
-
-        @Override
-        public void run(){
-            output = drop.take();
-
-            try{
-                Random random = new Random();
-                Thread.sleep(random.nextInt(500));
-            }
-            catch (InterruptedException ignore){}
-        }
     }
 }

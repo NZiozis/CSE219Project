@@ -48,6 +48,10 @@ public class AppData implements DataComponent{
         this.currentAlgorithmConfiguration = new ArrayList<>();
     }
 
+    public TenLines<String> getTenLines(){
+        return tenLines;
+    }
+
     public HashSet<String> getLabels(){
         return labels;
     }

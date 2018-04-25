@@ -1,45 +1,41 @@
 package datastructures;
 
-import javafx.beans.property.SimpleBooleanProperty;
+import ui.AppUI;
+import vilij.templates.ApplicationTemplate;
 
 import java.util.List;
 
 public class Drop{
     private List<Integer> output;
-    private SimpleBooleanProperty empty = new SimpleBooleanProperty(true);
+    private boolean             empty               = true;
+    private ApplicationTemplate applicationTemplate = new ApplicationTemplate();
 
-    public SimpleBooleanProperty emptyProperty(){
-        return empty;
-    }
-
-    public boolean isEmpty(){
-        return empty.get();
-    }
 
     public synchronized List<Integer> take(){
         // Wait until the output is available
-        while (empty.get()){
+        while (empty){
             try{
                 wait();
             }
             catch (InterruptedException ignore){}
         }
-        empty.set(true);
+        empty = true;
         notifyAll();
-        System.out.println(output.toString());
+        ((AppUI) applicationTemplate.getUIComponent()).isRunningProperty().set(true);
         return output;
     }
 
     public synchronized void put(List<Integer> output){
         // Wait until the output has been received
-        while (!empty.get()){
+        while (!empty){
             try{
                 wait();
             }
             catch (InterruptedException ignore){}
         }
-        empty.set(false);
+        empty = false;
         this.output = output;
+        ((AppUI) applicationTemplate.getUIComponent()).isRunningProperty().set(false);
         notifyAll();
     }
 }
