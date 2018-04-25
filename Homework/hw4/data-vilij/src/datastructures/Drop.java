@@ -7,8 +7,12 @@ import java.util.List;
 
 public class Drop{
     private List<Integer> output;
-    private boolean             empty               = true;
-    private ApplicationTemplate applicationTemplate = new ApplicationTemplate();
+    private boolean empty = true;
+    private ApplicationTemplate applicationTemplate;
+
+    public Drop(ApplicationTemplate applicationTemplate){
+        this.applicationTemplate = applicationTemplate;
+    }
 
 
     public synchronized List<Integer> take(){
@@ -21,7 +25,7 @@ public class Drop{
         }
         empty = true;
         notifyAll();
-        ((AppUI) applicationTemplate.getUIComponent()).isRunningProperty().set(true);
+        ( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().set(true);
         return output;
     }
 
@@ -35,7 +39,7 @@ public class Drop{
         }
         empty = false;
         this.output = output;
-        ((AppUI) applicationTemplate.getUIComponent()).isRunningProperty().set(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().set(false);
         notifyAll();
     }
 }

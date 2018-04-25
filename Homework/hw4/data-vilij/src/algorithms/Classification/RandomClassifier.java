@@ -35,11 +35,11 @@ public class RandomClassifier extends Classifier{
     /**
      * A placeholder main method to just make sure this code runs smoothly
      */
-    public static void main(String... args) throws IOException{
+    /*public static void main(String... args) throws IOException{
         DataSet dataset = DataSet.fromTSDFile(Paths.get("/path/to/some-data.tsd"));
         RandomClassifier classifier = new RandomClassifier(dataset, new Drop(), 100, 5, true);
         classifier.run(); // no multithreading yet
-    }
+    }*/
 
     @Override
     public int getMaxIterations(){
@@ -70,7 +70,7 @@ public class RandomClassifier extends Classifier{
             // in the final project, such changes will be dynamically visible in the UI
             if (i % updateInterval == 0 || i >= maxIterations){
                 drop.put(output);
-                if (i == maxIterations)
+                if (i >= maxIterations)
                     drop.put(null);
                 System.out.printf("Iteration number %d: ", i); //
                 flush();

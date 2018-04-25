@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -55,6 +56,9 @@ public final class AppActions implements ActionComponent{
 
     private List<Integer> output;
     private Drop          drop;
+    private Thread        algorithmThread;
+    private Algorithm     algorithm;
+    private boolean firstIteration = true;
 
     /**
      * Path to the data file currently active.
@@ -73,7 +77,7 @@ public final class AppActions implements ActionComponent{
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
         this.isUnsaved = new SimpleBooleanProperty(false);
-        this.drop = new Drop();
+        this.drop = new Drop(applicationTemplate);
     }
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
@@ -229,23 +233,65 @@ public final class AppActions implements ActionComponent{
     }
 
 
-    //TODO then figure out how to project this data onto the chart
-    //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
+    /**
+     * This is here to take the output of the algorithm and put it into mx+b=y form and put it on the chart
+     * minX is the minimum x value from the given data set
+     * maxX is the maximum x value from the given data set
+     * Both are required because they give the base points for out series that will be displayed on the chart
+     */
+    private void makeline(int a, int b, int c){
+        ArrayList<String> data = ( (AppData) applicationTemplate.getDataComponent() ).getTenLines().get_totalData();
+        ArrayList<Double> xVals = new ArrayList<>();
+        data.forEach(line -> xVals.add(Double.parseDouble(line.split("\t")[2].split(",")[0])));
 
-    private void startRunning(ArrayList<?> currentConfig, boolean continuousRun){
+        double maxX = xVals.get(0);
+        double minX = maxX;
+        for (double xVal : xVals){
+            if (xVal < minX){
+                minX = xVal;
+            }
+            else if (xVal > maxX){
+                maxX = xVal;
+            }
+        }
+
+        double YvalForMinX = formula(minX, a, b, c);
+        double YvalForMaxX = formula(maxX, a, b, c);
+
+        //TODO add the proper css for this series so that it is visible as a line
+        XYChart.Series<Number,Number> classificationLine = new XYChart.Series<>();
+        classificationLine.getData().add(new XYChart.Data<>(minX, YvalForMinX));
+        classificationLine.getData().add(new XYChart.Data<>(maxX, YvalForMaxX));
+
+        LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
+        chart.getData().add(0, classificationLine);
+    }
+
+    private double formula(double xVal, int a, int b, int c){
+
+        double xCoefficient = ( (double) a ) / b;
+        double intercept = ( (double) c ) / b;
+
+        return xCoefficient * xVal + intercept;
+    }
+
+
+    private void createAlgorithmThread(Algorithm algorithm){
+        algorithmThread = new Thread(algorithm);
+        algorithmThread.setName("Algorithm Thread");
+    }
+
+    private void createAlgorithmInstance(ArrayList<?> currentConfig, boolean continuousRun){
         String referencePath = ( (AppUI) applicationTemplate.getUIComponent() ).getClassPathtoAlgorithm().toString();
 
         try{
             Class<?> klass = Class.forName(referencePath);
             Constructor konstructor = klass.getConstructors()[0];
 
-            Algorithm algorithm = (Algorithm) konstructor
+            algorithm = (Algorithm) konstructor
                     .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), continuousRun);
 
             // This is how we get the data from the consumer
-            Thread algorithmThread = new Thread(algorithm);
-            algorithmThread.setName("Algorithm Thread");
-            algorithmThread.start();
         }
 
         catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e){
@@ -258,36 +304,7 @@ public final class AppActions implements ActionComponent{
 
     }
 
-
-    private double formula(double xVal, int a, int b, int c){
-
-        double xCoefficient = -a / b;
-        double intercept = -c / b;
-
-        return xCoefficient * xVal + intercept;
-    }
-
-    /**
-     * This is here to take the output of the algorithm and put it into mx+b=y form and put it on the chart
-     * minX is the minimum x value from the given data set
-     * maxX is the maximum x value from the given data set
-     * Both are required because they give the base points for out series that will be displayed on the chart
-     */
-    private void makeline(int a, int b, int c){
-        ArrayList<String> data = ( (AppData) applicationTemplate.getDataComponent() ).getTenLines().get_totalData();
-        ArrayList<Double> xVals = new ArrayList<>();
-        data.forEach(line -> xVals.add(Double.parseDouble(line.split("\t")[2].split(",")[0])));
-
-        double maxX = xVals.indexOf(Collections.max(xVals));
-        double minX = xVals.indexOf(Collections.min(xVals));
-
-        double YvalForMinX = formula(minX, a, b, c);
-        double YvalForMaxX = formula(maxX, a, b, c);
-
-
-    }
-
-
+    //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
     //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
 
@@ -297,27 +314,38 @@ public final class AppActions implements ActionComponent{
         boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
         //TODO fix the line two below this, this is a logical error and will result in multiple threads editing different things, not the desired output
-        if (!( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().get()){
-            startRunning(currentConfig, continuousRun);
+        if (firstIteration){
+            createAlgorithmInstance(currentConfig, continuousRun);
+            firstIteration = false;
         }
+
+        createAlgorithmThread(algorithm);
+        algorithmThread.start();
+
 
         output = drop.take();
         //TODO get the boolean property that the run button is associated to
 //        .setDisable(true);
         if (output == null){
+            System.out.println("output is null");
             //reset whatever property it is that prevents it from entering start running and disable the run button until a new thing is started or set again.
             // This can possibly be the simple boolean that is updated to make sure that a valid configuration is
             // present in to run on. Make the user have to reconfirm that they want to run the algorithm again
         }
         else{
+            LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
             if (continuousRun){
                 while (output != null){
                     makeline(output.get(0), output.get(1), output.get(2));
+                    createAlgorithmThread(algorithm);
+                    algorithmThread.start();
                     output = drop.take();
+//                    chart.getData().remove(0);
                 }
             }
             else{
                 makeline(output.get(0), output.get(1), output.get(2));
+//                chart.getData().remove(0);
             }
         }
 
