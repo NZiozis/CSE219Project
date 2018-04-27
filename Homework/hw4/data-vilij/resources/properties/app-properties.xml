@@ -70,9 +70,13 @@ functionality within the main workspace. -->
         <property name="CLUSTERING" value="Clustering"/>
         <property name="CLASSIFICATION" value="Classification"/>
         <property name="LABELS_NUM" value="Number of Labels"/>
-        <property name="RUN_TEXT" value="run"/>
         <property name="CLASS_PATH_JOINER" value="."/>
         <property name="NULL_STRING" value="null"/>
+        <property name="CONFIGURATION_BUTTON_STYLE" value="configuration-button"/>
+        <property name="CLASSIFICATION_LINE_NAME" value="classification line"/>
+        <property name="CLASSIFICATION_LINE_STYLE" value="series-classificationLine"/>
+        <property name="CLASSIFICATION_LINE_SYMBOL_STYLE" value="series-classificationLine-symbol"/>
+        <property name="ALGORITHM_THREAD_NAME" value="Algorithm Thread"/>
 
     </property_list>
     <property_options_list/>

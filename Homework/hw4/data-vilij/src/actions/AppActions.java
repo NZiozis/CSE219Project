@@ -282,14 +282,18 @@ public final class AppActions implements ActionComponent{
 
         //TODO add the proper css for this series so that it is visible as a line
         XYChart.Series<Number,Number> classificationLine = new XYChart.Series<>();
-        classificationLine.setName("classificationLine");
+        classificationLine.setName(
+                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION_LINE_NAME.name()));
         classificationLine.getData().add(new XYChart.Data<>(minX, minYVal));
         classificationLine.getData().add(new XYChart.Data<>(maxX, maxYVal));
 
         chart.getData().add(0, classificationLine);
-        classificationLine.getNode().getStyleClass().add("series-classificationLine");
-        classificationLine.getData().forEach(
-                element -> element.getNode().getStyleClass().add("series-classificationLine-symbol"));
+        classificationLine.getNode().getStyleClass().add(applicationTemplate.manager.getPropertyValue(
+                AppPropertyTypes.CLASSIFICATION_LINE_STYLE.name()));
+        classificationLine.getData().forEach(element -> element.getNode().getStyleClass()
+                                                               .add(applicationTemplate.manager.getPropertyValue(
+                                                                       AppPropertyTypes.CLASSIFICATION_LINE_SYMBOL_STYLE
+                                                                               .name())));
         previousSeries = classificationLine;
     }
 
@@ -304,7 +308,8 @@ public final class AppActions implements ActionComponent{
 
     private void createAlgorithmThread(Algorithm algorithm){
         algorithmThread = new Thread(algorithm);
-        algorithmThread.setName("Algorithm Thread");
+        algorithmThread
+                .setName(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHM_THREAD_NAME.name()));
     }
 
     private void createAlgorithmInstance(ArrayList<?> currentConfig, boolean continuousRun){
@@ -325,7 +330,10 @@ public final class AppActions implements ActionComponent{
             // chosen should implement Algorithm which has a default run method, and the files are read directly from
             // the directory they are located in and are not hardcoded. This error could occur if the user deleted an
             // algorithm after the program was started, but this doesn't need to be handled yet.
-            e.printStackTrace();
+            ErrorDialog errorDialog = (ErrorDialog) applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+            errorDialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND.name()),
+                             applicationTemplate.manager
+                                     .getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND_MESSAGE.name()));
         }
 
     }
@@ -350,7 +358,7 @@ public final class AppActions implements ActionComponent{
             output = drop.take();
 
             if (output == null){
-                System.out.println("output is null");
+                System.out.println(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()));
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
                 firstIteration = true;
                 isRunning.set(false);
@@ -588,7 +596,8 @@ public final class AppActions implements ActionComponent{
         Tooltip tooltip = new Tooltip(
                 algoName + applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIGURATION_TOOLTIP.name()));
         configurationButton.setTooltip(tooltip);
-        configurationButton.getStyleClass().add("configuration-button");
+        configurationButton.getStyleClass().add(applicationTemplate.manager.getPropertyValue(
+                AppPropertyTypes.CONFIGURATION_BUTTON_STYLE.name()));
 
         ConfigurationDialog dialog = new ConfigurationDialog(applicationTemplate, isClustering, counter);
         dialog.init(applicationTemplate.getUIComponent().getPrimaryWindow());
