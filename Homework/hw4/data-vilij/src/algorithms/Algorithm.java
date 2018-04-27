@@ -14,4 +14,10 @@ public interface Algorithm extends Runnable{
 
     boolean tocontinue();
 
+    @Override
+    default void run(){
+        System.out
+                .println("This algorithm doesn't have a run method yet. Please restart the application and try again.");
+        System.exit(0);
+    }
 }

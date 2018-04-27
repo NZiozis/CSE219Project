@@ -54,11 +54,11 @@ public final class AppUI extends UITemplate{
     private StringBuilder            classPathtoAlgorithm;
     // this will contain the class path to the algorithm for Reflection purposes
 
-    private SimpleBooleanProperty    configurationValid;
-    private SimpleBooleanProperty    algorithmIsSelected;
-    private SimpleBooleanProperty    dataLoadedIn;
-    private RadioButton              selectedToggle;
-    private Integer                  currentAlgoIndex;
+    private SimpleBooleanProperty configurationValid;
+    private SimpleBooleanProperty algorithmIsSelected;
+    private SimpleBooleanProperty dataLoadedIn;
+    private RadioButton           selectedToggle;
+    private Integer               currentAlgoIndex;
 
     @SuppressWarnings("unused")
     private boolean hasNewText;
@@ -311,6 +311,9 @@ public final class AppUI extends UITemplate{
             configurationValid.set(false);
         }
         else{
+            if (algorithmIsSelected.get()){
+                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf("."), classPathtoAlgorithm.length());
+            }
             classPathtoAlgorithm
                     .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
                     .append(selectedToggle.getText());
@@ -319,6 +322,9 @@ public final class AppUI extends UITemplate{
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
                 currentAlgoIndex = loadedAlgorithms.getChildren().indexOf(selectedToggle) / 2 +
                                    1; // This equation accounts for the other elements that are inside of the GridPane
+
+                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf("."), classPathtoAlgorithm.length());
+
                 algorithmIsSelected.set(true);
                 configurationValid.set(false);
             }
@@ -343,6 +349,10 @@ public final class AppUI extends UITemplate{
         }
 
         else{
+
+            if (algorithmIsSelected.get()){
+                classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf("."), classPathtoAlgorithm.length());
+            }
 
             classPathtoAlgorithm
                     .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))

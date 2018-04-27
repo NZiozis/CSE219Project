@@ -18,8 +18,4 @@ public class AlgoClass2 extends Classifier{
         return false;
     }
 
-    @Override
-    public void run(){
-
-    }
 }

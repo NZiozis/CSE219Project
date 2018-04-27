@@ -22,7 +22,7 @@ public abstract class Classifier implements Algorithm{
      * See 3.4.4 of the SRS.
      */
     protected List<Integer> output;
-    protected Drop drop;
+    protected Drop          drop;
 
     public List<Integer> getOutput(){ return output; }
 

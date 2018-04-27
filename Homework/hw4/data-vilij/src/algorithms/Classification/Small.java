@@ -23,8 +23,4 @@ public class Small extends Classifier{
         return false;
     }
 
-    @Override
-    public void run(){
-
-    }
 }
