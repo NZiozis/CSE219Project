@@ -36,6 +36,7 @@ functionality within the main workspace. -->
         <property name="INVALID_TEXT_ERROR_TITLE" value="Invalid Text"/>
         <property name="CONFIGURATION_TITLE" value="Configuration Settings"/>
         <property name="ALGORITHM_NOT_FOUND" value="Algorithm not found"/>
+        <property name="ALGORITHM_RUNNING_WARNING_TITLE" value="Algorithm Running Warning"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>

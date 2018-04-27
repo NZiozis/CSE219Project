@@ -153,7 +153,21 @@ public final class AppActions implements ActionComponent{
     //TODO edit this so that it takes care of algorithm running when trying to exit case
     public void handleExitRequest(){
         try{
-            if (!isUnsaved.get() || promptToSave()) System.exit(0);
+            if (!isUnsaved.get() || promptToSave()){
+                if (isRunning.get()){
+                    ConfirmationDialog algorithmRunningWarning =
+                            (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+                    algorithmRunningWarning.show(applicationTemplate.manager.getPropertyValue(
+                            AppPropertyTypes.ALGORITHM_RUNNING_WARNING_TITLE.name()), applicationTemplate.manager
+                                                         .getPropertyValue(
+                                                                 AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING.name()));
+                    if (algorithmRunningWarning.getSelectedOption() != null &&
+                        algorithmRunningWarning.getSelectedOption().equals(ConfirmationDialog.Option.YES)){
+                        System.exit(0);
+                    }
+                }
+                else{ System.exit(0); }
+            }
         }
         catch (IOException e){ errorHandlingHelper(); }
     }
@@ -324,8 +338,6 @@ public final class AppActions implements ActionComponent{
 
     }
 
-    //TODO when the consumer takes the data what you should do is analyze it and put it in the chart. You should then toggle the buttons appropriately from there
-    //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
 
         Platform.runLater(() -> {
@@ -361,7 +373,6 @@ public final class AppActions implements ActionComponent{
 
                 if (continuousRun){
 
-                    //hack way for this to work
                     handleRunRequest();
                 }
                 else{
@@ -626,4 +637,6 @@ public final class AppActions implements ActionComponent{
 
         dialog.show(errTitle, String.format(errMsg, duplicateIndex, duplicateElement));
     }
+
+
 }

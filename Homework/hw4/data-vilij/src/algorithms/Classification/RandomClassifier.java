@@ -79,7 +79,7 @@ public class RandomClassifier extends Classifier{
                 flush();
             }
             if (i > maxIterations * .6 && RAND.nextDouble() < 0.05){
-                System.out.printf("Iteration number %d: ", i);
+//                System.out.printf("Iteration number %d: ", i);
                 flush();
                 break;
             }
