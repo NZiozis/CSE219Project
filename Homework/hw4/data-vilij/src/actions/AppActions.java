@@ -362,7 +362,7 @@ public final class AppActions implements ActionComponent{
                 if (continuousRun){
 
                     //hack way for this to work
-                    ( (AppUI) applicationTemplate.getUIComponent() ).getRunButton().fire();
+                    handleRunRequest();
                 }
                 else{
                     isRunning.set(false);

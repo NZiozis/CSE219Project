@@ -227,7 +227,10 @@ public final class AppUI extends UITemplate{
         runButton = new Button(null, new ImageView(
                 new Image(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_BUTTON_ICON_PATH.name()))));
         runButton.visibleProperty().bind(algorithmIsSelected.and(algorithmHouse.visibleProperty()));
-        runButton.disableProperty().bind(( algorithmIsSelected.and(configurationValid) ).not());
+        runButton.disableProperty().bind(( algorithmIsSelected.and(configurationValid) ).not()
+                                                                                        .or(( (AppActions) applicationTemplate
+                                                                                                .getActionComponent()
+                                                                                            ).isRunningProperty()));
         leftPanel.getChildren()
                  .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
                          selectButton, runButton);
