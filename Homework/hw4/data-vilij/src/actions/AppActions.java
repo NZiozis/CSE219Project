@@ -263,6 +263,7 @@ public final class AppActions implements ActionComponent{
                 maxX = xVal;
             }
         }
+        if (maxX == minX) maxX += 1;
 
         double YvalForMinX = formula(minX, a, b, c);
         double YvalForMaxX = formula(maxX, a, b, c);
@@ -343,21 +344,17 @@ public final class AppActions implements ActionComponent{
                 firstIteration = true;
             }
             else{
+                makeline(output);
+
                 if (continuousRun){
 
-                    makeline(output);
-
                     try{
-                        Thread.sleep(800);
+                        Thread.sleep(500);
                     }
                     catch (InterruptedException ignored){ }
 
                     //hack way for this to work
                     ( (AppUI) applicationTemplate.getUIComponent() ).getRunButton().fire();
-                }
-
-                else{
-                    makeline(output);
                 }
             }
         });
