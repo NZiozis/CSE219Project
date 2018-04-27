@@ -42,23 +42,26 @@ public final class AppUI extends UITemplate{
     // toolbar button to edit the textArea when inputting new data
     private LineChart<Number,Number> chart;               // the chart where data will be displayed
     private TextArea                 textArea;            // text area for new data input
-    private boolean                  hasNewText;
     private Text                     loadedInFileText;    // text displayed when
     private GridPane                 loadedAlgorithms;
     private ToggleGroup              algorithms;
     // this will hold the algorithms of the currently selected type.
+
     private Button                   selectButton;        // selected choice from radio buttons
     private Button                   runButton;
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
     private ScrollPane               algorithmHouse;
     private StringBuilder            classPathtoAlgorithm;
     // this will contain the class path to the algorithm for Reflection purposes
+
     private SimpleBooleanProperty    configurationValid;
     private SimpleBooleanProperty    algorithmIsSelected;
     private SimpleBooleanProperty    dataLoadedIn;
     private RadioButton              selectedToggle;
     private Integer                  currentAlgoIndex;
 
+    @SuppressWarnings("unused")
+    private boolean hasNewText;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -74,10 +77,6 @@ public final class AppUI extends UITemplate{
 
     public Integer getCurrentAlgoIndex(){
         return currentAlgoIndex;
-    }
-
-    public Button getRunButton(){
-        return runButton;
     }
 
     public StringBuilder getClassPathtoAlgorithm(){
@@ -106,10 +105,6 @@ public final class AppUI extends UITemplate{
 
     public Button getEditDoneButton(){
         return editDoneButton;
-    }
-
-    public Button getScrnshotButton(){
-        return scrnshotButton;
     }
 
     public TextArea getTextArea(){

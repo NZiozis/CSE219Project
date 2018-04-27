@@ -94,14 +94,6 @@ public final class AppActions implements ActionComponent{
         return isUnsaved;
     }
 
-    public List<Integer> getOutput(){
-        return output;
-    }
-
-    public void setOutput(List<Integer> output){
-        this.output = output;
-    }
-
     @Override
     public void handleNewRequest(){
         ( (AppUI) applicationTemplate.getUIComponent() ).setLoadedInFileText(
@@ -285,14 +277,14 @@ public final class AppActions implements ActionComponent{
         }
         if (maxX == minX) maxX += 1;
 
-        double YvalForMinX = formula(minX, a, b, c);
-        double YvalForMaxX = formula(maxX, a, b, c);
+        double minYVal = formula(minX, a, b, c);
+        double maxYVal = formula(maxX, a, b, c);
 
         //TODO add the proper css for this series so that it is visible as a line
         XYChart.Series<Number,Number> classificationLine = new XYChart.Series<>();
         classificationLine.setName("classificationLine");
-        classificationLine.getData().add(new XYChart.Data<>(minX, YvalForMinX));
-        classificationLine.getData().add(new XYChart.Data<>(maxX, YvalForMaxX));
+        classificationLine.getData().add(new XYChart.Data<>(minX, minYVal));
+        classificationLine.getData().add(new XYChart.Data<>(maxX, maxYVal));
 
         chart.getData().add(0, classificationLine);
         classificationLine.getNode().getStyleClass().add("series-classificationLine");
