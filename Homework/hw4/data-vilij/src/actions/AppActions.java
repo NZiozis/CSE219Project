@@ -367,7 +367,7 @@ public final class AppActions implements ActionComponent{
                 makeline(output);
 
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(800);
                 }
                 catch (InterruptedException ignored){ }
 
