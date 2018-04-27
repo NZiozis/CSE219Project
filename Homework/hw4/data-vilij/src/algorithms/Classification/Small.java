@@ -22,4 +22,9 @@ public class Small extends Classifier{
     public boolean tocontinue(){
         return false;
     }
+
+    @Override
+    public void run(){
+
+    }
 }

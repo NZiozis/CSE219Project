@@ -178,7 +178,6 @@ public class AppData implements DataComponent{
 
     public void displayData(){
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
-        ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
     }
 
     /**

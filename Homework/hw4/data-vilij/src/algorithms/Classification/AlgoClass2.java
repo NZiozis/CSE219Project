@@ -17,4 +17,9 @@ public class AlgoClass2 extends Classifier{
     public boolean tocontinue(){
         return false;
     }
+
+    @Override
+    public void run(){
+
+    }
 }

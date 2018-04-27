@@ -1,18 +1,10 @@
 package datastructures;
 
-import ui.AppUI;
-import vilij.templates.ApplicationTemplate;
-
 import java.util.List;
 
 public class Drop{
     private List<Integer> output;
     private boolean empty = true;
-    private ApplicationTemplate applicationTemplate;
-
-    public Drop(ApplicationTemplate applicationTemplate){
-        this.applicationTemplate = applicationTemplate;
-    }
 
 
     public synchronized List<Integer> take(){
@@ -24,7 +16,6 @@ public class Drop{
             catch (InterruptedException ignore){}
         }
         empty = true;
-        ( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().set(true);
         notifyAll();
         return output;
     }
@@ -39,7 +30,6 @@ public class Drop{
         }
         empty = false;
         this.output = output;
-        ( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().set(false);
         notifyAll();
     }
 }

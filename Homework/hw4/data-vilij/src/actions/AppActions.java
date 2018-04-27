@@ -59,7 +59,9 @@ public final class AppActions implements ActionComponent{
     private Drop          drop;
     private Thread        algorithmThread;
     private Algorithm     algorithm;
-    private boolean firstIteration = true;
+    private boolean               firstIteration = true;
+    private SimpleBooleanProperty isRunning      = new SimpleBooleanProperty(false);
+
     private XYChart.Series<Number,Number> previousSeries;
 
     /**
@@ -79,7 +81,11 @@ public final class AppActions implements ActionComponent{
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
         this.isUnsaved = new SimpleBooleanProperty(false);
-        this.drop = new Drop(applicationTemplate);
+        this.drop = new Drop();
+    }
+
+    public SimpleBooleanProperty isRunningProperty(){
+        return isRunning;
     }
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
@@ -333,6 +339,7 @@ public final class AppActions implements ActionComponent{
                 firstIteration = false;
             }
 
+            isRunning.set(true);
             createAlgorithmThread(algorithm);
             algorithmThread.start();
 
@@ -342,19 +349,23 @@ public final class AppActions implements ActionComponent{
                 System.out.println("output is null");
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
                 firstIteration = true;
+                isRunning.set(false);
             }
             else{
                 makeline(output);
 
-                if (continuousRun){
+                try{
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException ignored){ }
 
-                    try{
-                        Thread.sleep(500);
-                    }
-                    catch (InterruptedException ignored){ }
+                if (continuousRun){
 
                     //hack way for this to work
                     ( (AppUI) applicationTemplate.getUIComponent() ).getRunButton().fire();
+                }
+                else{
+                    isRunning.set(false);
                 }
             }
         });
