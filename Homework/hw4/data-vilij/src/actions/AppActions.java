@@ -5,6 +5,7 @@ import dataprocessors.AppData;
 import datastructures.ConfigurationDialog;
 import datastructures.Drop;
 import datastructures.Tuple;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -168,7 +169,6 @@ public final class AppActions implements ActionComponent{
                                          .getPropertyValue(AppPropertyTypes.RESOURCE_SUBDIR_NOT_FOUND.name()));
         }
 
-
         assert dataDirURL != null;
         fileChooser.setInitialDirectory(new File(dataDirURL.getFile()));
         fileChooser.setTitle(manager.getPropertyValue(SAVE_WORK_TITLE.name()));
@@ -240,7 +240,10 @@ public final class AppActions implements ActionComponent{
      * maxX is the maximum x value from the given data set
      * Both are required because they give the base points for out series that will be displayed on the chart
      */
-    private void makeline(int a, int b, int c){
+    private void makeline(List<Integer> output){
+        int a = output.get(0);
+        int b = output.get(1);
+        int c = output.get(2);
         ArrayList<String> data = ( (AppData) applicationTemplate.getDataComponent() ).getTenLines().get_totalData();
         LineChart<Number,Number> chart = ( (AppUI) applicationTemplate.getUIComponent() ).getChart();
         ArrayList<Double> xVals = new ArrayList<>();
@@ -269,7 +272,6 @@ public final class AppActions implements ActionComponent{
         classificationLine.setName("classificationLine");
         classificationLine.getData().add(new XYChart.Data<>(minX, YvalForMinX));
         classificationLine.getData().add(new XYChart.Data<>(maxX, YvalForMaxX));
-
 
         chart.getData().add(0, classificationLine);
         classificationLine.getNode().getStyleClass().add("series-classificationLine");
@@ -319,49 +321,46 @@ public final class AppActions implements ActionComponent{
     //Reminder, the config data is now located in the AppData file
     public void handleRunRequest(){
 
-        ArrayList<Integer> currentConfig =
-                ( (AppData) applicationTemplate.getDataComponent() ).getCurrentAlgorithmConfiguration();
+        Platform.runLater(() -> {
+            ArrayList<Integer> currentConfig =
+                    ( (AppData) applicationTemplate.getDataComponent() ).getCurrentAlgorithmConfiguration();
 
-        boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
+            boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
-        if (firstIteration){
-            createAlgorithmInstance(currentConfig, continuousRun);
-            firstIteration = false;
-        }
+            if (firstIteration){
+                createAlgorithmInstance(currentConfig, continuousRun);
+                firstIteration = false;
+            }
 
-        createAlgorithmThread(algorithm);
-        algorithmThread.start();
+            createAlgorithmThread(algorithm);
+            algorithmThread.start();
 
+            output = drop.take();
 
-        output = drop.take();
-
-
-        if (output == null){
-            System.out.println("output is null");
-            ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
-            firstIteration = true;
-        }
-        else{
-            if (continuousRun){
+            if (output == null){
+                System.out.println("output is null");
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
                 firstIteration = true;
+            }
+            else{
+                if (continuousRun){
 
-                while (output != null){
-                    //TODO run through this loop in debugger, isn't updating the chart as expected.
+                    makeline(output);
 
-                    makeline(output.get(0), output.get(1), output.get(2));
+                    try{
+                        Thread.sleep(800);
+                    }
+                    catch (InterruptedException ignored){ }
 
-                    createAlgorithmThread(algorithm);
-                    algorithmThread.start();
+                    //hack way for this to work
+                    ( (AppUI) applicationTemplate.getUIComponent() ).getRunButton().fire();
+                }
 
-                    output = drop.take();
+                else{
+                    makeline(output);
                 }
             }
-
-            else{
-                makeline(output.get(0), output.get(1), output.get(2));
-            }
-        }
+        });
     }
 
     /**
@@ -513,7 +512,6 @@ public final class AppActions implements ActionComponent{
         File algorithmsDir = new File(locationURL.getFile());
         ( (AppUI) applicationTemplate.getUIComponent() ).getAlgorithms().getToggles().clear();
         ( (AppUI) applicationTemplate.getUIComponent() ).getSelectButton().setDisable(false);
-
 
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
         if (directories != null && directories.length != 0){

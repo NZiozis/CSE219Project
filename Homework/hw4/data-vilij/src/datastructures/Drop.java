@@ -24,8 +24,8 @@ public class Drop{
             catch (InterruptedException ignore){}
         }
         empty = true;
-        notifyAll();
         ( (AppUI) applicationTemplate.getUIComponent() ).isRunningProperty().set(true);
+        notifyAll();
         return output;
     }
 
