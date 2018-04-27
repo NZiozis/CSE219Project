@@ -142,7 +142,6 @@ public final class AppActions implements ActionComponent{
 
 
     @Override
-    //TODO edit this so that it takes care of algorithm running when trying to exit case
     public void handleExitRequest(){
         try{
             if (!isUnsaved.get() || promptToSave()){
@@ -280,7 +279,6 @@ public final class AppActions implements ActionComponent{
         double minYVal = formula(minX, a, b, c);
         double maxYVal = formula(maxX, a, b, c);
 
-        //TODO add the proper css for this series so that it is visible as a line
         XYChart.Series<Number,Number> classificationLine = new XYChart.Series<>();
         classificationLine.setName(
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFICATION_LINE_NAME.name()));
