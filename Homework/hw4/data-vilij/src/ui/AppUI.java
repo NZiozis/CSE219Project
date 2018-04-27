@@ -30,7 +30,6 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
  */
 public final class AppUI extends UITemplate{
 
-
     // This will display the algorithm types and then the algorithms available to be chosen from as well as the option to configure them
     /**
      * The application to which this class of actions belongs.
@@ -43,22 +42,26 @@ public final class AppUI extends UITemplate{
     // toolbar button to edit the textArea when inputting new data
     private LineChart<Number,Number> chart;               // the chart where data will be displayed
     private TextArea                 textArea;            // text area for new data input
-    private boolean                  hasNewText;
     private Text                     loadedInFileText;    // text displayed when
     private GridPane                 loadedAlgorithms;
     private ToggleGroup              algorithms;
     // this will hold the algorithms of the currently selected type.
+
     private Button                   selectButton;        // selected choice from radio buttons
     private Button                   runButton;
     private HashMap<String,GridPane> previouslyLoaded;    // contains gridpanes of algos loaded in past
     private ScrollPane               algorithmHouse;
     private StringBuilder            classPathtoAlgorithm;
     // this will contain the class path to the algorithm for Reflection purposes
+
     private SimpleBooleanProperty    configurationValid;
     private SimpleBooleanProperty    algorithmIsSelected;
     private SimpleBooleanProperty    dataLoadedIn;
     private RadioButton              selectedToggle;
     private Integer                  currentAlgoIndex;
+
+    @SuppressWarnings("unused")
+    private boolean hasNewText;
 
     AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate){
         super(primaryStage, applicationTemplate);
@@ -68,8 +71,8 @@ public final class AppUI extends UITemplate{
         algorithmIsSelected = new SimpleBooleanProperty(false);
         dataLoadedIn = new SimpleBooleanProperty(false);
         classPathtoAlgorithm = new StringBuilder();
-        classPathtoAlgorithm.append(
-                applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
+        classPathtoAlgorithm
+                .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
     }
 
     public Integer getCurrentAlgoIndex(){
@@ -102,10 +105,6 @@ public final class AppUI extends UITemplate{
 
     public Button getEditDoneButton(){
         return editDoneButton;
-    }
-
-    public Button getScrnshotButton(){
-        return scrnshotButton;
     }
 
     public TextArea getTextArea(){
@@ -143,8 +142,8 @@ public final class AppUI extends UITemplate{
         saveButton.setOnAction(e -> applicationTemplate.getActionComponent().handleSaveRequest());
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
-        scrnshotButton.setOnAction(
-                e -> ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest());
+        scrnshotButton
+                .setOnAction(e -> ( (AppActions) applicationTemplate.getActionComponent() ).handleScreenshotRequest());
     }
 
     @Override
@@ -152,7 +151,7 @@ public final class AppUI extends UITemplate{
         layout();
         setWorkspaceActions();
         appPane.getStylesheets()
-                .add(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CSS_RESOURCE_PATH.name()));
+               .add(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CSS_RESOURCE_PATH.name()));
     }
 
     @Override
@@ -200,34 +199,38 @@ public final class AppUI extends UITemplate{
 
         algorithmHouse = new ScrollPane();
         algorithmHouse.visibleProperty()
-                .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
+                      .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
         algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
-
 
         algorithms = new ToggleGroup();
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
         selectButton.visibleProperty()
-                .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
+                    .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
         selectButton.setDisable(true);
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
 
-        loadedAlgorithms = ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithms(algorithms,
-                                                                                                      applicationTemplate.manager
-                                                                                                              .getPropertyValue(
-                                                                                                                      AppPropertyTypes.ALGORITHMS_PATH
-                                                                                                                              .name()));
+        loadedAlgorithms = ( (AppActions) applicationTemplate.getActionComponent() ).populateAlgorithms(algorithms,
+                                                                                                        applicationTemplate.manager
+                                                                                                                .getPropertyValue(
+                                                                                                                        AppPropertyTypes.ALGORITHMS_PATH
+                                                                                                                                .name()));
         algorithmHouse.setContent(loadedAlgorithms);
 
         runButton = new Button(null, new ImageView(
                 new Image(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_BUTTON_ICON_PATH.name()))));
-        runButton.visibleProperty().bind(algorithmIsSelected);
-        runButton.disableProperty().bind((algorithmIsSelected.and(configurationValid)).not());
+        runButton.visibleProperty().bind(algorithmIsSelected.and(algorithmHouse.visibleProperty()));
+        runButton.disableProperty().bind(( algorithmIsSelected.and(configurationValid) ).not()
+                                                                                        .or(( (AppActions) applicationTemplate
+                                                                                                .getActionComponent()
+                                                                                            ).isRunningProperty()));
         leftPanel.getChildren()
-                .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
-                        selectButton, runButton);
+                 .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
+                         selectButton, runButton);
+        scrnshotButton.disableProperty()
+                      .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty());
 
         leftPanelTitle.visibleProperty().bind(textArea.visibleProperty());
 
@@ -246,10 +249,10 @@ public final class AppUI extends UITemplate{
     private void setWorkspaceActions(){
         setTextAreaActions();
         setSelectButtonActions();
-        editDoneButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleEditDone());
-        runButton.setOnAction(e -> ((AppActions) applicationTemplate.getActionComponent()).handleRunRequest());
+        editDoneButton.setOnAction(e -> ( (AppActions) applicationTemplate.getActionComponent() ).handleEditDone());
+        runButton.setOnAction(e -> ( (AppActions) applicationTemplate.getActionComponent() ).handleRunRequest());
         saveButton.disableProperty()
-                .bind(((AppActions) applicationTemplate.getActionComponent()).isUnsavedProperty().not());
+                  .bind(( (AppActions) applicationTemplate.getActionComponent() ).isUnsavedProperty().not());
     }
 
     private void setTextAreaActions(){
@@ -257,12 +260,12 @@ public final class AppUI extends UITemplate{
             try{
                 if (!newValue.equals(oldValue)){
                     if (!newValue.isEmpty()){
-                        ((AppActions) applicationTemplate.getActionComponent()).setIsUnsavedProperty(true);
+                        ( (AppActions) applicationTemplate.getActionComponent() ).setIsUnsavedProperty(true);
                         if (newValue.charAt(newValue.length() - 1) == '\n') hasNewText = true;
                         newButton.setDisable(false);
                     }
                     else{
-                        ((AppActions) applicationTemplate.getActionComponent()).setIsUnsavedProperty(false);
+                        ( (AppActions) applicationTemplate.getActionComponent() ).setIsUnsavedProperty(false);
                         hasNewText = true;
                         newButton.setDisable(true);
                     }
@@ -300,7 +303,7 @@ public final class AppUI extends UITemplate{
         loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
         algorithmHouse.setContent(loadedAlgorithms);
         if (selectedToggle.getText()
-                .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+                          .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
             classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf(
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
                                         classPathtoAlgorithm.length());
@@ -308,12 +311,12 @@ public final class AppUI extends UITemplate{
             configurationValid.set(false);
         }
         else{
-            classPathtoAlgorithm.append(
-                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
+            classPathtoAlgorithm
+                    .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
                     .append(selectedToggle.getText());
 
-            if (selectedToggle.getText()
-                    .contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
+            if (selectedToggle.getText().contains(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
                 currentAlgoIndex = loadedAlgorithms.getChildren().indexOf(selectedToggle) / 2 +
                                    1; // This equation accounts for the other elements that are inside of the GridPane
                 algorithmIsSelected.set(true);
@@ -328,9 +331,9 @@ public final class AppUI extends UITemplate{
 
     private void loadInNew(String algorithmsDir) throws NullPointerException{
         GridPane temp;
-        AppActions appActions = ((AppActions) applicationTemplate.getActionComponent());
+        AppActions appActions = ( (AppActions) applicationTemplate.getActionComponent() );
         if (selectedToggle.getText()
-                .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
+                          .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK.name()))){
             classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf(
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
                                         classPathtoAlgorithm.length());
@@ -341,13 +344,13 @@ public final class AppUI extends UITemplate{
 
         else{
 
-            classPathtoAlgorithm.append(
-                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
+            classPathtoAlgorithm
+                    .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name()))
                     .append(selectedToggle.getText());
 
             /*This else if block is why I re-added the file extensions, if a better way becomes apparent, fix this*/
-            if (selectedToggle.getText()
-                    .contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
+            if (selectedToggle.getText().contains(
+                    applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_FILE_EXT.name()))){
                 temp = loadedAlgorithms;
                 currentAlgoIndex = temp.getChildren().indexOf(selectedToggle) / 2 + 1;
                 classPathtoAlgorithm.delete(classPathtoAlgorithm.lastIndexOf(

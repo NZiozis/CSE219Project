@@ -17,4 +17,9 @@ public class AlgoClust4 implements Algorithm{
     public boolean tocontinue(){
         return false;
     }
+
+    @Override
+    public void run(){
+
+    }
 }
