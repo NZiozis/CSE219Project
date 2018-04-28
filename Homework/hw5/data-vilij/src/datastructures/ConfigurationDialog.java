@@ -118,10 +118,12 @@ public class ConfigurationDialog extends Stage implements Dialog{
 
             ( (AppActions) applicationTemplate.getActionComponent() ).setFirstIteration(true);
 
-            String graceful = invalidInputHandler(maxIterations.getText());
-            maxIterations.setText(graceful);
-            String degradation = invalidInputHandler(updateInterval.getText());
-            updateInterval.setText(degradation);
+            maxIterations.setText(invalidInputHandler(maxIterations.getText()));
+            updateInterval.setText(invalidInputHandler(updateInterval.getText()));
+
+            if (Integer.parseInt(updateInterval.getText()) > Integer.parseInt(maxIterations.getText())){
+                updateInterval.setText(maxIterations.getText());
+            }
 
             if (isClustering){
                 numberOfLabelsChosen = invalidInputHandler(numLables.getValue());
