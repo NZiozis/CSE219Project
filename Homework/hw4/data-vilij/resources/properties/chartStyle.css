@@ -67,7 +67,7 @@
 }
 
 .series-classificationLine {
-    -fx-stroke: black;
+    -fx-stroke: green;
     -fx-background-color: black, white;
 }
 
