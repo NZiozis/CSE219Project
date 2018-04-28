@@ -532,7 +532,6 @@ public final class AppActions implements ActionComponent{
         URL locationURL = getClass().getResource(location);
         File algorithmsDir = new File(locationURL.getFile());
         ( (AppUI) applicationTemplate.getUIComponent() ).getAlgorithms().getToggles().clear();
-        ( (AppUI) applicationTemplate.getUIComponent() ).getSelectButton().setDisable(false);
 
         String[] directories = algorithmsDir.list((dir, name) -> new File(dir, name).isDirectory());
         if (directories != null && directories.length != 0){

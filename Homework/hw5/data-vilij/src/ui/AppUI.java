@@ -91,10 +91,6 @@ public final class AppUI extends UITemplate{
         this.configurationValid.set(configurationValid);
     }
 
-    public Button getSelectButton(){
-        return selectButton;
-    }
-
     public ToggleGroup getAlgorithms(){
         return algorithms;
     }
@@ -200,6 +196,8 @@ public final class AppUI extends UITemplate{
         algorithmHouse = new ScrollPane();
         algorithmHouse.visibleProperty()
                       .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
+        algorithmHouse.disableProperty()
+                      .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty());
         algorithmHouse.setMaxSize(windowWidth * 0.25, windowHeight * 0.15);
         algorithmHouse.setMinSize(windowWidth * 0.25, windowHeight * 0.15);
 
@@ -207,7 +205,7 @@ public final class AppUI extends UITemplate{
         selectButton = new Button(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SELECT_TEXT.name()));
         selectButton.visibleProperty()
                     .bind(textArea.visibleProperty().and(textArea.disableProperty()).and(dataLoadedIn));
-        selectButton.setDisable(true);
+        selectButton.disableProperty().bind(algorithmHouse.disableProperty());
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
