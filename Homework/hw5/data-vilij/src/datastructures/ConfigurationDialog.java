@@ -1,5 +1,6 @@
 package datastructures;
 
+import actions.AppActions;
 import dataprocessors.AppData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -75,39 +76,38 @@ public class ConfigurationDialog extends Stage implements Dialog{
         settingsPane.setVgap(10);
         settingsPane.setPadding(new Insets(10, 10, 10, 10));
 
-        settingsPane.add(
-                new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.MAX_ITERATIONS_TEXT.name())), 0,
-                rowIndex);
+        settingsPane.add(new Text(
+                                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.MAX_ITERATIONS_TEXT.name())), 0,
+                         rowIndex);
         maxIterations = new TextArea();
         maxIterations.setMaxSize(100, 30);
         maxIterations.setMinSize(100, 30);
         settingsPane.add(maxIterations, 1, rowIndex++);
 
-        settingsPane.add(
-                new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.UPDATE_INTERVAL_TEXT.name())), 0,
-                rowIndex);
+        settingsPane.add(new Text(
+                                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.UPDATE_INTERVAL_TEXT.name())), 0,
+                         rowIndex);
         updateInterval = new TextArea();
         updateInterval.setMaxSize(100, 30);
         updateInterval.setMinSize(100, 30);
         settingsPane.add(updateInterval, 1, rowIndex++);
 
         if (isClustering){
-            settingsPane.add(new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LABELS_NUM.name())),
-                             0, rowIndex);
+            settingsPane
+                    .add(new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LABELS_NUM.name())), 0,
+                         rowIndex);
             numLables = new ComboBox<>();
-            for (int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLabels().size(); i++){
+            for (int i = 0; i < ( (AppData) applicationTemplate.getDataComponent() ).getLabels().size(); i++){
                 numLables.getItems().add(i + 1 + "");
             }
             settingsPane.add(numLables, 1, rowIndex++);
         }
 
-
-        settingsPane.add(
-                new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONTINUOUS_RUN_TEXT.name())), 0,
-                rowIndex);
+        settingsPane.add(new Text(
+                                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONTINUOUS_RUN_TEXT.name())), 0,
+                         rowIndex);
         continuousRun = new CheckBox();
         settingsPane.add(continuousRun, 1, rowIndex);
-
 
         VBox messagePane = new VBox(settingsPane, buttonBox);
         messagePane.setAlignment(Pos.CENTER);
@@ -115,6 +115,8 @@ public class ConfigurationDialog extends Stage implements Dialog{
         messagePane.setSpacing(10);
 
         confirmationButton.setOnMouseClicked(event -> {
+
+            ( (AppActions) applicationTemplate.getActionComponent() ).setFirstIteration(true);
 
             String graceful = invalidInputHandler(maxIterations.getText());
             maxIterations.setText(graceful);
@@ -127,12 +129,12 @@ public class ConfigurationDialog extends Stage implements Dialog{
             }
 
             continuousRun.setSelected(continuousRun.isSelected());
-            if (this.row.equals(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgoIndex())){
-                ((AppUI) applicationTemplate.getUIComponent()).setConfigurationValid(true);
+            if (this.row.equals(( (AppUI) applicationTemplate.getUIComponent() ).getCurrentAlgoIndex())){
+                ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(true);
             }
 
             ArrayList<Integer> externalConfig =
-                    ((AppData) applicationTemplate.getDataComponent()).getCurrentAlgorithmConfiguration();
+                    ( (AppData) applicationTemplate.getDataComponent() ).getCurrentAlgorithmConfiguration();
 
             externalConfig.clear();
 
@@ -143,7 +145,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
             /*Here, 1 means that it is selected and 0 means that it isn't*/
             if (continuousRun.isSelected()){ externalConfig.add(1); }
             else{ externalConfig.add(0); }
-
 
             this.close();
         });

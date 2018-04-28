@@ -90,6 +90,10 @@ public final class AppActions implements ActionComponent{
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
 
+    public void setFirstIteration(boolean firstIteration){
+        this.firstIteration = firstIteration;
+    }
+
     public SimpleBooleanProperty isUnsavedProperty(){
         return isUnsaved;
     }
