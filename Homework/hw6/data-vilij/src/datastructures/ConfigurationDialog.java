@@ -5,10 +5,7 @@ import dataprocessors.AppData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,8 +22,8 @@ import java.util.ArrayList;
 public class ConfigurationDialog extends Stage implements Dialog{
 
     private ApplicationTemplate applicationTemplate;
-    private TextArea            maxIterations;
-    private TextArea            updateInterval;
+    private TextField           maxIterations;
+    private TextField           updateInterval;
     private CheckBox            continuousRun;
     private boolean             isClustering;
     private ComboBox<String>    numLables;
@@ -79,7 +76,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
         settingsPane.add(new Text(
                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.MAX_ITERATIONS_TEXT.name())), 0,
                          rowIndex);
-        maxIterations = new TextArea();
+        maxIterations = new TextField();
         maxIterations.setMaxSize(100, 30);
         maxIterations.setMinSize(100, 30);
         settingsPane.add(maxIterations, 1, rowIndex++);
@@ -87,7 +84,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
         settingsPane.add(new Text(
                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.UPDATE_INTERVAL_TEXT.name())), 0,
                          rowIndex);
-        updateInterval = new TextArea();
+        updateInterval = new TextField();
         updateInterval.setMaxSize(100, 30);
         updateInterval.setMinSize(100, 30);
         settingsPane.add(updateInterval, 1, rowIndex++);
@@ -160,12 +157,12 @@ public class ConfigurationDialog extends Stage implements Dialog{
     }
 
     @SuppressWarnings("unused")
-    public TextArea getMaxIterations(){
+    public TextField getMaxIterations(){
         return maxIterations;
     }
 
     @SuppressWarnings("unused")
-    public TextArea getUpdateInterval(){
+    public TextField getUpdateInterval(){
         return updateInterval;
     }
 

@@ -2,6 +2,7 @@ package algorithms.Classification;
 
 import algorithms.Classifier;
 import algorithms.DataSet;
+import datastructures.ClassificationDrop;
 import datastructures.Drop;
 
 import java.util.Arrays;
@@ -22,12 +23,12 @@ public class RandomClassifier extends Classifier{
     // this mock classifier doesn't actually use the data, but a real classifier will
     private       DataSet       dataset;
 
-    public RandomClassifier(DataSet dataset, Drop drop, int maxIterations, int updateInterval, boolean tocontinue){
+    public RandomClassifier(DataSet dataset, Drop drop, int maxIterations, int updateInterval, int tocontinue){
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
-        this.tocontinue = new AtomicBoolean(tocontinue);
-        this.drop = drop;
+        this.tocontinue = new AtomicBoolean(tocontinue == 1);
+        this.drop = (ClassificationDrop) drop;
     }
 
     /**

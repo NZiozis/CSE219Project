@@ -1,16 +1,6 @@
-import org.junit.runner.JUnitCore;
-import vilij.templates.ApplicationTemplate;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-public class MainTester{
-
-    ApplicationTemplate applicationTemplate;
-
-    public MainTester(ApplicationTemplate applicationTemplate){
-        this.applicationTemplate = applicationTemplate;
-    }
-
-    public static void main(String[] args){
-        JUnitCore.runClasses(TestPrimer.class);
-    }
-
-}
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ TestPrimer.class })
+public class MainTester{}

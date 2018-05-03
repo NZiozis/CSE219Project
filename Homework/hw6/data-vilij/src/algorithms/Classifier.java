@@ -1,6 +1,6 @@
 package algorithms;
 
-import datastructures.Drop;
+import datastructures.ClassificationDrop;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public abstract class Classifier implements Algorithm{
      * into polynomial curves instead of just straight lines.
      * See 3.4.4 of the SRS.
      */
-    protected List<Integer> output;
-    protected Drop          drop;
+    protected List<Integer>      output;
+    protected ClassificationDrop drop;
 
     public List<Integer> getOutput(){ return output; }
 

@@ -82,7 +82,6 @@ public final class AppActions implements ActionComponent{
     public AppActions(ApplicationTemplate applicationTemplate){
         this.applicationTemplate = applicationTemplate;
         this.isUnsaved = new SimpleBooleanProperty(false);
-        this.drop = new Drop();
     }
 
     public SimpleBooleanProperty isRunningProperty(){
@@ -324,12 +323,12 @@ public final class AppActions implements ActionComponent{
 
             if (dataFilePath == null){
                 algorithm = (Algorithm) konstructor
-                        .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), continuousRun);
+                        .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
             }
             else{
                 algorithm = (Algorithm) konstructor
                         .newInstance(DataSet.fromTSDFile(dataFilePath), drop, currentConfig.get(0),
-                                     currentConfig.get(1), continuousRun);
+                                     currentConfig.get(1), currentConfig.get(2));
             }
             // This is how we get the data from the consumer
         }
@@ -367,7 +366,7 @@ public final class AppActions implements ActionComponent{
             createAlgorithmThread(algorithm);
             algorithmThread.start();
 
-            output = drop.take();
+            output = (List<Integer>) drop.take();
 
             if (output == null){
                 System.out.println(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()));
