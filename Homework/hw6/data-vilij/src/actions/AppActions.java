@@ -1,6 +1,7 @@
 package actions;
 
 import algorithms.Algorithm;
+import algorithms.DataSet;
 import dataprocessors.AppData;
 import datastructures.ConfigurationDialog;
 import datastructures.Drop;
@@ -321,9 +322,15 @@ public final class AppActions implements ActionComponent{
             Class<?> klass = Class.forName(referencePath);
             Constructor konstructor = klass.getConstructors()[0];
 
-            algorithm = (Algorithm) konstructor
-                    .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), continuousRun);
-
+            if (dataFilePath == null){
+                algorithm = (Algorithm) konstructor
+                        .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), continuousRun);
+            }
+            else{
+                algorithm = (Algorithm) konstructor
+                        .newInstance(DataSet.fromTSDFile(dataFilePath), drop, currentConfig.get(0),
+                                     currentConfig.get(1), continuousRun);
+            }
             // This is how we get the data from the consumer
         }
 
@@ -336,6 +343,9 @@ public final class AppActions implements ActionComponent{
             errorDialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND.name()),
                              applicationTemplate.manager
                                      .getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND_MESSAGE.name()));
+        }
+        catch (IOException e){
+            e.printStackTrace();
         }
 
     }
