@@ -102,6 +102,8 @@ public final class AppActions implements ActionComponent{
                 applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NO_DATA_LOADED_IN_PLACEHOLDER.name()));
         ( (AppData) applicationTemplate.getDataComponent() ).hasTwoLabelsProperty().set(false);
         ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setAlgorithmIsSelected(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();
@@ -132,6 +134,8 @@ public final class AppActions implements ActionComponent{
     public void handleLoadRequest(){
         applicationTemplate.getDataComponent().clear();
         applicationTemplate.getUIComponent().clear();
+        ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setAlgorithmIsSelected(false);
         try{
             if (promptToLoad()){
                 ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(true);
@@ -314,16 +318,15 @@ public final class AppActions implements ActionComponent{
 
     private void setNewInstance(Constructor konstructor, ArrayList<?> currentConfig) throws IllegalAccessException,
                                                                                             InvocationTargetException,
-                                                                                            InstantiationException,
-                                                                                            IOException{
+                                                                                            InstantiationException{
         if (dataFilePath == null){
             algorithm = (Algorithm) konstructor
                     .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
         }
         else{
             algorithm = (Algorithm) konstructor
-                    .newInstance(DataSet.fromTSDFile(dataFilePath), drop, currentConfig.get(0), currentConfig.get(1),
-                                 currentConfig.get(2));
+                    .newInstance(DataSet.fromChart(( (AppUI) applicationTemplate.getUIComponent() ).getChart()), drop,
+                                 currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
         }
     }
 
@@ -356,10 +359,6 @@ public final class AppActions implements ActionComponent{
                              applicationTemplate.manager
                                      .getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND_MESSAGE.name()));
         }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-
     }
 
     private void handleClassifierOutput(List<Integer> output, boolean continuousRun){
@@ -423,7 +422,6 @@ public final class AppActions implements ActionComponent{
                              .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFIER.name()))){
                     handleClassifierOutput((List<Integer>) output, continuousRun);
                 }
-
                 else{
                     handleClusteringOutput((DataSet) output, continuousRun);
                 }

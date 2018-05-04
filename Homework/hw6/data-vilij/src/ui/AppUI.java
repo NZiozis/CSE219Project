@@ -75,6 +75,11 @@ public final class AppUI extends UITemplate{
                 .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
     }
 
+
+    public void setAlgorithmIsSelected(boolean algorithmIsSelected){
+        this.algorithmIsSelected.set(algorithmIsSelected);
+    }
+
     public Integer getCurrentAlgoIndex(){
         return currentAlgoIndex;
     }

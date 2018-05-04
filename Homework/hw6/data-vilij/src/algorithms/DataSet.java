@@ -1,6 +1,7 @@
 package algorithms;
 
 import javafx.geometry.Point2D;
+import javafx.scene.chart.LineChart;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,6 +57,24 @@ public class DataSet{
         });
         return dataset;
     }
+
+    public static DataSet fromChart(LineChart<Number,Number> chart){
+        DataSet dataSet = new DataSet();
+        chart.getData().forEach(series -> {
+            series.getData().forEach(data -> {
+                try{
+                    dataSet.addInstance(
+                            "@" + data.getExtraValue() + "\t" + series.getName() + "\t" + data.getXValue() + "," +
+                            data.getYValue());
+                }
+                catch (InvalidDataNameException e){
+                    e.printStackTrace();
+                }
+            });
+        });
+        return dataSet;
+    }
+
 
     public Map<String,String> getLabels()    { return labels; }
 

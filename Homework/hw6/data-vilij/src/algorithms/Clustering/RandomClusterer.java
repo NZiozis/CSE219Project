@@ -2,8 +2,7 @@ package algorithms.Clustering;
 
 import algorithms.Clusterer;
 import algorithms.DataSet;
-import datastructures.Drop;
-import javafx.geometry.Point2D;
+import datastructures.ClusteringDrop;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,17 +17,14 @@ public class RandomClusterer extends Clusterer{
     private       DataSet       dataset;
 
 
-    public RandomClusterer(DataSet dataset, Drop drop, int maxIterations, int updateInterval, int numberOfClusters){
+    public RandomClusterer(DataSet dataset, ClusteringDrop drop, int maxIterations, int updateInterval,
+                           int numberOfClusters){
         super(numberOfClusters);
         this.drop = drop;
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
         this.tocontinue = new AtomicBoolean(false);
-    }
-
-    private static double computeDistance(Point2D p, Point2D q){
-        return Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getY() - q.getY(), 2));
     }
 
     @Override
@@ -49,6 +45,7 @@ public class RandomClusterer extends Clusterer{
             if (iteration % updateInterval == 0 || iteration + 1 == maxIterations){
                 System.out.println("Another cluster updated");
                 tocontinue.set(false);
+                System.out.println(dataset.getLabels().toString());
                 drop.put(dataset);
 
                 try{
@@ -58,7 +55,9 @@ public class RandomClusterer extends Clusterer{
             }
         }
         maxIterations -= iteration;
-        if (maxIterations <= 0) drop.put(null);
+        if (maxIterations <= 0){
+            drop.put(null);
+        }
     }
 
     private void assignLabels(){
