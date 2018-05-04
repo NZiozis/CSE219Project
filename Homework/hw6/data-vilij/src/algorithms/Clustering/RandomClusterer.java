@@ -47,8 +47,14 @@ public class RandomClusterer extends Clusterer{
         while (iteration++ < maxIterations & tocontinue.get()){
             assignLabels();
             if (iteration % updateInterval == 0 || iteration + 1 == maxIterations){
+                System.out.println("Another cluster updated");
                 tocontinue.set(false);
                 drop.put(dataset);
+
+                try{
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException ignored){ }
             }
         }
         maxIterations -= iteration;
