@@ -16,14 +16,15 @@ import java.util.stream.IntStream;
  */
 public class KMeansClusterer extends Clusterer{
 
-    private final int           maxIterations;
     private final int           updateInterval;
     private final AtomicBoolean tocontinue;
+    private       int           maxIterations;
     private       DataSet       dataset;
     private       List<Point2D> centroids;
 
 
-    public KMeansClusterer(DataSet dataset, ClusteringDrop drop, int maxIterations, int updateInterval, int numberOfClusters){
+    public KMeansClusterer(DataSet dataset, ClusteringDrop drop, int maxIterations, int updateInterval,
+                           int numberOfClusters){
         super(numberOfClusters);
         this.drop = drop;
         this.dataset = dataset;
@@ -51,8 +52,14 @@ public class KMeansClusterer extends Clusterer{
         int iteration = 0;
         while (iteration++ < maxIterations & tocontinue.get()){
             assignLabels();
+            if (iteration % updateInterval == 0 || iteration + 1 == maxIterations){
+                tocontinue.set(false);
+                drop.put(dataset);
+            }
             recomputeCentroids();
         }
+        maxIterations -= iteration;
+        if (maxIterations <= 0) drop.put(null);
     }
 
     private void initializeCentroids(){
@@ -83,6 +90,11 @@ public class KMeansClusterer extends Clusterer{
         });
     }
 
+    /**
+     * The addition that I made here was that if the tocontinue isn't updated to true I have the algorithm produce a
+     * null data set. This makes it so that it stops running (as this is my end condition) and terminates the algorithm
+     * run
+     */
     private void recomputeCentroids(){
         tocontinue.set(false);
         IntStream.range(0, numberOfClusters).forEach(i -> {
@@ -98,6 +110,9 @@ public class KMeansClusterer extends Clusterer{
             if (!newCentroid.equals(centroids.get(i))){
                 centroids.set(i, newCentroid);
                 tocontinue.set(true);
+            }
+            else{
+                drop.put(null);
             }
         });
     }

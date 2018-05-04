@@ -72,6 +72,8 @@ public enum AppPropertyTypes{
     BACK,
     CLUSTERING,
     CLASSIFICATION,
+    CLASSIFIER,
+    CLUSTERER,
     LABELS_NUM,
     CLASS_PATH_JOINER,
     NULL_STRING,

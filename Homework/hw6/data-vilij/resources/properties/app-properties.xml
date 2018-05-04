@@ -69,6 +69,8 @@ functionality within the main workspace. -->
         <property name="BACK" value="Back"/>
         <property name="CLUSTERING" value="Clustering"/>
         <property name="CLASSIFICATION" value="Classification"/>
+        <property name="CLASSIFIER" value="Classifier"/>
+        <property name="CLUSTERER" value="Clusterer"/>
         <property name="LABELS_NUM" value="Number of Labels"/>
         <property name="CLASS_PATH_JOINER" value="."/>
         <property name="NULL_STRING" value="null"/>

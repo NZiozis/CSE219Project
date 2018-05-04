@@ -1,6 +1,7 @@
 package dataprocessors;
 
 import actions.AppActions;
+import algorithms.DataSet;
 import datastructures.TenLines;
 import datastructures.Tuple;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -46,6 +47,10 @@ public class AppData implements DataComponent{
         this.algorithmsDir = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
         this.hasTwoLabels = new SimpleBooleanProperty(false);
         this.currentAlgorithmConfiguration = new ArrayList<>();
+    }
+
+    public TSDProcessor getProcessor(){
+        return processor;
     }
 
     public TenLines<String> getTenLines(){
@@ -97,15 +102,15 @@ public class AppData implements DataComponent{
             hasTwoLabels.set(false);
         }
 
-        ((AppUI) applicationTemplate.getUIComponent()).setDataLoadedIn(true);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(true);
 
         loadedText.append("\n");
         for (Object element : labels)
             loadedText.append(element).append("\n");
 
-        ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(loadedText.toString());
+        ( (AppUI) applicationTemplate.getUIComponent() ).setLoadedInFileText(loadedText.toString());
         displayData();
-        ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(builder.toString());
+        ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setText(builder.toString());
     }
 
 
@@ -133,7 +138,7 @@ public class AppData implements DataComponent{
                 hasTwoLabels.set(false);
             }
 
-            ((AppUI) applicationTemplate.getUIComponent()).setDataLoadedIn(true);
+            ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(true);
 
             StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
@@ -143,10 +148,11 @@ public class AppData implements DataComponent{
             for (Object element : labels)
                 loadedText.append(element).append("\n");
 
-            ((AppUI) applicationTemplate.getUIComponent()).setLoadedInFileText(loadedText.toString());
+            ( (AppUI) applicationTemplate.getUIComponent() ).setLoadedInFileText(loadedText.toString());
 
-            ((AppActions) applicationTemplate.getActionComponent()).populateAlgorithms(
-                    ((AppUI) applicationTemplate.getUIComponent()).getAlgorithms(), algorithmsDir);
+            ( (AppActions) applicationTemplate.getActionComponent() )
+                    .populateAlgorithms(( (AppUI) applicationTemplate.getUIComponent() ).getAlgorithms(),
+                                        algorithmsDir);
 
         }
         catch (Exception e){
@@ -164,7 +170,7 @@ public class AppData implements DataComponent{
         // NOTE: completing this method was not a part of HW 1. You may have implemented file saving from the
         // confirmation dialog elsewhere in a different way.
         try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))){
-            writer.write(((AppUI) applicationTemplate.getUIComponent()).getCurrentText());
+            writer.write(( (AppUI) applicationTemplate.getUIComponent() ).getCurrentText());
         }
         catch (IOException e){
             System.err.println(e.getMessage());
@@ -177,8 +183,16 @@ public class AppData implements DataComponent{
     }
 
     public void displayData(){
-        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        processor.toChartData(( (AppUI) applicationTemplate.getUIComponent() ).getChart());
     }
+
+    public void updateDataClusters(DataSet output){
+        clear();
+        applicationTemplate.getUIComponent().clear();
+        processor.putNewDataSetToChart(output);
+        processor.toChartData(( (AppUI) applicationTemplate.getUIComponent() ).getChart());
+    }
+
 
     /**
      * This returns the index of an error if there is. If not, the Tuple.get_key() == -1
@@ -189,7 +203,7 @@ public class AppData implements DataComponent{
         arrayList.forEach((String string) -> {
             String[] temp = string.split("\t");
             if (map.containsKey(temp[0])){
-                tuple.set_key((arrayList.indexOf(string) + 1));
+                tuple.set_key(( arrayList.indexOf(string) + 1 ));
                 tuple.set_value(string);
                 tuple.set_isDuplicate(true);
             }

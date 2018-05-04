@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import algorithms.DataSet;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -63,7 +64,7 @@ public final class TSDProcessor{
      *
      * @param chart the specified chart
      */
-    void toChartData(XYChart<Number,Number> chart){
+    public void toChartData(XYChart<Number,Number> chart){
         Set<String> labels = new HashSet<>(dataLabels.values());
         for (String label : labels){
             XYChart.Series<Number,Number> series = new XYChart.Series<>();
@@ -80,6 +81,12 @@ public final class TSDProcessor{
     void clear(){
         dataPoints.clear();
         dataLabels.clear();
+    }
+
+    void putNewDataSetToChart(DataSet output){
+        clear();
+        dataPoints = output.getLocations();
+        dataLabels = output.getLabels();
     }
 
     private String checkedname(String name) throws InvalidDataNameException{

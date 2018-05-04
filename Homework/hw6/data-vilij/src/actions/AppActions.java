@@ -3,9 +3,7 @@ package actions;
 import algorithms.Algorithm;
 import algorithms.DataSet;
 import dataprocessors.AppData;
-import datastructures.ConfigurationDialog;
-import datastructures.Drop;
-import datastructures.Tuple;
+import datastructures.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -56,10 +54,10 @@ import static vilij.templates.UITemplate.SEPARATOR;
  */
 public final class AppActions implements ActionComponent{
 
-    private List<Integer> output;
-    private Drop          drop;
-    private Thread        algorithmThread;
-    private Algorithm     algorithm;
+    private Object    output;
+    private Drop      drop;
+    private Thread    algorithmThread;
+    private Algorithm algorithm;
     private boolean               firstIteration = true;
     private SimpleBooleanProperty isRunning      = new SimpleBooleanProperty(false);
 
@@ -314,21 +312,36 @@ public final class AppActions implements ActionComponent{
                 .setName(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHM_THREAD_NAME.name()));
     }
 
-    private void createAlgorithmInstance(ArrayList<?> currentConfig, boolean continuousRun){
+    private void setNewInstance(Constructor konstructor, ArrayList<?> currentConfig) throws IllegalAccessException,
+                                                                                            InvocationTargetException,
+                                                                                            InstantiationException,
+                                                                                            IOException{
+        if (dataFilePath == null){
+            algorithm = (Algorithm) konstructor
+                    .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
+        }
+        else{
+            algorithm = (Algorithm) konstructor
+                    .newInstance(DataSet.fromTSDFile(dataFilePath), drop, currentConfig.get(0), currentConfig.get(1),
+                                 currentConfig.get(2));
+        }
+    }
+
+    private void createAlgorithmInstance(ArrayList<?> currentConfig){
         String referencePath = ( (AppUI) applicationTemplate.getUIComponent() ).getClassPathtoAlgorithm().toString();
 
         try{
             Class<?> klass = Class.forName(referencePath);
             Constructor konstructor = klass.getConstructors()[0];
 
-            if (dataFilePath == null){
-                algorithm = (Algorithm) konstructor
-                        .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
+            if (klass.getSuperclass().getSimpleName()
+                     .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFIER.name()))){
+                drop = new ClassificationDrop();
+                setNewInstance(konstructor, currentConfig);
             }
             else{
-                algorithm = (Algorithm) konstructor
-                        .newInstance(DataSet.fromTSDFile(dataFilePath), drop, currentConfig.get(0),
-                                     currentConfig.get(1), currentConfig.get(2));
+                drop = new ClusteringDrop();
+                setNewInstance(konstructor, currentConfig);
             }
             // This is how we get the data from the consumer
         }
@@ -349,6 +362,38 @@ public final class AppActions implements ActionComponent{
 
     }
 
+    private void handleClassifierOutput(List<Integer> output, boolean continuousRun){
+        makeline(output);
+
+        try{
+            Thread.sleep(800);
+        }
+        catch (InterruptedException ignored){ }
+
+        if (continuousRun){
+            handleRunRequest();
+        }
+        else{
+            isRunning.set(false);
+        }
+    }
+
+    private void handleClusteringOutput(DataSet output, boolean continuousRun){
+        ( (AppData) applicationTemplate.getDataComponent() ).updateDataClusters(output);
+
+        try{
+            Thread.sleep(800);
+        }
+        catch (InterruptedException ignored){ }
+
+        if (continuousRun){
+            handleRunRequest();
+        }
+        else{
+            isRunning.set(false);
+        }
+    }
+
     public void handleRunRequest(){
 
         Platform.runLater(() -> {
@@ -358,7 +403,7 @@ public final class AppActions implements ActionComponent{
             boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
             if (firstIteration){
-                createAlgorithmInstance(currentConfig, continuousRun);
+                createAlgorithmInstance(currentConfig);
                 firstIteration = false;
             }
 
@@ -366,8 +411,7 @@ public final class AppActions implements ActionComponent{
             createAlgorithmThread(algorithm);
             algorithmThread.start();
 
-            output = (List<Integer>) drop.take();
-
+            output = drop.take();
             if (output == null){
                 System.out.println(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()));
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
@@ -375,19 +419,13 @@ public final class AppActions implements ActionComponent{
                 isRunning.set(false);
             }
             else{
-                makeline(output);
-
-                try{
-                    Thread.sleep(800);
+                if (algorithm.getClass().getSuperclass().getSimpleName()
+                             .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFIER.name()))){
+                    handleClassifierOutput((List<Integer>) output, continuousRun);
                 }
-                catch (InterruptedException ignored){ }
 
-                if (continuousRun){
-
-                    handleRunRequest();
-                }
                 else{
-                    isRunning.set(false);
+                    handleClusteringOutput((DataSet) output, continuousRun);
                 }
             }
         });

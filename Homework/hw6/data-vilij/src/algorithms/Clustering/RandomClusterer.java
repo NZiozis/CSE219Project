@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class RandomClusterer extends Clusterer{
 
-    private final int           maxIterations;
     private final int           updateInterval;
     private final AtomicBoolean tocontinue;
+    private       int           maxIterations;
     private       DataSet       dataset;
 
 
@@ -43,9 +43,16 @@ public class RandomClusterer extends Clusterer{
     @Override
     public void run(){
         int iteration = 0;
+        tocontinue.set(true);
         while (iteration++ < maxIterations & tocontinue.get()){
             assignLabels();
+            if (iteration % updateInterval == 0 || iteration + 1 == maxIterations){
+                tocontinue.set(false);
+                drop.put(dataset);
+            }
         }
+        maxIterations -= iteration;
+        if (maxIterations <= 0) drop.put(null);
     }
 
     private void assignLabels(){
