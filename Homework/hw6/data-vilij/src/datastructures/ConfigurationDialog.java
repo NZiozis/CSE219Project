@@ -5,7 +5,10 @@ import dataprocessors.AppData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,7 +32,6 @@ public class ConfigurationDialog extends Stage implements Dialog{
     private ComboBox<String>    numLables;
     private String              numberOfLabelsChosen;
     private Integer             row;
-    private Integer             chosenNumberOfLabels;
 
     public ConfigurationDialog(ApplicationTemplate applicationTemplate, boolean isClustering, Integer row){
         this.applicationTemplate = applicationTemplate;
@@ -124,6 +126,7 @@ public class ConfigurationDialog extends Stage implements Dialog{
 
             if (isClustering){
                 numberOfLabelsChosen = invalidInputHandler(numLables.getValue());
+                if (Integer.parseInt(numberOfLabelsChosen) == 1) numberOfLabelsChosen = "2";
                 numLables.setValue(numberOfLabelsChosen);
             }
 

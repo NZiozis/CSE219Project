@@ -49,10 +49,6 @@ public class AppData implements DataComponent{
         this.currentAlgorithmConfiguration = new ArrayList<>();
     }
 
-    public TSDProcessor getProcessor(){
-        return processor;
-    }
-
     public TenLines<String> getTenLines(){
         return tenLines;
     }
