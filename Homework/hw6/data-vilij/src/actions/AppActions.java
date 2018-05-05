@@ -54,12 +54,12 @@ import static vilij.templates.UITemplate.SEPARATOR;
  */
 public final class AppActions implements ActionComponent{
 
-    private Object output;
-    private Drop   drop;
-    private Thread algorithmThread;
+    private Object    output;
+    private Drop      drop;
+    private Thread    algorithmThread;
     private Algorithm algorithm;
-    private boolean firstIteration = true;
-    private SimpleBooleanProperty isRunning = new SimpleBooleanProperty(false);
+    private boolean               firstIteration = true;
+    private SimpleBooleanProperty isRunning      = new SimpleBooleanProperty(false);
 
     private XYChart.Series<Number,Number> previousSeries;
 
@@ -400,16 +400,18 @@ public final class AppActions implements ActionComponent{
 
             boolean continuousRun = currentConfig.get(currentConfig.size() - 1) == 1;
 
+            isRunning.set(true);
             if (firstIteration){
                 createAlgorithmInstance(currentConfig);
                 firstIteration = false;
             }
 
-            isRunning.set(true);
             createAlgorithmThread(algorithm);
             algorithmThread.start();
 
             output = drop.take();
+//            System.out.println(( (DataSet) output ).getLabels().toString());
+
             if (output == null){
                 System.out.println(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()));
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
@@ -419,10 +421,10 @@ public final class AppActions implements ActionComponent{
             else{
                 if (algorithm.getClass().getSuperclass().getSimpleName()
                              .equals(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFIER.name()))){
-                    handleClassifierOutput((List<Integer>) output, continuousRun);
+                    Platform.runLater(() -> handleClassifierOutput((List<Integer>) output, continuousRun));
                 }
                 else{
-                    handleClusteringOutput((DataSet) output, continuousRun);
+                    Platform.runLater(() -> handleClusteringOutput((DataSet) output, continuousRun));
                 }
             }
         });

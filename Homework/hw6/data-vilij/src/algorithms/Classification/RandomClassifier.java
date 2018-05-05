@@ -70,7 +70,7 @@ public class RandomClassifier extends Classifier{
                 drop.put(output);
 
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(800);
                 }
                 catch (InterruptedException ignored){}
 

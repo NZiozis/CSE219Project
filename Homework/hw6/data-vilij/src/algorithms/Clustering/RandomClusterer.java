@@ -3,6 +3,7 @@ package algorithms.Clustering;
 import algorithms.Clusterer;
 import algorithms.DataSet;
 import datastructures.ClusteringDrop;
+import javafx.geometry.Point2D;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,6 +28,10 @@ public class RandomClusterer extends Clusterer{
         this.tocontinue = new AtomicBoolean(false);
     }
 
+    private static double computeDistance(Point2D p, Point2D q){
+        return Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getY() - q.getY(), 2));
+    }
+
     @Override
     public int getMaxIterations(){ return maxIterations; }
 
@@ -40,22 +45,23 @@ public class RandomClusterer extends Clusterer{
     public void run(){
         int iteration = 0;
         tocontinue.set(true);
-        while (iteration++ < maxIterations & tocontinue.get()){
+        while (iteration++ < maxIterations && tocontinue.get()){
             assignLabels();
-            if (iteration % updateInterval == 0){
+            if (iteration % updateInterval == 0 || iteration >= maxIterations){
                 tocontinue.set(false);
+
                 drop.put(dataset);
-                System.out.println(dataset.getLabels().toString());
+
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(800);
                 }
-                catch (InterruptedException ignored){ }
+                catch (InterruptedException ignored){}
+
+                if (iteration >= maxIterations) drop.put(null);
             }
         }
         maxIterations -= ( iteration - 1 );
-        if (maxIterations <= 0){
-            drop.put(null);
-        }
+
     }
 
     private void assignLabels(){
