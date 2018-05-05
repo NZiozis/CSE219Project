@@ -46,20 +46,28 @@ public class KMeansClusterer extends Clusterer{
     @Override
     public boolean tocontinue(){ return tocontinue.get(); }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void run(){
         initializeCentroids();
         int iteration = 0;
         while (iteration++ < maxIterations & tocontinue.get()){
             assignLabels();
-            if (iteration % updateInterval == 0 || iteration + 1 == maxIterations){
+            if (iteration % updateInterval == 0 || iteration >= maxIterations){
                 tocontinue.set(false);
+
                 drop.put(dataset);
+
+                try{
+                    Thread.sleep(800);
+                }
+                catch (InterruptedException ignored){}
+
+                if (iteration >= maxIterations) drop.put(null);
             }
             recomputeCentroids();
         }
-        maxIterations -= iteration;
-        if (maxIterations <= 0) drop.put(null);
+        maxIterations -= ( iteration - 1 );
     }
 
     private void initializeCentroids(){

@@ -410,7 +410,6 @@ public final class AppActions implements ActionComponent{
             algorithmThread.start();
 
             output = drop.take();
-//            System.out.println(( (DataSet) output ).getLabels().toString());
 
             if (output == null){
                 System.out.println(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()));
