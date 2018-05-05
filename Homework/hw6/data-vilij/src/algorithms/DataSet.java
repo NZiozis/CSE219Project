@@ -3,6 +3,9 @@ package algorithms;
 import datastructures.TenLines;
 import javafx.geometry.Point2D;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -42,23 +45,7 @@ public class DataSet{
         return new Point2D(Double.parseDouble(coordinateStrings[0]), Double.parseDouble(coordinateStrings[1]));
     }
 
-    /*public static DataSet fromChart(LineChart<Number,Number> chart){
-        DataSet dataSet = new DataSet();
-        chart.getData().forEach(series -> {
-            series.getData().forEach(data -> {
-                try{
-                    dataSet.addInstance(
-                            "@" + data.getExtraValue() + "\t" + series.getName() + "\t" + data.getXValue() + "," +
-                            data.getYValue());
-                }
-                catch (InvalidDataNameException e){
-                    e.printStackTrace();
-                }
-            });
-        });
-        return dataSet;
-    }*/
-    /*public static DataSet fromTSDFile(Path tsdFilePath) throws IOException{
+    public static DataSet fromTSDFile(Path tsdFilePath) throws IOException{
         DataSet dataset = new DataSet();
         Files.lines(tsdFilePath).forEach(line -> {
             try{
@@ -69,7 +56,7 @@ public class DataSet{
             }
         });
         return dataset;
-    }*/
+    }
 
     public static DataSet fromTenLines(TenLines tenLines){
         DataSet dataSet = new DataSet();
