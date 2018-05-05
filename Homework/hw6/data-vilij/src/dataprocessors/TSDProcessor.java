@@ -84,9 +84,9 @@ public final class TSDProcessor{
     }
 
     void putNewDataSetToChart(DataSet output){
-        clear();
-        dataPoints = output.getLocations();
-        dataLabels = output.getLabels();
+
+        dataPoints = (HashMap<String,Point2D>) ( (HashMap<String,Point2D>) output.getLocations() ).clone();
+        dataLabels = (HashMap<String,String>) ( (HashMap<String,String>) output.getLabels() ).clone();
     }
 
     private String checkedname(String name) throws InvalidDataNameException{

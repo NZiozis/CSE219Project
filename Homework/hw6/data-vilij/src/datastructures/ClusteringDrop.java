@@ -3,7 +3,6 @@ package datastructures;
 import algorithms.DataSet;
 
 public class ClusteringDrop implements Drop{
-
     private DataSet output;
     private boolean empty = true;
 
@@ -33,6 +32,5 @@ public class ClusteringDrop implements Drop{
         empty = false;
         this.output = (DataSet) output;
         notifyAll();
-
     }
 }

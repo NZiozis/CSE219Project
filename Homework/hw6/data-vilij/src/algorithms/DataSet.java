@@ -1,11 +1,8 @@
 package algorithms;
 
+import datastructures.TenLines;
 import javafx.geometry.Point2D;
-import javafx.scene.chart.LineChart;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -45,20 +42,7 @@ public class DataSet{
         return new Point2D(Double.parseDouble(coordinateStrings[0]), Double.parseDouble(coordinateStrings[1]));
     }
 
-    public static DataSet fromTSDFile(Path tsdFilePath) throws IOException{
-        DataSet dataset = new DataSet();
-        Files.lines(tsdFilePath).forEach(line -> {
-            try{
-                dataset.addInstance(line);
-            }
-            catch (InvalidDataNameException e){
-                e.printStackTrace();
-            }
-        });
-        return dataset;
-    }
-
-    public static DataSet fromChart(LineChart<Number,Number> chart){
+    /*public static DataSet fromChart(LineChart<Number,Number> chart){
         DataSet dataSet = new DataSet();
         chart.getData().forEach(series -> {
             series.getData().forEach(data -> {
@@ -73,8 +57,33 @@ public class DataSet{
             });
         });
         return dataSet;
-    }
+    }*/
+    /*public static DataSet fromTSDFile(Path tsdFilePath) throws IOException{
+        DataSet dataset = new DataSet();
+        Files.lines(tsdFilePath).forEach(line -> {
+            try{
+                dataset.addInstance(line);
+            }
+            catch (InvalidDataNameException e){
+                e.printStackTrace();
+            }
+        });
+        return dataset;
+    }*/
 
+    public static DataSet fromTenLines(TenLines tenLines){
+        DataSet dataSet = new DataSet();
+        tenLines.get_totalData().forEach(line -> {
+            try{
+                dataSet.addInstance((String) line);
+            }
+            catch (InvalidDataNameException e){
+                e.printStackTrace();
+            }
+        });
+
+        return dataSet;
+    }
 
     public Map<String,String> getLabels()    { return labels; }
 
@@ -98,5 +107,6 @@ public class DataSet{
         public InvalidDataNameException(String name){
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
         }
+
     }
 }

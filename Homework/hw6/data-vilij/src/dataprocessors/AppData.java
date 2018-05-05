@@ -184,7 +184,7 @@ public class AppData implements DataComponent{
 
     public void updateDataClusters(DataSet output){
         clear();
-//        ( (AppUI) applicationTemplate.getUIComponent() ).getChart().getData().clear();
+        ( (AppUI) applicationTemplate.getUIComponent() ).getChart().getData().clear();
         processor.putNewDataSetToChart(output);
         processor.toChartData(( (AppUI) applicationTemplate.getUIComponent() ).getChart());
     }

@@ -54,12 +54,12 @@ import static vilij.templates.UITemplate.SEPARATOR;
  */
 public final class AppActions implements ActionComponent{
 
-    private Object    output;
-    private Drop      drop;
-    private Thread    algorithmThread;
+    private Object output;
+    private Drop   drop;
+    private Thread algorithmThread;
     private Algorithm algorithm;
-    private boolean               firstIteration = true;
-    private SimpleBooleanProperty isRunning      = new SimpleBooleanProperty(false);
+    private boolean firstIteration = true;
+    private SimpleBooleanProperty isRunning = new SimpleBooleanProperty(false);
 
     private XYChart.Series<Number,Number> previousSeries;
 
@@ -94,6 +94,10 @@ public final class AppActions implements ActionComponent{
 
     public SimpleBooleanProperty isUnsavedProperty(){
         return isUnsaved;
+    }
+
+    public XYChart.Series<Number,Number> getPreviousSeries(){
+        return previousSeries;
     }
 
     @Override
@@ -319,15 +323,10 @@ public final class AppActions implements ActionComponent{
     private void setNewInstance(Constructor konstructor, ArrayList<?> currentConfig) throws IllegalAccessException,
                                                                                             InvocationTargetException,
                                                                                             InstantiationException{
-        if (dataFilePath == null){
-            algorithm = (Algorithm) konstructor
-                    .newInstance(null, drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
-        }
-        else{
-            algorithm = (Algorithm) konstructor
-                    .newInstance(DataSet.fromChart(( (AppUI) applicationTemplate.getUIComponent() ).getChart()), drop,
-                                 currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
-        }
+        algorithm = (Algorithm) konstructor
+                .newInstance(DataSet.fromTenLines(( (AppData) applicationTemplate.getDataComponent() ).getTenLines()),
+                             drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
+
     }
 
     private void createAlgorithmInstance(ArrayList<?> currentConfig){

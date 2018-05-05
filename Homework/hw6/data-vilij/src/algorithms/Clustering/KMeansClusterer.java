@@ -68,7 +68,7 @@ public class KMeansClusterer extends Clusterer{
         Random r = new Random();
         while (chosen.size() < numberOfClusters){
             int i = r.nextInt(instanceNames.size());
-            while (chosen.contains(instanceNames.get(i))) ++i;
+            while (chosen.contains(instanceNames.get(i))) i = ( ++i % instanceNames.size() );
             chosen.add(instanceNames.get(i));
         }
         centroids = chosen.stream().map(name -> dataset.getLocations().get(name)).collect(Collectors.toList());

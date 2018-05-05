@@ -1,14 +1,14 @@
 package algorithms;
 
-import datastructures.Drop;
+import datastructures.ClusteringDrop;
 
 /**
  * @author Ritwik Banerjee
  */
 public abstract class Clusterer implements Algorithm{
 
-    protected final int  numberOfClusters;
-    protected       Drop drop;
+    protected final int            numberOfClusters;
+    protected       ClusteringDrop drop;
 
     public Clusterer(int k){
         if (k < 2){ k = 2; }
