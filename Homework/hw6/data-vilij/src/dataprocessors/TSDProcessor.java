@@ -116,7 +116,7 @@ public final class TSDProcessor{
 
         private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
 
-        InvalidDataNameException(String name){
+        public InvalidDataNameException(String name){
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
         }
     }
