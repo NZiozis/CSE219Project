@@ -41,6 +41,7 @@ public class RandomClusterer extends Clusterer{
     @Override
     public boolean tocontinue(){ return tocontinue.get(); }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void run(){
         int iteration = 0;

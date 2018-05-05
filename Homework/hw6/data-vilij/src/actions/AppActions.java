@@ -107,7 +107,6 @@ public final class AppActions implements ActionComponent{
         ( (AppData) applicationTemplate.getDataComponent() ).hasTwoLabelsProperty().set(false);
         ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(false);
         ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
-        ( (AppUI) applicationTemplate.getUIComponent() ).setAlgorithmIsSelected(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
                 applicationTemplate.getDataComponent().clear();
@@ -139,7 +138,6 @@ public final class AppActions implements ActionComponent{
         applicationTemplate.getDataComponent().clear();
         applicationTemplate.getUIComponent().clear();
         ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
-        ( (AppUI) applicationTemplate.getUIComponent() ).setAlgorithmIsSelected(false);
         try{
             if (promptToLoad()){
                 ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(true);
