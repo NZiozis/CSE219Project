@@ -3,4 +3,4 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ TSDTestSuite.class, SaveDataTestSuite.class })
-public class TestPrimer{}
+public class IOPrimer{}
