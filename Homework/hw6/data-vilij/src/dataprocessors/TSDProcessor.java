@@ -34,9 +34,16 @@ public final class TSDProcessor{
 
     /**
      * Processes the data and populated two {@link Map} objects with the data.
+     * <p>
+     * The boundary values for this is when either the name or the label are one character long. The String "null"
+     * will also be included here as it is handled differently than most other labels. The Point2D location can be
+     * any Double and so isn't restricted by a particular boundary value.
      *
      * @param tsdString the input data provided as a single {@link String}
-     * @throws Exception if the input string does not follow the <code>.tsd</code> data format
+     * @throws Exception if the input string does not follow the <code>.tsd</code> data format.
+     *                   The exception will be thrown especially when the @ symbol doesn't prepend the name to
+     *                   a given Instance. There will also be an error if one of the inputs is missing.
+     * @author Niko Ziozis
      */
     public void processString(String tsdString) throws Exception{
         AtomicBoolean hadAnError = new AtomicBoolean(false);
@@ -83,6 +90,8 @@ public final class TSDProcessor{
         dataLabels.clear();
     }
 
+    @SuppressWarnings("unchecked")
+        //seems silly to have to suppress this, but Intellij won't have it any other way.
     void putNewDataSetToChart(DataSet output){
 
         dataPoints = (HashMap<String,Point2D>) ( (HashMap<String,Point2D>) output.getLocations() ).clone();

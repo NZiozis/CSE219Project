@@ -75,6 +75,8 @@ public class ConfigurationDialog extends Stage implements Dialog{
      * were taken as an unrestricted user input (ie TextField) the value obtained would be verified to be inside of the
      * aforementioned range. When the data stored in numLabels is exported to the rest of the application, it is at
      * index 2, in between the value from updateInterval and the value from continuousRun.
+     *
+     * @author Niko Ziozis
      */
     @Override
     public void init(Stage owner){
