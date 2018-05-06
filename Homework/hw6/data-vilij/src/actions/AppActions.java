@@ -238,7 +238,10 @@ public final class AppActions implements ActionComponent{
             Tuple<Integer,String> errorTuple =
                     ( (AppData) applicationTemplate.getDataComponent() ).indexOfErrorOrDuplicates(arrayListData);
             if (errorTuple.get_key() == -1){
+                ( (AppData) applicationTemplate.getDataComponent() ).tenLines.setTotalData(arrayListData);
+
                 ( (AppData) applicationTemplate.getDataComponent() ).loadData(data);
+
                 ( (AppData) applicationTemplate.getDataComponent() ).displayData();
             }
             else{
@@ -588,7 +591,10 @@ public final class AppActions implements ActionComponent{
                                .bind(( (AppData) applicationTemplate.getDataComponent() ).hasTwoLabelsProperty().not());
                 }
                 else{
-                    radioButton.setDisable(false);
+
+                    radioButton.disableProperty()
+                               .bind(( (AppData) applicationTemplate.getDataComponent() ).hasAtLeastTwoInstancesProperty()
+                                                                                         .not());
                 }
             }
         }

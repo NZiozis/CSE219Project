@@ -38,6 +38,8 @@ public class AppData implements DataComponent{
     private HashSet<String>       labels;
     private SimpleBooleanProperty hasTwoLabels;
     private ArrayList<Integer>    currentAlgorithmConfiguration;
+    private int                   instances;
+    private SimpleBooleanProperty hasAtLeastTwoInstances;
 
     public AppData(ApplicationTemplate applicationTemplate){
         this.processor = new TSDProcessor();
@@ -46,7 +48,12 @@ public class AppData implements DataComponent{
         this.labels = new HashSet<>();
         this.algorithmsDir = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name());
         this.hasTwoLabels = new SimpleBooleanProperty(false);
+        this.hasAtLeastTwoInstances = new SimpleBooleanProperty(false);
         this.currentAlgorithmConfiguration = new ArrayList<>();
+    }
+
+    public int getInstances(){
+        return instances;
     }
 
     public TenLines<String> getTenLines(){
@@ -55,6 +62,10 @@ public class AppData implements DataComponent{
 
     public HashSet<String> getLabels(){
         return labels;
+    }
+
+    public SimpleBooleanProperty hasAtLeastTwoInstancesProperty(){
+        return hasAtLeastTwoInstances;
     }
 
     public SimpleBooleanProperty hasTwoLabelsProperty(){
@@ -71,7 +82,7 @@ public class AppData implements DataComponent{
      */
     @Override
     public void loadData(Path dataFilePath){
-        int instances = tenLines.size();
+        instances = tenLines.size();
         StringBuilder builder = new StringBuilder();
         String filename = dataFilePath.getFileName().toString();
         labels = new HashSet<>();
@@ -119,7 +130,7 @@ public class AppData implements DataComponent{
                 String[] pointT = point.split("\t");
                 labels.add(pointT[1]);
             });
-            int instances = dataArray.size();
+            instances = dataArray.size();
             int numberOfLabels;
 
             if (labels.contains(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NULL_STRING.name()))){
@@ -127,12 +138,11 @@ public class AppData implements DataComponent{
             }
             else{ numberOfLabels = labels.size(); }
 
-            if (numberOfLabels == 2){
-                hasTwoLabels.set(true);
-            }
-            else{
-                hasTwoLabels.set(false);
-            }
+            if (numberOfLabels == 2){ hasTwoLabels.set(true);}
+            else{ hasTwoLabels.set(false); }
+
+            if (instances >= 2){ hasAtLeastTwoInstances.set(true); }
+            else{ hasAtLeastTwoInstances.set(false); }
 
             ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(true);
 

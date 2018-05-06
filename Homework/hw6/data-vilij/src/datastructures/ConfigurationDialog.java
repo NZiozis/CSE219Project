@@ -116,8 +116,8 @@ public class ConfigurationDialog extends Stage implements Dialog{
                     .add(new Text(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LABELS_NUM.name())), 0,
                          rowIndex);
             numLables = new ComboBox<>();
-            for (int i = 1; i < ( (AppData) applicationTemplate.getDataComponent() ).getLabels().size() && i < 4; i++){
-                numLables.getItems().add(i + 1 + "");
+            for (int i = 2; i <= ( (AppData) applicationTemplate.getDataComponent() ).getInstances() && i < 5; i++){
+                numLables.getItems().add(i + "");
             }
             settingsPane.add(numLables, 1, rowIndex++);
         }

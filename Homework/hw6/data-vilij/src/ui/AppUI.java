@@ -302,6 +302,8 @@ public final class AppUI extends UITemplate{
 
     }
 
+
+
     private void loadInPreviouslyLoaded() throws NullPointerException{
         loadedAlgorithms = previouslyLoaded.get(selectedToggle.getText());
         algorithmHouse.setContent(loadedAlgorithms);
