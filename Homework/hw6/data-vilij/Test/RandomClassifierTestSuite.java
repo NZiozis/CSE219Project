@@ -1,8 +1,24 @@
+import dataprocessors.AppData;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+
+
+/**
+ * Inside of the init method, each unique configuration dialog gets its own button that has a lambda that tells it
+ * what do to when pressed. There are three elements that are updated:
+ * {@link datastructures.ConfigurationDialog#maxIterations}
+ * {@link datastructures.ConfigurationDialog#updateInterval}
+ * {@link datastructures.ConfigurationDialog#continuousRun}
+ * Since these are all TextFields, getText() is called on them. Then, the first two are validated to make sure that
+ * they are greater than 1, and that the updateInterval, when converted to an Integer isn't greater than
+ * maxIterations. This is why 1 is a boundary value for both of these inputs. continuousRun is a CheckBox, and if it
+ * is true it stores a 1 in {@link AppData#currentAlgorithmConfiguration} and a 0 when false.
+ *
+ * @author Niko Ziozis
+ */
 
 
 public class RandomClassifierTestSuite{

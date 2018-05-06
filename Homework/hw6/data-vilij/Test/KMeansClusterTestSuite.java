@@ -1,8 +1,30 @@
+import dataprocessors.AppData;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+
+/**
+ * Inside of the init method, each unique configuration dialog gets its own button that has a lambda that tells it
+ * what do to when pressed. There are three elements that are updated:
+ * {@link datastructures.ConfigurationDialog#maxIterations}
+ * {@link datastructures.ConfigurationDialog#updateInterval}
+ * {@link datastructures.ConfigurationDialog#continuousRun}
+ * Since these are all TextFields, getText() is called on them. Then, the first two are validated to make sure that
+ * they are greater than 1, and that the updateInterval, when converted to an Integer isn't greater than
+ * maxIterations. This is why 1 is a boundary value for both of these inputs. continuousRun is a CheckBox, and if it
+ * is true it stores a 1 in {@link AppData#currentAlgorithmConfiguration} and a 0 when false.
+ * Since the algorithm is Clustering, in addition to the above elements there is a also a ComboBox that stores the
+ * number of Clusters available to choose from {@link datastructures.ConfigurationDialog#numLables}. The ComboBox is populated with
+ * numbers from 2 to 4 inclusive. As such, the boundary values are 2 on the low end and 4 on the high end. If this
+ * were taken as an unrestricted user input (ie TextField) the value obtained would be verified to be inside of the
+ * aforementioned range. When the data stored in numLabels is exported to the rest of the application, it is at
+ * index 2, in between the value from updateInterval and the value from continuousRun.
+ *
+ * @author Niko Ziozis
+ */
+
 
 public class KMeansClusterTestSuite{
 

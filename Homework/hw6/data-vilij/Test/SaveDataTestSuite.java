@@ -11,6 +11,13 @@ import static org.junit.Assert.assertEquals;
 
 public class SaveDataTestSuite{
 
+    /**
+     * There are no bound values here as all of the Text Validation is taken care of by the TSDProcessor. This is just
+     * meant to make sure that the text that is saved into the file is the same as what is expected.
+     *
+     * @author Niko Ziozis
+     */
+
 
     private Path dataFilePath;
 

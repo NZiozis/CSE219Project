@@ -12,6 +12,16 @@ import static org.junit.Assert.assertEquals;
 
 public class TSDTestSuite{
 
+    /**
+     * <p>
+     * The boundary values for this is when either the name or the label are one character long. The String "null"
+     * will also be included here as it is handled differently than most other labels. The Point2D location can be
+     * any Double and so isn't restricted by a particular boundary value. An invalid name is one that doesn't have an @
+     * symbol in front of it.
+     *
+     * @author Niko Ziozis
+     */
+
     private Map<String,String>  dataLabels;
     private Map<String,Point2D> dataPoints;
 
