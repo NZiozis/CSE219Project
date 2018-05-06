@@ -57,6 +57,7 @@ public final class AppUI extends UITemplate{
     private SimpleBooleanProperty configurationValid;
     private SimpleBooleanProperty algorithmIsSelected;
     private SimpleBooleanProperty dataLoadedIn;
+    private SimpleBooleanProperty dataInChart;
     private RadioButton           selectedToggle;
     private Integer               currentAlgoIndex;
 
@@ -70,6 +71,7 @@ public final class AppUI extends UITemplate{
         configurationValid = new SimpleBooleanProperty(false);
         algorithmIsSelected = new SimpleBooleanProperty(false);
         dataLoadedIn = new SimpleBooleanProperty(false);
+        dataInChart = new SimpleBooleanProperty(false);
         classPathtoAlgorithm = new StringBuilder();
         classPathtoAlgorithm
                 .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
@@ -116,6 +118,10 @@ public final class AppUI extends UITemplate{
         this.loadedInFileText.setText(text);
     }
 
+    public void setDataInChart(boolean dataInChart){
+        this.dataInChart.set(dataInChart);
+    }
+
     @Override
     protected void setResourcePaths(ApplicationTemplate applicationTemplate){
         super.setResourcePaths(applicationTemplate);
@@ -157,6 +163,7 @@ public final class AppUI extends UITemplate{
 
     @Override
     public void clear(){
+        dataInChart.set(false);
         textArea.clear();
         chart.getData().clear();
         previouslyLoaded.clear();
@@ -233,7 +240,8 @@ public final class AppUI extends UITemplate{
                  .addAll(leftPanelTitle, textArea, editDoneButton, processButtonsBox, loadedInFileText, algorithmHouse,
                          selectButton, runButton);
         scrnshotButton.disableProperty()
-                      .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty());
+                      .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty()
+                                                                                     .or(dataInChart.not()));
 
         leftPanelTitle.visibleProperty().bind(textArea.visibleProperty());
 
@@ -301,7 +309,6 @@ public final class AppUI extends UITemplate{
         });
 
     }
-
 
 
     private void loadInPreviouslyLoaded() throws NullPointerException{

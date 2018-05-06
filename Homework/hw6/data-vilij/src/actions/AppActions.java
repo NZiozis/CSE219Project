@@ -297,6 +297,7 @@ public final class AppActions implements ActionComponent{
         classificationLine.getData().add(new XYChart.Data<>(maxX, maxYVal));
 
         chart.getData().add(0, classificationLine);
+        ( (AppUI) applicationTemplate.getUIComponent() ).setDataInChart(true);
         classificationLine.getNode().getStyleClass().add(applicationTemplate.manager.getPropertyValue(
                 AppPropertyTypes.CLASSIFICATION_LINE_STYLE.name()));
         classificationLine.getData().forEach(element -> element.getNode().getStyleClass()
@@ -592,9 +593,8 @@ public final class AppActions implements ActionComponent{
                 }
                 else{
 
-                    radioButton.disableProperty()
-                               .bind(( (AppData) applicationTemplate.getDataComponent() ).hasAtLeastTwoInstancesProperty()
-                                                                                         .not());
+                    radioButton.disableProperty().bind(( (AppData) applicationTemplate.getDataComponent() )
+                                                               .hasAtLeastTwoInstancesProperty().not());
                 }
             }
         }

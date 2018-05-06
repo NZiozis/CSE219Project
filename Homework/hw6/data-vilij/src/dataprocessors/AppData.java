@@ -145,6 +145,7 @@ public class AppData implements DataComponent{
             else{ hasAtLeastTwoInstances.set(false); }
 
             ( (AppUI) applicationTemplate.getUIComponent() ).setDataLoadedIn(true);
+            ( (AppUI) applicationTemplate.getUIComponent() ).setDataInChart(true);
 
             StringBuilder loadedText = new StringBuilder(
                     String.format(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.LOADED_DATA.name()),
