@@ -58,6 +58,7 @@ public final class AppUI extends UITemplate{
     private SimpleBooleanProperty algorithmIsSelected;
     private SimpleBooleanProperty dataLoadedIn;
     private SimpleBooleanProperty dataInChart;
+    private SimpleBooleanProperty algorithmInProgress;
     private RadioButton           selectedToggle;
     private Integer               currentAlgoIndex;
 
@@ -72,7 +73,9 @@ public final class AppUI extends UITemplate{
         algorithmIsSelected = new SimpleBooleanProperty(false);
         dataLoadedIn = new SimpleBooleanProperty(false);
         dataInChart = new SimpleBooleanProperty(false);
+        algorithmInProgress = new SimpleBooleanProperty(false);
         classPathtoAlgorithm = new StringBuilder();
+
         classPathtoAlgorithm
                 .append(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHMS_PATH.name()));
     }
@@ -319,6 +322,7 @@ public final class AppUI extends UITemplate{
             classPathtoAlgorithm.delete(classPathtoAlgorithm.indexOf(
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
                                         classPathtoAlgorithm.length());
+            ( (AppActions) applicationTemplate.getActionComponent() ).algorithmInProgressProperty().set(false);
             algorithmIsSelected.set(false);
             configurationValid.set(false);
         }
@@ -356,6 +360,7 @@ public final class AppUI extends UITemplate{
                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASS_PATH_JOINER.name())),
                                         classPathtoAlgorithm.length());
             temp = appActions.populateAlgorithms(algorithms, algorithmsDir);
+            ( (AppActions) applicationTemplate.getActionComponent() ).algorithmInProgressProperty().set(false);
             algorithmIsSelected.set(false);
             configurationValid.set(false);
         }

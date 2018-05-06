@@ -58,8 +58,9 @@ public final class AppActions implements ActionComponent{
     private Drop      drop;
     private Thread    algorithmThread;
     private Algorithm algorithm;
-    private boolean               firstIteration = true;
-    private SimpleBooleanProperty isRunning      = new SimpleBooleanProperty(false);
+    private boolean               firstIteration      = true;
+    private SimpleBooleanProperty isRunning           = new SimpleBooleanProperty(false);
+    private SimpleBooleanProperty algorithmInProgress = new SimpleBooleanProperty(false);
 
     private XYChart.Series<Number,Number> previousSeries;
 
@@ -84,6 +85,10 @@ public final class AppActions implements ActionComponent{
 
     public SimpleBooleanProperty isRunningProperty(){
         return isRunning;
+    }
+
+    public SimpleBooleanProperty algorithmInProgressProperty(){
+        return algorithmInProgress;
     }
 
     public void setIsUnsavedProperty(boolean property){ isUnsaved.set(property); }
@@ -404,6 +409,7 @@ public final class AppActions implements ActionComponent{
 
             isRunning.set(true);
             if (firstIteration){
+                algorithmInProgress.set(true);
                 createAlgorithmInstance(currentConfig);
                 firstIteration = false;
             }
@@ -418,6 +424,7 @@ public final class AppActions implements ActionComponent{
                 ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
                 firstIteration = true;
                 isRunning.set(false);
+                algorithmInProgress.set(false);
             }
             else{
                 if (algorithm.getClass().getSuperclass().getSimpleName()
@@ -622,6 +629,7 @@ public final class AppActions implements ActionComponent{
 
                     loadedAlgorithms.add(radioButton, 0, counter);
                     Button configurationButton = createNewConfigurationButton(algoName, true, counter);
+                    configurationButton.disableProperty().bind(algorithmInProgress);
                     loadedAlgorithms.add(configurationButton, 1, counter++);
                     radioButton.setToggleGroup(algorithms);
                 }
@@ -632,6 +640,7 @@ public final class AppActions implements ActionComponent{
 
                     loadedAlgorithms.add(radioButton, 0, counter);
                     Button configurationButton = createNewConfigurationButton(algoName, false, counter);
+                    configurationButton.disableProperty().bind(algorithmInProgress);
                     loadedAlgorithms.add(configurationButton, 1, counter++);
                     radioButton.setToggleGroup(algorithms);
                 }
