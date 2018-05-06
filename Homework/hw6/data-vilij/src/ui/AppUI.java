@@ -59,6 +59,7 @@ public final class AppUI extends UITemplate{
     private SimpleBooleanProperty dataLoadedIn;
     private SimpleBooleanProperty dataInChart;
     private SimpleBooleanProperty algorithmInProgress;
+    private SimpleBooleanProperty newButtonSBP;
     private RadioButton           selectedToggle;
     private Integer               currentAlgoIndex;
 
@@ -74,6 +75,7 @@ public final class AppUI extends UITemplate{
         dataLoadedIn = new SimpleBooleanProperty(false);
         dataInChart = new SimpleBooleanProperty(false);
         algorithmInProgress = new SimpleBooleanProperty(false);
+        newButtonSBP = new SimpleBooleanProperty(false);
         classPathtoAlgorithm = new StringBuilder();
 
         classPathtoAlgorithm
@@ -180,7 +182,10 @@ public final class AppUI extends UITemplate{
         PropertyManager manager = applicationTemplate.manager;
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+        xAxis.setForceZeroInRange(false);
+        yAxis.setForceZeroInRange(false);
         chart = new LineChart<>(xAxis, yAxis);
+        chart.setAnimated(false);
         chart.setTitle(manager.getPropertyValue(AppPropertyTypes.CHART_TITLE.name()));
 
         VBox leftPanel = new VBox(8);
@@ -224,6 +229,12 @@ public final class AppUI extends UITemplate{
 
         editDoneButton = new Button(manager.getPropertyValue(AppPropertyTypes.EDIT_TEXT.name()));
         editDoneButton.visibleProperty().bind(textArea.visibleProperty());
+
+        newButton.disableProperty()
+                 .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty().or(newButtonSBP));
+
+        loadButton.disableProperty()
+                  .bind(( (AppActions) applicationTemplate.getActionComponent() ).isRunningProperty());
 
         loadedAlgorithms = ( (AppActions) applicationTemplate.getActionComponent() ).populateAlgorithms(algorithms,
                                                                                                         applicationTemplate.manager
@@ -276,12 +287,12 @@ public final class AppUI extends UITemplate{
                     if (!newValue.isEmpty()){
                         ( (AppActions) applicationTemplate.getActionComponent() ).setIsUnsavedProperty(true);
                         if (newValue.charAt(newValue.length() - 1) == '\n') hasNewText = true;
-                        newButton.setDisable(false);
+                        newButtonSBP.set(false);
                     }
                     else{
                         ( (AppActions) applicationTemplate.getActionComponent() ).setIsUnsavedProperty(false);
                         hasNewText = true;
-                        newButton.setDisable(true);
+                        newButtonSBP.set(true);
                     }
                 }
             }
