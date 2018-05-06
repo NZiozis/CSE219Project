@@ -44,7 +44,7 @@ public class TSDTestSuite{
 
 
     @Test(expected = TSDProcessor.InvalidDataNameException.class)
-    public void invalidTSDinput() throws Exception{
+    public void invalidTSDInputName() throws Exception{
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
         String invalidString = "asdf\tadfgre\t1,2\n";
