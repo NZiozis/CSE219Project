@@ -245,7 +245,8 @@ public final class AppUI extends UITemplate{
 
         runButton = new Button(null, new ImageView(
                 new Image(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_BUTTON_ICON_PATH.name()))));
-        runButton.visibleProperty().bind(algorithmIsSelected.and(algorithmHouse.visibleProperty()));
+        runButton.visibleProperty()
+                 .bind(algorithmIsSelected.and(algorithmHouse.visibleProperty()).and(configurationValid));
         runButton.disableProperty().bind(( algorithmIsSelected.and(configurationValid) ).not()
                                                                                         .or(( (AppActions) applicationTemplate
                                                                                                 .getActionComponent()
@@ -322,6 +323,15 @@ public final class AppUI extends UITemplate{
             catch (NullPointerException ignored){}
         });
 
+    }
+
+    public void resetToAlgorithmTypeLevel(){
+        loadedAlgorithms = ( (AppActions) applicationTemplate.getActionComponent() ).populateAlgorithms(algorithms,
+                                                                                                        applicationTemplate.manager
+                                                                                                                .getPropertyValue(
+                                                                                                                        AppPropertyTypes.ALGORITHMS_PATH
+                                                                                                                                .name()));
+        algorithmHouse.setContent(loadedAlgorithms);
     }
 
 

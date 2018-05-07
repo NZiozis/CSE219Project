@@ -114,6 +114,7 @@ public final class AppActions implements ActionComponent{
         ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
         try{
             if (!isUnsaved.get() || promptToSave()){
+                ( (AppUI) applicationTemplate.getUIComponent() ).resetToAlgorithmTypeLevel();
                 applicationTemplate.getDataComponent().clear();
                 applicationTemplate.getUIComponent().clear();
                 isUnsaved.set(false);
@@ -145,6 +146,7 @@ public final class AppActions implements ActionComponent{
         ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
         try{
             if (promptToLoad()){
+                ( (AppUI) applicationTemplate.getUIComponent() ).resetToAlgorithmTypeLevel();
                 ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(true);
                 ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setVisible(true);
                 ( (AppUI) applicationTemplate.getUIComponent() ).getTextArea().setDisable(true);
