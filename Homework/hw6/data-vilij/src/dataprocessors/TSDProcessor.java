@@ -51,7 +51,7 @@ public final class TSDProcessor{
         Stream.of(tsdString.split("\n")).map(line -> Arrays.asList(line.split("\t"))).forEach(list -> {
             try{
                 String name = checkedname(list.get(0));
-                String label = list.get(1);
+                String label = checkedLabel(list.get(1));
                 String[] pair = list.get(2).split(",");
                 Point2D point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
                 dataLabels.put(name, label);
@@ -103,6 +103,11 @@ public final class TSDProcessor{
         return name;
     }
 
+    private String checkedLabel(String label) throws InvalidLabelException{
+        if (label == null || label.length() <= 0) throw new InvalidLabelException(label);
+        return label;
+    }
+
     private void addTooltips(XYChart<Number,Number> chart){
         for (int i = 0; i < chart.getData().size(); i++){
             for (XYChart.Data<Number,Number> data : chart.getData().get(i).getData()){
@@ -127,6 +132,14 @@ public final class TSDProcessor{
 
         public InvalidDataNameException(String name){
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
+        }
+    }
+
+    public static class InvalidLabelException extends Exception{
+        private static String LABEL_ERROR_MSG = "All labels must have at least a length of 1.";
+
+        public InvalidLabelException(String label){
+            super(String.format("Invalid label '%s'." + LABEL_ERROR_MSG, label));
         }
     }
 }
