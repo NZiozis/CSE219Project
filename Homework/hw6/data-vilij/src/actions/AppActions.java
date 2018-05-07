@@ -141,10 +141,12 @@ public final class AppActions implements ActionComponent{
 
     @Override
     public void handleLoadRequest(){
-        applicationTemplate.getDataComponent().clear();
-        applicationTemplate.getUIComponent().clear();
+
         ( (AppUI) applicationTemplate.getUIComponent() ).setConfigurationValid(false);
         try{
+            handleSaveRequest();
+            applicationTemplate.getDataComponent().clear();
+            applicationTemplate.getUIComponent().clear();
             if (promptToLoad()){
                 ( (AppUI) applicationTemplate.getUIComponent() ).resetToAlgorithmTypeLevel();
                 ( (AppUI) applicationTemplate.getUIComponent() ).getEditDoneButton().setDisable(true);
