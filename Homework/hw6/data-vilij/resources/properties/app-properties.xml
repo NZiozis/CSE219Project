@@ -50,7 +50,8 @@ functionality within the main workspace. -->
         <property name="MAX_ITERATIONS_TEXT" value="Max Iterations:"/>
         <property name="UPDATE_INTERVAL_TEXT" value="Update Interval:"/>
         <property name="CONTINUOUS_RUN_TEXT" value="Continuous Run?"/>
-        <property name="ALGORITHM_NOT_FOUND_MESSAGE" value="This either was not found or does not have a run method."/>
+        <property name="ALGORITHM_NOT_FOUND_MESSAGE"
+                  value="This either was not found or does not have a run method. The application will now exit."/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value=".tsd"/>

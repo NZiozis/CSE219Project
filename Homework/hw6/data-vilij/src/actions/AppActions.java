@@ -331,7 +331,8 @@ public final class AppActions implements ActionComponent{
 
     private void setNewInstance(Constructor konstructor, ArrayList<?> currentConfig) throws IllegalAccessException,
                                                                                             InvocationTargetException,
-                                                                                            InstantiationException{
+                                                                                            InstantiationException,
+                                                                                            IllegalArgumentException{
         algorithm = (Algorithm) konstructor
                 .newInstance(DataSet.fromTenLines(( (AppData) applicationTemplate.getDataComponent() ).getTenLines()),
                              drop, currentConfig.get(0), currentConfig.get(1), currentConfig.get(2));
@@ -357,7 +358,7 @@ public final class AppActions implements ActionComponent{
             // This is how we get the data from the consumer
         }
 
-        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e){
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e){
             // This should never occur during the normal use of this version of the program as all classes that are
             // chosen should implement Algorithm which has a default run method, and the files are read directly from
             // the directory they are located in and are not hardcoded. This error could occur if the user deleted an
@@ -366,6 +367,7 @@ public final class AppActions implements ActionComponent{
             errorDialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND.name()),
                              applicationTemplate.manager
                                      .getPropertyValue(AppPropertyTypes.ALGORITHM_NOT_FOUND_MESSAGE.name()));
+            System.exit(0);
         }
     }
 
